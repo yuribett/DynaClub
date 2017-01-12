@@ -10,16 +10,16 @@ module.exports = function(app) {
 
          model.findOne({
              login: req.body.login,
-             senha: req.body.senha
+             password: req.body.password
          })
-         .then(function(usuario) {
-             if (!usuario) {
+         .then(function(user) {
+             if (!user) {
                  console.log('Login/password incorrect');
                  res.sendStatus(401);
              } else {
-                console.log(usuario.login)
-                 var token = jwt.sign({login: usuario.login}, app.get('secret'), {
-                     expiresIn: 84600
+                console.log(user.login)
+                 var token = jwt.sign({login: user.login}, app.get('secret'), {
+                     expiresIn: 7614000
                  });
                  res.set('x-access-token', token); 
                  res.end(); 
