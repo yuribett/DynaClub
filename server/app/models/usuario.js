@@ -6,10 +6,10 @@ var schema = mongoose.Schema({
         type: String, 
         required: true
     },
-    senha: {
+    password: {
         type: String,
         required: true
     }
 });
 
-mongoose.model('Usuario', schema);
+mongoose.model('User', schema);

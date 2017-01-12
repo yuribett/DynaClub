@@ -4,9 +4,9 @@ var jwt  = require('jsonwebtoken');
 module.exports = function(app) {
 
      var api = {};
-     var model = mongoose.model('Usuario');
+     var model = mongoose.model('User');
 
-     api.autentica = function(req, res) {
+     api.authUser = function(req, res) {
 
          model.findOne({
              login: req.body.login,
@@ -14,38 +14,35 @@ module.exports = function(app) {
          })
          .then(function(usuario) {
              if (!usuario) {
-                 console.log('Login/senha inválidos');
+                 console.log('Login/password incorrect');
                  res.sendStatus(401);
              } else {
                 console.log(usuario.login)
                  var token = jwt.sign({login: usuario.login}, app.get('secret'), {
                      expiresIn: 84600
                  });
-                 console.log('Autenticado: token adicionado na resposta');
                  res.set('x-access-token', token); 
                  res.end(); 
              }
          });
      };
 
-    api.verificaToken = function(req, res, next) {
+    api.verifyToken = function(req, res, next) {
 
          var token = req.headers['x-access-token'];
 
          if (token) {
-             console.log('Token recebido, decodificando');
              jwt.verify(token, app.get('secret'), function(err, decoded) {
                  if (err) {
-                     console.log('Token rejeitado');
+                     console.log('Token rejected');
                      return res.sendStatus(401);
                  } else {
-                     console.log('Token aceito')
                      req.usuario = decoded;    
                      next();
                   }
             });
         } else {
-            console.log('Nenhum token enviado');
+            console.log('Token not sent');
             return res.sendStatus(401);
           }
     }
