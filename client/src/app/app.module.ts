@@ -13,6 +13,10 @@ import { AdminComponent } from './admin/admin.component';
 //Other
 import { routing } from './app.routes';
 import 'rxjs/add/operator/map';
+import { XHRBackend } from '@angular/http';
+import { ExtendedXHRBackend } from './auth/extended.xhr.backend';
+import { UserService } from './auth/user.service';
+import { LoggedInGuard } from './auth/logged.in.guard';
 
 @NgModule({
   declarations: [
@@ -20,14 +24,15 @@ import 'rxjs/add/operator/map';
     LoginComponent,
     DashbordComponent,
     AdminComponent
-  ],
+  ],  
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule, 
     routing
   ],
-  providers: [],
+  providers: [{ provide: XHRBackend, useClass: ExtendedXHRBackend }, LoggedInGuard, 
+                UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

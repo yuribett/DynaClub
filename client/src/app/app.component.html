@@ -1,3 +1,9 @@
 <div class="container">
-    <router-outlet></router-outlet>
+  <nav class="navbar navbar-default" *ngIf="user.loggedIn | async">
+    <ul class="nav navbar-nav">
+      <li><a [routerLink]="['/dashboard']">Dashboard</a></li>
+      <li><a [routerLink]="['/admin']">Admin</a></li>
+    </ul>
+  </nav>
+  <router-outlet></router-outlet>
 </div>
