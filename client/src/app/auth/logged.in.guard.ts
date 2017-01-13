@@ -10,7 +10,7 @@ export class LoggedInGuard implements CanActivate {
   canActivate() {
       let isLoggedIn = this.user.isLoggedIn();
       if(!isLoggedIn){
-          this.router.navigate(['']);
+          this.router.navigate(['/login']);
       }
       return isLoggedIn;
   }
