@@ -2,9 +2,6 @@ module.exports = function(app) {
 
 	var api = app.api.transaction;
 
-    console.log('>>>>');
-    console.log(api.listByUser);
-
 /*
 	app.route('/transaction')
 		.post(api.insert);

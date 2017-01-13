@@ -1,8 +1,8 @@
 module.exports = function(app) {
 
-	var api = app.api.user;
+	var api = app.api.configs;
 
-    app.route('/user')
+    app.route('/configs')
         .get(api.list);
         
 };

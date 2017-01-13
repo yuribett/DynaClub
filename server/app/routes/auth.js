@@ -2,6 +2,6 @@ module.exports = function(app) {
 
     var api = app.api.auth;
     app.post('/auth', api.authUser);
-    //remover
+    //TODO
     //app.use('/*', api.verifyToken);
 };
