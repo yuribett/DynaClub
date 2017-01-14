@@ -2,14 +2,16 @@
 
     <div class="form-signin">
         <h2 class="form-signin-heading">Junte-se ao Club!</h2>
-        <input type="text" id="inputUser" class="form-control" placeholder="Usu&aacute;rio" required autofocus [(ngModel)]="user">
-        <input type="password" id="inputPassword" class="form-control" placeholder="Senha" required [(ngModel)]="password">
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" value="remember-me" checked> Mantenha-me conectado
-            </label>
-        </div>
-        <button type="button" class="btn btn-lg btn-primary btn-block" (click)="onButtonLoginClick()">Entrar</button>
+        <form (submit)="onButtonLoginClick()">
+            <input name="user" type="text" id="inputUser" class="form-control" placeholder="Usu&aacute;rio" required autofocus [(ngModel)]="user">
+            <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Senha" required [(ngModel)]="password">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" value="remember-me" checked> Mantenha-me conectado
+                </label>
+            </div>
+            <button type="submit" class="btn btn-lg btn-primary btn-block" (click)="onButtonLoginClick()">Entrar</button>
+        </form>
     </div>
 
 </div>
