@@ -18,6 +18,17 @@ module.exports = function(app) {
 
 	};
 
+	api.insert = function(req, res) {
+		model.create(req.body)
+		.then(function(user) {
+			res.json(user);
+		}, function(error) {
+			console.log('cannot insert user');
+			console.log(error);
+			res.sendStatus(500);
+		});
+	};
+
 	return api;
 };
 

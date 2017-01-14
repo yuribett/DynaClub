@@ -7,21 +7,25 @@ module.exports = function(app) {
      var model = mongoose.model('User');
 
      api.authUser = function(req, res) {
+         console.log('authUser');
+
+         console.log(req.body.password);
 
          model.findOne({
-             login: req.body.login,
+             user: req.body.user,
              password: req.body.password
          })
-         .then(function(user) {
-             if (!user) {
+         .then(function(auth) {
+             if (!auth) {
                  console.log('Login/password incorrect');
                  res.sendStatus(401);
              } else {
-                console.log(user.login)
-                 var token = jwt.sign({login: user.login}, app.get('secret'), {
+                console.log(auth.user)
+                 var token = jwt.sign({auth: auth.user}, app.get('secret'), {
                      expiresIn: 7614000
                  });
                  res.set('x-access-token', token); 
+                 console.log(token);
                  res.end(); 
              }
          });

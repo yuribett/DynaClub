@@ -12,7 +12,8 @@ module.exports = function(app) {
 		.put(api.update);
 */
 
-    app.route('/team/')
-        .get(api.list);
+    app.route('/team')
+        .get(api.list)
+		.post(api.insert);
         
 };
