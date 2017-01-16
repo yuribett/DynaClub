@@ -17,6 +17,8 @@ import { XHRBackend } from '@angular/http';
 import { ExtendedXHRBackend } from './auth/extended.xhr.backend';
 import { UserService } from './auth/user.service';
 import { LoggedInGuard } from './auth/logged.in.guard';
+import { TransactionComponent } from './dashboard/transaction/transaction.component';
+import { WalletComponent } from './dashboard/wallet/wallet.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,9 @@ import { LoggedInGuard } from './auth/logged.in.guard';
     LoginComponent,
     DashboardComponent,
     AdminComponent,
-    DashboardComponent
+    DashboardComponent,
+    TransactionComponent,
+    WalletComponent
   ],  
   imports: [
     BrowserModule,
