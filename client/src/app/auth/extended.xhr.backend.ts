@@ -12,14 +12,15 @@ export class ExtendedXHRBackend extends XHRBackend {
     }
 
     createConnection(request: Request) {
-        let token = localStorage.getItem('token');
+        let token = localStorage.getItem('dynaclub-token');
         request.headers.set('x-access-token', `${token}`);
         request.headers.set('Content-Type', 'application/json');
         let xhrConnection = super.createConnection(request);
         xhrConnection.response = xhrConnection.response.catch((error: Response) => {
             if (error.status === 401 || error.status === 403) {
                 console.log('acesso não autorizado');
-                localStorage.removeItem('token');
+                localStorage.removeItem('dynaclub-token');
+                localStorage.removeItem('dynaclub-user');
             }
             return Observable.throw(error);
         });

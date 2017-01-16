@@ -7,7 +7,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 @Injectable()
 export class UserService {
 
-  private url: string = '/auth';
+  private url: string = 'http://localhost:3000/auth';
 
   private _loggedIn: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public loggedIn: Observable<boolean> = this._loggedIn.asObservable();
@@ -25,11 +25,13 @@ export class UserService {
                  .map((res) => {  
                           
                     let token = res.headers.get('x-access-token');
-                    console.log('token',token);
-                    
+
+                    //TODO move inside IF clause
+                    localStorage.setItem('dynaclub-user', res.text());
+
                     if (token) {
                         this._loggedIn.next(true);
-                        localStorage.setItem('token', token);
+                        localStorage.setItem('dynaclub-token', token);
                     }
                  });
   }
