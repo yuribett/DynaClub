@@ -7,7 +7,7 @@ import { HttpModule } from '@angular/http';
 //Components
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
-import { DashbordComponent } from './dashbord/dashbord.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 import { AdminComponent } from './admin/admin.component';
 
 //Other
@@ -22,8 +22,9 @@ import { LoggedInGuard } from './auth/logged.in.guard';
   declarations: [
     AppComponent,
     LoginComponent,
-    DashbordComponent,
-    AdminComponent
+    DashboardComponent,
+    AdminComponent,
+    DashboardComponent
   ],  
   imports: [
     BrowserModule,
