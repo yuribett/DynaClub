@@ -17,6 +17,18 @@ module.exports = function(app) {
 		});
 
 	};
+
+	api.insert = function(req, res) {
+		model.create(req.body)
+		.then(function(transaction) {
+			res.json(transaction);
+		}, function(error) {
+			console.log('cannot insert transaction');
+			console.log(error);
+			res.sendStatus(500);
+		});
+	};
+
 /*
     api.findById = function(req, res) {
 		
