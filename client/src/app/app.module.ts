@@ -7,7 +7,7 @@ import { HttpModule } from '@angular/http';
 //Components
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
-import { DashbordComponent } from './dashbord/dashbord.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 import { AdminComponent } from './admin/admin.component';
 
 //Other
@@ -17,13 +17,18 @@ import { XHRBackend } from '@angular/http';
 import { ExtendedXHRBackend } from './auth/extended.xhr.backend';
 import { UserService } from './auth/user.service';
 import { LoggedInGuard } from './auth/logged.in.guard';
+import { TransactionComponent } from './dashboard/transaction/transaction.component';
+import { WalletComponent } from './dashboard/wallet/wallet.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    DashbordComponent,
-    AdminComponent
+    DashboardComponent,
+    AdminComponent,
+    DashboardComponent,
+    TransactionComponent,
+    WalletComponent
   ],  
   imports: [
     BrowserModule,
