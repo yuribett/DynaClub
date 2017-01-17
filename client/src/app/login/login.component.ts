@@ -24,8 +24,6 @@ export class LoginComponent implements OnInit {
 
     onButtonLoginClick() {
         this.userService.autentica(new AuthLogin(this.user, this.password)).subscribe(e => {
-            console.log('subs', e);
-            console.log('logged in:', this.userService.isLoggedIn())
             if(this.userService.isLoggedIn()){
                 this.router.navigate(['/dashboard']);
             }

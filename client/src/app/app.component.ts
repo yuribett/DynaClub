@@ -10,4 +10,9 @@ export class AppComponent {
   
     constructor(private user: UserService){ }
 
+    logout(e) {
+      e.preventDefault();
+      this.user.logout();
+    }
+
 }

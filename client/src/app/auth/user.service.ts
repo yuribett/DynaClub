@@ -3,16 +3,17 @@ import { Http, Headers } from '@angular/http';
 import { AuthLogin } from '../login/login.component';
 import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class UserService {
 
-  private url: string = '/auth';
+  private url: string = 'http://localhost:3000/auth';
 
   private _loggedIn: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public loggedIn: Observable<boolean> = this._loggedIn.asObservable();
 
-  constructor(private http: Http) { }
+  constructor(private http: Http, private route: Router) { }
 
   autentica(login: AuthLogin) { //: Observable<boolean>
 
@@ -21,11 +22,11 @@ export class UserService {
       headers.append('Authorization', 'Basic ' + btoa(login.user + ":" + login.password));
 
       return this.http
-                 .post(this.url, JSON.stringify(login), {headers : headers})
+                 .post(this.url, JSON.stringify(login)) //, {headers : headers}
                  .map((res) => {  
                           
                     let token = res.headers.get('x-access-token');
-                    console.log('token',token);
+                    console.log('>>>>',res.headers); //OBJECT HEADERS COM MAP VAZIO
                     
                     if (token) {
                         this._loggedIn.next(true);
@@ -36,6 +37,7 @@ export class UserService {
 
   logout() {
     localStorage.removeItem('token');
+    this.route.navigate(['/login']);
   }
 
   isLoggedIn() {
