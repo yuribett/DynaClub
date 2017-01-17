@@ -14,5 +14,8 @@ module.exports = function(app) {
 
     app.route('/transaction/:user')
         .get(api.listByUser);
+
+	app.route('/transaction')
+		.post(api.insert);
         
 };

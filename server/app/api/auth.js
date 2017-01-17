@@ -7,10 +7,8 @@ module.exports = function(app) {
      var model = mongoose.model('User');
 
      api.authUser = function(req, res) {
-         console.log('authUser');
-
-         console.log(req.body.password);
-
+         console.log('>>>>>>>');
+         console.log(req.body);
          model.findOne({
              user: req.body.user,
              password: req.body.password
@@ -20,12 +18,14 @@ module.exports = function(app) {
                  console.log('Login/password incorrect');
                  res.sendStatus(401);
              } else {
-                console.log(auth.user)
                  var token = jwt.sign({auth: auth.user}, app.get('secret'), {
                      expiresIn: 7614000
                  });
+                 //setting password to null to response
+                 auth.password = null;
+                 
                  res.set('x-access-token', token); 
-                 console.log(token);
+                 res.json(auth);
                  res.end(); 
              }
          });

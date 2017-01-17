@@ -19,18 +19,22 @@ export class UserService {
 
       var headers = new Headers();
       headers.append('Content-Type', 'application/json');
-      headers.append('Authorization', 'Basic ' + btoa(login.user + ":" + login.password));
+      //headers.append('Authorization', 'Basic ' + btoa(login.user + ":" + login.password));
 
       return this.http
-                 .post(this.url, JSON.stringify(login)) //, {headers : headers}
+                 .post(this.url, JSON.stringify(login), {headers : headers}) //
                  .map((res) => {  
                           
                     let token = res.headers.get('x-access-token');
-                    console.log('>>>>',res.headers); //OBJECT HEADERS COM MAP VAZIO
-                    
+
+                    console.log(res.headers);
+
+                    //TODO move inside IF clause
+                    localStorage.setItem('dynaclub-user', res.text());
+
                     if (token) {
                         this._loggedIn.next(true);
-                        localStorage.setItem('token', token);
+                        localStorage.setItem('dynaclub-token', token);
                     }
                  });
   }

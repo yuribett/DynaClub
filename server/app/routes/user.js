@@ -4,6 +4,11 @@ module.exports = function(app) {
 
     app.route('/user')
         .get(api.list)
-        .post(api.insert);
+		.post(api.insert);
+    
+	app.route('/user/:id')
+		.get(api.findById)
+        .put(api.update)
+		.delete(api.delete);
         
 };

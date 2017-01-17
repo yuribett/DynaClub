@@ -1,15 +1,26 @@
 import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
-import { DashbordComponent } from './dashbord/dashbord.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 import { AdminComponent } from './admin/admin.component';
+import { ProfileComponent } from './settings/profile/profile.component';
 import { LoggedInGuard } from './auth/logged.in.guard';
 
+/*
 const appRoutes: Routes = [
-    {path: '', component: DashbordComponent, canActivate: [LoggedInGuard] },
+    {path: '', component: DashboardComponent, canActivate: [LoggedInGuard] },
     {path: 'login', component: LoginComponent},
     {path: 'admin', component: AdminComponent, canActivate: [LoggedInGuard] },
-    {path: '**', component: DashbordComponent, canActivate: [LoggedInGuard] }
+    {path: '**', component: DashboardComponent, canActivate: [LoggedInGuard] }
+];
+*/
+
+const appRoutes: Routes = [
+    {path: '', component: DashboardComponent },
+    {path: 'login', component: LoginComponent},
+    {path: 'admin', component: AdminComponent },
+    {path: 'profile', component: ProfileComponent },
+    {path: '**', component: DashboardComponent }
 ];
 
 export const routing = RouterModule.forRoot(appRoutes);
