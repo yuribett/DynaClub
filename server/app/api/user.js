@@ -20,7 +20,7 @@ module.exports = function(app) {
 
 	api.findById = function(req, res) {
 		model.findOne({
-             _id: req.body._id,
+             _id: req.params.id,
         }).then(function(user) {
 			res.json(user);
 		}, function(error) {
