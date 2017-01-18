@@ -1,5 +1,5 @@
 <div class="container">
-  <nav class="navbar navbar-default" *ngIf="user.loggedIn | async">
+  <nav class="navbar navbar-default" *ngIf="auth.loggedIn | async">
     <ul class="nav navbar-nav">
       <li><a [routerLink]="['/dashboard']">Dashboard</a></li>
       <li><a [routerLink]="['/admin']">Admin</a></li>

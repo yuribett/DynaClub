@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Router } from '@angular/router';
 
 @Injectable()
-export class UserService {
+export class AuthService {
 
   private url: string = 'http://localhost:3000/auth';
 

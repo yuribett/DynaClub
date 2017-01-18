@@ -16,7 +16,7 @@ import { routing } from './app.routes';
 import 'rxjs/add/operator/map';
 import { XHRBackend } from '@angular/http';
 import { ExtendedXHRBackend } from './auth/extended.xhr.backend';
-import { UserService } from './auth/user.service';
+import { AuthService } from './auth/auth.service';
 import { LoggedInGuard } from './auth/logged.in.guard';
 import { TransactionComponent } from './dashboard/transaction/transaction.component';
 import { WalletComponent } from './dashboard/wallet/wallet.component';
@@ -42,7 +42,7 @@ import { ProfileComponent } from './settings/profile/profile.component';
   ],
   providers: [{ provide: XHRBackend, useClass: ExtendedXHRBackend }, 
                 LoggedInGuard, 
-                UserService],
+                AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
