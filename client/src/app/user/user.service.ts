@@ -6,9 +6,10 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class UserService {
 
-  http: Http;
-  headers: Headers;
-  url: string = 'http://localhost:3000/user';
+  private http: Http;
+  private headers: Headers;
+  private url: string = 'http://localhost:3000/user';
+  private localStorageKey: string = 'dynaclub-user';
 
   constructor(http: Http) {
     this.http = http;
@@ -16,10 +17,25 @@ export class UserService {
     this.headers.append('Content-Type', 'application/json');
   }
 
+  /**
+   * Find an specific user by ID from backend.
+   */
   findById(id: string): Observable<UserComponent> {
     return this.http
       .get(this.url + '/' + id)
       .map(res => res.json());
+  }
+
+  getStoredUser(): UserComponent {
+    return JSON.parse(localStorage.getItem(this.localStorageKey));
+  }
+
+  storeUser(user: UserComponent) {
+    localStorage.setItem(this.localStorageKey, JSON.stringify(user));
+  }
+
+  removeStoredUser() {
+    localStorage.removeItem(this.localStorageKey);
   }
 
 }

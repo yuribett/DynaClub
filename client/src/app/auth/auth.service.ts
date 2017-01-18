@@ -4,6 +4,7 @@ import { AuthLogin } from '../login/login.component';
 import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Router } from '@angular/router';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AuthService {
@@ -13,7 +14,7 @@ export class AuthService {
   private _loggedIn: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public loggedIn: Observable<boolean> = this._loggedIn.asObservable();
 
-  constructor(private http: Http, private route: Router) { }
+  constructor(private http: Http, private route: Router, private user: UserService) { }
 
   autentica(login: AuthLogin) { //: Observable<boolean>
 
@@ -29,7 +30,7 @@ export class AuthService {
                     if (token) {
                         this._loggedIn.next(true);
                         localStorage.setItem('dynaclub-token', token);
-                        localStorage.setItem('dynaclub-user', res.text());
+                        this.user.storeUser(res.json())
                     }
                  });
   }

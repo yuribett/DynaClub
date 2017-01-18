@@ -3,11 +3,12 @@ import { Request, XHRBackend, BrowserXhr, ResponseOptions, XSRFStrategy, Respons
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class ExtendedXHRBackend extends XHRBackend {
 
-    constructor(browserXhr: BrowserXhr, baseResponseOptions: ResponseOptions, xsrfStrategy: XSRFStrategy) {
+    constructor(browserXhr: BrowserXhr, baseResponseOptions: ResponseOptions, xsrfStrategy: XSRFStrategy, private user: UserService) {
         super(browserXhr, baseResponseOptions, xsrfStrategy);
     }
 
@@ -18,9 +19,9 @@ export class ExtendedXHRBackend extends XHRBackend {
         let xhrConnection = super.createConnection(request);
         xhrConnection.response = xhrConnection.response.catch((error: Response) => {
             if (error.status === 401 || error.status === 403) {
-                console.log('acesso não autorizado');
+                console.log('acesso nao autorizado');
                 localStorage.removeItem('dynaclub-token');
-                localStorage.removeItem('dynaclub-user');
+                this.user.removeStoredUser();
             }
             return Observable.throw(error);
         });
