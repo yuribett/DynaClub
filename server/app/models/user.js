@@ -23,11 +23,11 @@ var schema = mongoose.Schema({
         type: String, 
         required: true
     },
-    team: {
+    teams: [{
         type: mongoose.Schema.ObjectId,
         ref: 'Team',
         required: true
-    }, 
+    }], 
     active : {
         type: Boolean, 
         required: true
