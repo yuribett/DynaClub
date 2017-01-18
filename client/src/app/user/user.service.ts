@@ -9,7 +9,6 @@ export class UserService {
 
   private http: Http;
   private headers: Headers;
-  private localStorageKey: string = 'dynaclub-user';
 
   constructor(http: Http) {
     this.http = http;
@@ -27,15 +26,15 @@ export class UserService {
   }
 
   getStoredUser(): UserComponent {
-    return JSON.parse(localStorage.getItem(this.localStorageKey));
+    return JSON.parse(localStorage.getItem(Globals.LOCAL_USER));
   }
 
   storeUser(user: UserComponent) {
-    localStorage.setItem(this.localStorageKey, JSON.stringify(user));
+    localStorage.setItem(Globals.LOCAL_USER, JSON.stringify(user));
   }
 
   removeStoredUser() {
-    localStorage.removeItem(this.localStorageKey);
+    localStorage.removeItem(Globals.LOCAL_USER);
   }
 
 }
