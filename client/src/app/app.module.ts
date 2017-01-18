@@ -4,6 +4,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { UserModule } from './user/user.module';
+import { TransactionModule } from './dashboard/transaction/transaction.module';
+
 
 //Components
 import { AppComponent } from './app.component';
@@ -18,9 +20,9 @@ import { XHRBackend } from '@angular/http';
 import { ExtendedXHRBackend } from './auth/extended.xhr.backend';
 import { UserService } from './auth/user.service';
 import { LoggedInGuard } from './auth/logged.in.guard';
-import { TransactionComponent } from './dashboard/transaction/transaction.component';
 import { WalletComponent } from './dashboard/wallet/wallet.component';
 import { ProfileComponent } from './settings/profile/profile.component';
+import { SummaryComponent } from './dashboard/summary/summary.component';
 
 @NgModule({
   declarations: [
@@ -29,20 +31,21 @@ import { ProfileComponent } from './settings/profile/profile.component';
     DashboardComponent,
     AdminComponent,
     DashboardComponent,
-    TransactionComponent,
     WalletComponent,
-    ProfileComponent
-  ],  
+    ProfileComponent,
+    SummaryComponent
+  ],
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule, 
+    HttpModule,
     routing,
-    UserModule
+    UserModule,
+    TransactionModule
   ],
-  providers: [{ provide: XHRBackend, useClass: ExtendedXHRBackend }, 
-                LoggedInGuard, 
-                UserService],
+  providers: [{ provide: XHRBackend, useClass: ExtendedXHRBackend },
+    LoggedInGuard,
+    UserService, TransactionModule],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
