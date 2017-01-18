@@ -9,6 +9,7 @@ module.exports = function(app) {
     api.list = function(req, res) {
 		
         model.find()
+		.populate('teams')
 		.then(function(users) {
 			res.json(users);
 		}, function(error) {
@@ -21,7 +22,9 @@ module.exports = function(app) {
 	api.findById = function(req, res) {
 		model.findOne({
              _id: req.params.id,
-        }).then(function(user) {
+        })
+		.populate('teams')
+		.then(function(user) {
 			res.json(user);
 		}, function(error) {
 			console.log(error);

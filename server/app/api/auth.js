@@ -7,8 +7,7 @@ module.exports = function(app) {
      var model = mongoose.model('User');
 
      api.authUser = function(req, res) {
-         console.log('>>>>>>>');
-         console.log(req.body);
+         
          model.findOne({
              user: req.body.user,
              password: req.body.password

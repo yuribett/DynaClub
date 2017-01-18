@@ -7,8 +7,10 @@ module.exports = function(app) {
 	var model = mongoose.model('Transaction');
 
     api.listByUser = function(req, res) {
+		let	user = req.param.user;
 
-       model.find()
+       model.find({ $or : [ {'to' : user}, {'from' : user}]})
+	   	.populate('to from')
 		.then(function(transactions) {
 			res.json(transactions);
 		}, function(error) {
