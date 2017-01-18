@@ -6,21 +6,12 @@ import { AdminComponent } from './admin/admin.component';
 import { ProfileComponent } from './settings/profile/profile.component';
 import { LoggedInGuard } from './auth/logged.in.guard';
 
-/*
 const appRoutes: Routes = [
-    {path: '', component: DashboardComponent, canActivate: [LoggedInGuard] },
+    {path: '', component: DashboardComponent, canActivate: [LoggedInGuard]  },
     {path: 'login', component: LoginComponent},
-    {path: 'admin', component: AdminComponent, canActivate: [LoggedInGuard] },
-    {path: '**', component: DashboardComponent, canActivate: [LoggedInGuard] }
-];
-*/
-
-const appRoutes: Routes = [
-    {path: '', component: DashboardComponent },
-    {path: 'login', component: LoginComponent},
-    {path: 'admin', component: AdminComponent },
-    {path: 'profile', component: ProfileComponent },
-    {path: '**', component: DashboardComponent }
+    {path: 'admin', component: AdminComponent, canActivate: [LoggedInGuard]  },
+    {path: 'profile', component: ProfileComponent, canActivate: [LoggedInGuard]  },
+    {path: '**', component: DashboardComponent, canActivate: [LoggedInGuard]  }
 ];
 
 export const routing = RouterModule.forRoot(appRoutes);

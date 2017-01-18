@@ -7,8 +7,8 @@ module.exports = function(app) {
 	var model = mongoose.model('Transaction');
 
     api.listByUser = function(req, res) {
-		
-        model.find()
+
+       model.find()
 		.then(function(transactions) {
 			res.json(transactions);
 		}, function(error) {

@@ -24,11 +24,6 @@ module.exports = function(app) {
                  //setting password to null to response
                  auth.password = null;
 
-                 //FIXME sending temporarely on body
-                 auth['xaccesstoken'] = token;
-
-                 console.log(auth);
-                 
                  res.set('x-access-token', token); 
                  res.json(auth);
                  res.end(); 

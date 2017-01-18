@@ -25,34 +25,25 @@ export class UserService {
                  .map((res) => {  
                           
                     let token = res.headers.get('x-access-token');
-
-                    console.log('header token >>>>', token);
-
-                    //FIXME temporary getting from body
-                    if(!token){
-                      token = res.json()['xaccesstoken'];
-                    }
                     
-
-                    //TODO move inside IF clause 
-                    localStorage.setItem('dynaclub-user', res.text());
-
                     if (token) {
                         this._loggedIn.next(true);
                         localStorage.setItem('dynaclub-token', token);
+                        localStorage.setItem('dynaclub-user', res.text());
                     }
                  });
   }
 
   logout() {
     localStorage.removeItem('token');
+    this._loggedIn.next(false);
     this.route.navigate(['/login']);
   }
 
   isLoggedIn() {
-    let token = localStorage.getItem('token');
+    let token = localStorage.getItem('dynaclub-token');
 
-    if(token){ //essa atribui��o � feita para atualizar a variavel e o resto do sistema ser notificado
+    if(token){
       this._loggedIn.next(true);
     } else {
       this._loggedIn.next(false);
