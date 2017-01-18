@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { UserService } from './auth/user.service';
+import { AuthService } from './auth/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -8,11 +8,11 @@ import { UserService } from './auth/user.service';
 })
 export class AppComponent {
   
-    constructor(private user: UserService){ }
+    constructor(private auth: AuthService){ }
 
     logout(e) {
       e.preventDefault();
-      this.user.logout();
+      this.auth.logout();
     }
 
 }
