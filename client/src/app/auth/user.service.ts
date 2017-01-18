@@ -19,17 +19,22 @@ export class UserService {
 
       var headers = new Headers();
       headers.append('Content-Type', 'application/json');
-      //headers.append('Authorization', 'Basic ' + btoa(login.user + ":" + login.password));
-
+      
       return this.http
                  .post(this.url, JSON.stringify(login), {headers : headers}) //
                  .map((res) => {  
                           
                     let token = res.headers.get('x-access-token');
 
-                    console.log(res.headers);
+                    console.log('header token >>>>', token);
 
-                    //TODO move inside IF clause
+                    //FIXME temporary getting from body
+                    if(!token){
+                      token = res.json()['xaccesstoken'];
+                    }
+                    
+
+                    //TODO move inside IF clause 
                     localStorage.setItem('dynaclub-user', res.text());
 
                     if (token) {
