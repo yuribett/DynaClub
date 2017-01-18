@@ -5,11 +5,10 @@ import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Router } from '@angular/router';
 import { UserService } from '../user/user.service';
+import { Globals } from '../app.globals';
 
 @Injectable()
 export class AuthService {
-
-  private url: string = 'http://localhost:3000/auth';
 
   private _loggedIn: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public loggedIn: Observable<boolean> = this._loggedIn.asObservable();
@@ -22,27 +21,28 @@ export class AuthService {
       headers.append('Content-Type', 'application/json');
       
       return this.http
-                 .post(this.url, JSON.stringify(login), {headers : headers}) //
+                 .post(Globals.API_URL + 'auth', JSON.stringify(login), {headers : headers}) //
                  .map((res) => {  
                           
                     let token = res.headers.get('x-access-token');
                     
                     if (token) {
                         this._loggedIn.next(true);
-                        localStorage.setItem('dynaclub-token', token);
+                        localStorage.setItem(Globals.LOCAL_TOKEN, token);
                         this.user.storeUser(res.json())
                     }
                  });
   }
 
   logout() {
-    localStorage.removeItem('token');
+    localStorage.removeItem(Globals.LOCAL_TOKEN);
+    this.user.removeStoredUser();
     this._loggedIn.next(false);
     this.route.navigate(['/login']);
   }
 
   isLoggedIn() {
-    let token = localStorage.getItem('dynaclub-token');
+    let token = localStorage.getItem(Globals.LOCAL_TOKEN);
 
     if(token){
       this._loggedIn.next(true);

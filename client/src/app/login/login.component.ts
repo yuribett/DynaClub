@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
     ngOnInit() {
     }
 
-    onButtonLoginClick() {
+    signin() {
         this.authService.autentica(new AuthLogin(this.user, this.password)).subscribe(e => {
             if(this.authService.isLoggedIn()){
                 this.router.navigate(['/']);

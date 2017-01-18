@@ -2,13 +2,13 @@ import { Http, Headers, Response } from '@angular/http';
 import { UserComponent } from './user.component';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
+import { Globals } from '../app.globals';
 
 @Injectable()
 export class UserService {
 
   private http: Http;
   private headers: Headers;
-  private url: string = 'http://localhost:3000/user';
   private localStorageKey: string = 'dynaclub-user';
 
   constructor(http: Http) {
@@ -22,7 +22,7 @@ export class UserService {
    */
   findById(id: string): Observable<UserComponent> {
     return this.http
-      .get(this.url + '/' + id)
+      .get(Globals.API_URL + 'user/' + id)
       .map(res => res.json());
   }
 

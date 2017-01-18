@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 import { UserService } from '../user/user.service';
+import { Globals } from '../app.globals';
 
 @Injectable()
 export class ExtendedXHRBackend extends XHRBackend {
@@ -13,14 +14,14 @@ export class ExtendedXHRBackend extends XHRBackend {
     }
 
     createConnection(request: Request) {
-        let token = localStorage.getItem('dynaclub-token');
+        let token = localStorage.getItem(Globals.LOCAL_TOKEN);
         request.headers.set('x-access-token', `${token}`);
         request.headers.set('Content-Type', 'application/json');
         let xhrConnection = super.createConnection(request);
         xhrConnection.response = xhrConnection.response.catch((error: Response) => {
             if (error.status === 401 || error.status === 403) {
                 console.log('acesso nao autorizado');
-                localStorage.removeItem('dynaclub-token');
+                localStorage.removeItem(Globals.LOCAL_TOKEN);
                 this.user.removeStoredUser();
             }
             return Observable.throw(error);
