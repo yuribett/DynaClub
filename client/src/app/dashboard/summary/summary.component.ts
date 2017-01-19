@@ -17,7 +17,11 @@ export class SummaryComponent implements OnInit {
   constructor(transactionService: TransactionService, userService: UserService) {
     this.transactionService = transactionService;
     this.userService = userService;
-    //this.transactions = this.transactionService.findByUser(userService.getStoredUser());
+
+    transactionService.findByUser(userService.getStoredUser()).subscribe(
+      p => this.transactions = p,
+      err => console.log(err)
+    );
   }
 
   ngOnInit() {

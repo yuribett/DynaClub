@@ -1,3 +1,4 @@
+import { Globals } from '../../app.globals';
 import { UserComponent } from '../../user/user.component';
 import { TransactionComponent } from './transaction.component';
 import { Injectable } from '@angular/core';
@@ -18,9 +19,9 @@ export class TransactionService {
     this.headers.append('Content-Type', 'application/json');
   }
 
-  findByUser(user: UserComponent): Observable<TransactionComponent> {
+  findByUser(user: UserComponent) {
     return this.http
-      .get(this.url + '/' + user)
+      .get(Globals.API_URL + '/transaction/' + user)
       .map(res => res.json());
   }
 
