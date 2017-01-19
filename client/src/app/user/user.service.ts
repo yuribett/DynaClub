@@ -28,17 +28,17 @@ export class UserService {
   save(user: UserComponent) {
     if (user._id) {
       return this.http
-        .put(Globals.API_URL + 'user/' + user._id, JSON.stringify(user), { headers: this.headers })
+        .put(`${Globals.API_URL}/user/${user._id}`, JSON.stringify(user), { headers: this.headers })
         .map(() => console.log('usuario alterado com suesso'));
     } else {
       return this.http
-        .post(Globals.API_URL + 'user/', JSON.stringify(user), { headers: this.headers })
+        .post(`${Globals.API_URL}/user/`, JSON.stringify(user), { headers: this.headers })
         .map(() => console.log('usuario inserido com suesso'));
     }
   }
 
   remove(user: UserComponent):  Observable<Response> {
-    return this.http.delete(Globals.API_URL + 'user/' + user._id);
+    return this.http.delete(`${Globals.API_URL}/user/${user._id}`);
   }
 
   getStoredUser(): UserComponent {
