@@ -1,6 +1,7 @@
+import { UserComponent } from '../../user/user.component';
 import { TransactionComponent } from './transaction.component';
 import { Injectable } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
+import { Http, Headers } from '@angular/http';
 import { Observable } from 'rxjs';
 
 
@@ -17,9 +18,9 @@ export class TransactionService {
     this.headers.append('Content-Type', 'application/json');
   }
 
-  findById(id: string): Observable<TransactionComponent> {
+  findByUser(user: UserComponent): Observable<TransactionComponent> {
     return this.http
-      .get(this.url + '/' + id)
+      .get(this.url + '/' + user)
       .map(res => res.json());
   }
 
