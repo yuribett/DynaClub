@@ -7,5 +7,27 @@
   {{user.active}}<br>
   {{user.teams}}<br>
   {{user.admin}}<br>
-  
+
 </p>
+
+  <form (submit)="saveUser()">
+    <div>
+      <label for="name">Nome</label>
+      <input name="name" type="text" id="name" placeholder="Nome" class="form-control" [(ngModel)]="user.name" required>
+    </div>
+    <div>
+      <label for="name">Email</label>
+      <input name="email" type="email" id="email" placeholder="Email" class="form-control" [(ngModel)]="user.email" required>
+    </div>
+    <div>
+      <label for="name">Usuário</label>
+      <input name="user" type="text" id="user" placeholder="Usuário" class="form-control" [(ngModel)]="user.user" required>
+    </div>
+    <label class="custom-control custom-checkbox">
+      <input name="admin" type="checkbox" class="custom-control-input" [(ngModel)]="user.admin">
+      <span class="custom-control-indicator"></span>
+      <span class="custom-control-description">Administrador</span>
+    </label>
+    <button type="submit" class="btn btn-lg btn-primary">Atualizar</button>
+  </form>
+  

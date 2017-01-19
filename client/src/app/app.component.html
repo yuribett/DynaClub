@@ -1,8 +1,8 @@
 <div class="container">
   <nav class="navbar navbar-default" *ngIf="auth.loggedIn | async">
     <ul class="nav navbar-nav">
-      <li><a [routerLink]="['/dashboard']">Dashboard</a></li>
-      <li><a [routerLink]="['/admin']">Admin</a></li>
+      <li><a [routerLink]="['/']">Dashboard</a></li>
+      <li *ngIf="user.getStoredUser().admin"><a [routerLink]="['/admin']">Admin</a></li>
       <li><a [routerLink]="['/profile']">Perfil</a></li>
       <li><a href="#" (click)="logout($event)">Sair</a></li>
     </ul>

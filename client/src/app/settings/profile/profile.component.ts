@@ -27,4 +27,8 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {
   }
 
+  saveUser() {
+    this.service.save(this.user);
+  }
+
 }
