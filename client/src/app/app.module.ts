@@ -43,9 +43,12 @@ import { SummaryComponent } from './dashboard/summary/summary.component';
     UserModule,
     TransactionModule
   ],
-  providers: [{ provide: XHRBackend, useClass: ExtendedXHRBackend },
+  providers: [
+    { provide: XHRBackend, useClass: ExtendedXHRBackend },
     LoggedInGuard,
-    AuthService, TransactionModule],
+    AuthService, 
+    TransactionModule
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
