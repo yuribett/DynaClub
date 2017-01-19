@@ -21,7 +21,7 @@ export class UserService {
    */
   findById(id: string): Observable<UserComponent> {
     return this.http
-      .get(Globals.API_URL + 'user/' + id)
+      .get(`${Globals.API_URL}/user/${id}`)
       .map(res => res.json());
   }
 

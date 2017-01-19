@@ -21,7 +21,7 @@ export class AuthService {
       headers.append('Content-Type', 'application/json');
       
       return this.http
-                 .post(Globals.API_URL + 'auth', JSON.stringify(login), {headers : headers}) //
+                 .post(`${Globals.API_URL}/auth`, JSON.stringify(login), {headers : headers}) //
                  .map((res) => {  
                           
                     let token = res.headers.get('x-access-token');
