@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { UserModule } from './user/user.module';
 import { TransactionModule } from './dashboard/transaction/transaction.module';
+import { SummaryModule} from './dashboard/summary/summary.module';
 
 
 //Components
@@ -22,7 +23,6 @@ import { AuthService } from './auth/auth.service';
 import { LoggedInGuard } from './auth/logged.in.guard';
 import { WalletComponent } from './dashboard/wallet/wallet.component';
 import { ProfileComponent } from './settings/profile/profile.component';
-import { SummaryComponent } from './dashboard/summary/summary.component';
 
 @NgModule({
   declarations: [
@@ -32,8 +32,7 @@ import { SummaryComponent } from './dashboard/summary/summary.component';
     AdminComponent,
     DashboardComponent,
     WalletComponent,
-    ProfileComponent,
-    SummaryComponent
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -41,11 +40,12 @@ import { SummaryComponent } from './dashboard/summary/summary.component';
     HttpModule,
     routing,
     UserModule,
-    TransactionModule
+    TransactionModule,
+    SummaryModule
   ],
   providers: [{ provide: XHRBackend, useClass: ExtendedXHRBackend },
     LoggedInGuard,
-    AuthService, TransactionModule],
+    AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

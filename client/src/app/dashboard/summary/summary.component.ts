@@ -1,4 +1,6 @@
-import { TransactionModule } from '../transaction/transaction.module';
+import { UserService } from '../../user/user.service';
+import { TransactionService } from '../transaction/transaction.service';
+import { TransactionComponent } from '../transaction/transaction.component';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -8,7 +10,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SummaryComponent implements OnInit {
 
-  constructor() { }
+  transactions: Array<TransactionComponent>;
+  transactionService: TransactionService;
+  userService: UserService;
+
+  constructor(transactionService: TransactionService, userService: UserService) {
+    this.transactionService = transactionService;
+    this.userService = userService;
+    //this.transactions = this.transactionService.findByUser(userService.getStoredUser());
+  }
 
   ngOnInit() {
   }
