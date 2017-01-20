@@ -22,6 +22,11 @@ var schema = mongoose.Schema({
     },
     message : {
         type: String, 
+        required: false
+    },
+    team : {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Team',
         required: true
     }
 
