@@ -22,7 +22,8 @@ export class ExtendedXHRBackend extends XHRBackend {
             if (error.status === 401 || error.status === 403) {
                 console.log('acesso nao autorizado');
                 localStorage.removeItem(Globals.LOCAL_TOKEN);
-                this.user.removeStoredUser();
+                localStorage.removeItem(Globals.LOCAL_USER);
+                //this.user.removeStoredUser();
             }
             return Observable.throw(error);
         });
