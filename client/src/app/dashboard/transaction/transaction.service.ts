@@ -21,7 +21,7 @@ export class TransactionService {
 
   findByUser(user: UserComponent) {
     return this.http
-      .get(Globals.API_URL + '/transaction/' + user)
+      .get(Globals.API_URL + '/transaction/' + user._id)
       .map(res => res.json());
   }
 
