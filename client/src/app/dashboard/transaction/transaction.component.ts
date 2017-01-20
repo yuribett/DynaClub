@@ -1,6 +1,6 @@
+import { Transaction } from './transaction';
 import { UserComponent } from '../../user/user.component';
-import { Component, OnInit } from '@angular/core';
-
+import { Input, Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-transaction',
@@ -9,11 +9,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TransactionComponent implements OnInit {
 
-  from: UserComponent;
-  to: UserComponent;
-  date: Date;
-  amount: Number;
-  message: String;
+  @Input() transaction: Transaction;
 
   constructor() { }
 

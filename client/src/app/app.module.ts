@@ -4,9 +4,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { UserModule } from './user/user.module';
-import { TransactionModule } from './dashboard/transaction/transaction.module';
-import { SummaryModule} from './dashboard/summary/summary.module';
-
+import { DashboardModule } from './dashboard/dashboard.module';
 
 //Components
 import { AppComponent } from './app.component';
@@ -21,17 +19,13 @@ import { XHRBackend } from '@angular/http';
 import { ExtendedXHRBackend } from './auth/extended.xhr.backend';
 import { AuthService } from './auth/auth.service';
 import { LoggedInGuard } from './auth/logged.in.guard';
-import { WalletComponent } from './dashboard/wallet/wallet.component';
 import { ProfileComponent } from './settings/profile/profile.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    DashboardComponent,
     AdminComponent,
-    DashboardComponent,
-    WalletComponent,
     ProfileComponent
   ],
   imports: [
@@ -40,8 +34,7 @@ import { ProfileComponent } from './settings/profile/profile.component';
     HttpModule,
     routing,
     UserModule,
-    TransactionModule,
-    SummaryModule
+    DashboardModule
   ],
   providers: [{ provide: XHRBackend, useClass: ExtendedXHRBackend },
     LoggedInGuard,
