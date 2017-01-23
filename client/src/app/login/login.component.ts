@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 
@@ -14,7 +14,7 @@ export class LoginComponent implements OnInit {
     private router: Router;
     private authService : AuthService;
 
-    constructor(router: Router, authService : AuthService) { 
+    constructor( router: Router, authService : AuthService) { 
         this.router = router;
         this.authService = authService;
     }

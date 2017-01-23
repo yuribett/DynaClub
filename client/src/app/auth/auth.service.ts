@@ -13,7 +13,7 @@ export class AuthService {
   private _loggedIn: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public loggedIn: Observable<boolean> = this._loggedIn.asObservable();
 
-  constructor(private http: Http, private route: Router, private user: UserService) { }
+  constructor( private http: Http, private route: Router, private user: UserService) { }
 
   autentica(login: AuthLogin) { //: Observable<boolean>
 
