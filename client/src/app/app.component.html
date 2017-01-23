@@ -1,4 +1,5 @@
 <div class="container">
+  <!--
   <nav class="navbar navbar-default" *ngIf="auth.loggedIn | async">
     <ul class="nav navbar-nav">
       <li><a [routerLink]="['/']">Dashboard</a></li>
@@ -6,6 +7,37 @@
       <li><a [routerLink]="['/profile']">Perfil</a></li>
       <li><a href="#" (click)="logout($event)">Sair</a></li>
     </ul>
+  </nav>
+  -->
+
+  <nav class="navbar navbar-toggleable-md navbar-light bg-faded" *ngIf="auth.loggedIn | async">
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" [routerLink]="['/']">DynaClub</a>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" [routerLink]="['/']">Dashboard <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/profile']">Perfil</a>
+        </li>
+        <li class="nav-item dropdown" *ngIf="user.getStoredUser().admin">
+          <a class="nav-link dropdown-toggle" [routerLink]="['/admin']" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Admin
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" [routerLink]="['/admin']">Usuários</a>
+            <a class="dropdown-item" [routerLink]="['/admin']">Equipes</a>
+            <a class="dropdown-item" [routerLink]="['/admin']">Configurações</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link"href="#" (click)="logout($event)">Sair</a>
+        </li>
+      </ul>
+    </div>
   </nav>
   <router-outlet></router-outlet>
 </div>
