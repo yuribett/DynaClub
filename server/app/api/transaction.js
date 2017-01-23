@@ -6,10 +6,24 @@ module.exports = function(app) {
 
 	var model = mongoose.model('Transaction');
 
+/*
     api.listByUser = function(req, res) {
 		let	user = req.param.user;
-
+		console.log(user);
        model.find({ $or : [ {'to' : user}, {'from' : user}]})
+	   	.populate('to from')
+		.then(function(transactions) {
+			res.json(transactions);
+		}, function(error) {
+			console.log(error);
+			res.sendStatus(500);
+		});
+
+	};*/
+
+	api.listByUser = function(req, res) {
+		//let	user = req.param.user;
+       model.find()
 	   	.populate('to from')
 		.then(function(transactions) {
 			res.json(transactions);

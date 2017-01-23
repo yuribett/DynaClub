@@ -10,8 +10,8 @@ export class UserService {
   private http: Http;
   private headers: Headers;
 
-  constructor(injector: Injector) {
-    setTimeout(() => this.http = injector.get(Http))
+  constructor(http: Http) {
+    this.http = http;
     this.headers = new Headers();
     this.headers.append('Content-Type', 'application/json');
   }
