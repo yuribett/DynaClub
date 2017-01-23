@@ -1,5 +1,5 @@
 import { Transaction } from './transaction';
-import { UserComponent } from '../../user/user.component';
+import { User } from '../../user/user';
 import { Input, Component, OnInit } from '@angular/core';
 
 @Component({

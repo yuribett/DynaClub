@@ -1,5 +1,5 @@
 import { Http, Headers, Response } from '@angular/http';
-import { UserComponent } from './user.component';
+import { User } from './user';
 import { Observable } from 'rxjs';
 import { Injectable, Injector } from '@angular/core';
 import { Globals } from '../app.globals';
@@ -19,13 +19,13 @@ export class UserService {
   /**
    * Find an specific user by ID from backend.
    */
-  findById(id: string): Observable<UserComponent> {
+  findById(id: string): Observable<User> {
     return this.http
       .get(`${Globals.API_URL}/user/${id}`)
       .map(res => res.json());
   }
 
-  save(user: UserComponent) {
+  save(user: User) {
     if (user._id) {
       return this.http
         .put(`${Globals.API_URL}/user/${user._id}`, JSON.stringify(user), { headers: this.headers })
@@ -37,15 +37,15 @@ export class UserService {
     }
   }
 
-  remove(user: UserComponent): Observable<Response> {
+  remove(user: User): Observable<Response> {
     return this.http.delete(`${Globals.API_URL}/user/${user._id}`);
   }
 
-  getStoredUser(): UserComponent {
+  getStoredUser(): User {
     return JSON.parse(localStorage.getItem(Globals.LOCAL_USER));
   }
 
-  storeUser(user: UserComponent) {
+  storeUser(user: User) {
     localStorage.setItem(Globals.LOCAL_USER, JSON.stringify(user));
   }
 

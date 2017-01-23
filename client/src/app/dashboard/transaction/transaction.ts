@@ -1,9 +1,9 @@
-import { UserComponent } from '../../user/user.component';
+import { User } from '../../user/user';
 
 export class Transaction {
 
-    from: UserComponent;
-    to: UserComponent;
+    from: User;
+    to: User;
     date: Date;
     amount: Number;
     message: String;
