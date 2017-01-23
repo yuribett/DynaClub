@@ -15,10 +15,8 @@ export class ProfileComponent implements OnInit {
   constructor(service: UserService) {
     this.service = service;
 
-    let storedUser = JSON.parse(localStorage.getItem('dynaclub-user'));
-
     this.service
-      .findById(storedUser._id)
+      .findById(service.getStoredUser()._id)
       .subscribe(profile => {
         this.user = profile;
       }, erro => console.log(erro));

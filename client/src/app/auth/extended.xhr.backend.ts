@@ -9,7 +9,7 @@ import { Globals } from '../app.globals';
 @Injectable()
 export class ExtendedXHRBackend extends XHRBackend {
 
-    constructor(browserXhr: BrowserXhr, baseResponseOptions: ResponseOptions, xsrfStrategy: XSRFStrategy, private user: UserService) {
+    constructor(browserXhr: BrowserXhr, baseResponseOptions: ResponseOptions, xsrfStrategy: XSRFStrategy) {
         super(browserXhr, baseResponseOptions, xsrfStrategy);
     }
 
