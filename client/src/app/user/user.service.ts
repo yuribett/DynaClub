@@ -7,9 +7,9 @@ import { Globals } from '../app.globals';
 @Injectable()
 export class UserService {
 
-  private http: Http;
   private headers: Headers;
-
+  private http: Http;
+  
   constructor(http: Http) {
     this.http = http;
     this.headers = new Headers();
