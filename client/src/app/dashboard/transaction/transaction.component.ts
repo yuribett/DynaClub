@@ -1,6 +1,7 @@
+import { UserService } from '../../user/user.service';
 import { Transaction } from './transaction';
 import { User } from '../../user/user';
-import { Input, Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-transaction',
@@ -10,8 +11,17 @@ import { Input, Component, OnInit } from '@angular/core';
 export class TransactionComponent implements OnInit {
 
   @Input() transaction: Transaction;
+  loggedUser: User;
 
-  constructor() { }
+  constructor(userService: UserService) {
+    this.loggedUser = userService.getStoredUser();
+    console.log(this.loggedUser);
+  }
+
+  isCredit(): boolean {
+    return this.loggedUser._id == this.transaction.from._id;
+  }
+
 
   ngOnInit() {
   }
