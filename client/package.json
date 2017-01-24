@@ -22,7 +22,9 @@
     "@angular/platform-browser-dynamic": "^2.3.1",
     "@angular/router": "^3.3.1",
     "core-js": "^2.4.1",
+    "jquery": "^3.1.1",
     "rxjs": "^5.0.1",
+    "tether": "^1.4.0",
     "ts-helpers": "^1.1.1",
     "zone.js": "^0.7.2"
   },
