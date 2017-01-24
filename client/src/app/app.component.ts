@@ -9,7 +9,10 @@ import { UserService } from './user/user.service';
 })
 export class AppComponent {
   
-    constructor(private auth: AuthService, private user: UserService){ }
+    name: string = "";
+    admin: boolean = false;
+
+    constructor(private auth: AuthService){ }
 
     logout(e) {
       e.preventDefault();
