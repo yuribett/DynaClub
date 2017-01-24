@@ -4,6 +4,10 @@
     </div>
     <div class="col-md-9">
         <div class="row">
+            <div style="display: none;">
+                from {{transaction.from.name}}<br>
+                to {{transaction.to.name}}
+            </div>
             <div *ngIf="isCredit()">
                 Recebido de {{transaction.from.name}}
             </div>

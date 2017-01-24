@@ -19,7 +19,7 @@ export class TransactionComponent implements OnInit {
   }
 
   isCredit(): boolean {
-    return this.loggedUser._id == this.transaction.from._id;
+    return this.loggedUser._id == this.transaction.to._id;
   }
 
   getStyle() {
