@@ -22,6 +22,10 @@ export class TransactionComponent implements OnInit {
     return this.loggedUser._id == this.transaction.from._id;
   }
 
+  getStyle() {
+    return this.isCredit() ? "credit" : "debit";
+  }
+
 
   ngOnInit() {
   }
