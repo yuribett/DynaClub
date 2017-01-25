@@ -1,6 +1,8 @@
 import { Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
+import { AppComponent } from '../app.component';
+import { UserService } from '../user/user.service';
 
 @Component({
     selector: 'app-login',
@@ -14,7 +16,7 @@ export class LoginComponent implements OnInit {
     private router: Router;
     private authService : AuthService;
 
-    constructor( router: Router, authService : AuthService) { 
+    constructor( router: Router, authService : AuthService, private app: AppComponent, private userService: UserService) { 
         this.router = router;
         this.authService = authService;
     }
@@ -25,6 +27,8 @@ export class LoginComponent implements OnInit {
     signin() {
         this.authService.autentica(new AuthLogin(this.user, this.password)).subscribe(e => {
             if(this.authService.isLoggedIn()){
+                this.app.name = this.userService.getStoredUser().name;
+                this.app.admin = this.userService.getStoredUser().admin;
                 this.router.navigate(['/']);
             }
         });

@@ -12,7 +12,12 @@ export class AppComponent {
     name: string = "";
     admin: boolean = false;
 
-    constructor(private auth: AuthService){ }
+    constructor(private auth: AuthService, private userService: UserService){
+      if(this.auth.isLoggedIn()){
+        this.name = this.userService.getStoredUser().name;
+        this.admin = this.userService.getStoredUser().admin;
+      }
+     }
 
     logout(e) {
       e.preventDefault();
