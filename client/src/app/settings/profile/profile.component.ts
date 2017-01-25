@@ -10,6 +10,8 @@ import { User } from '../../user/user';
 export class ProfileComponent implements OnInit {
 
   user: User = new User();
+  //teams: Team[] = []; //TODO 
+
   service: UserService;
 
   constructor(service: UserService) {
