@@ -1,12 +1,17 @@
 <div class="row transaction {{getStyle()}}">
     <div class="col-md-3">
-        <h2>D$ {{transaction.amount}}</h2>
+        <h1>D$ {{transaction.amount}}</h1>
     </div>
-    <div class="col-md-9">
+
+    <div class="col-md-1">
+        <span *ngIf="isCredit()" class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
+        <span *ngIf="!isCredit()" class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+    </div>
+
+    <div class="col-md-8">
         <div class="row">
             <div style="display: none;">
-                from {{transaction.from.name}}<br>
-                to {{transaction.to.name}}
+                from {{transaction.from.name}}<br> to {{transaction.to.name}}
             </div>
             <div *ngIf="isCredit()">
                 Recebido de {{transaction.from.name}}

@@ -1,33 +1,47 @@
-<p>
+<h2>Editar meu profile</h2>
+
+<form (submit)="saveUser()">
   
-  {{user.name}}<br>
-  {{user.email}}<br>
-  {{user.user}}<br>
-  {{user.paswword}}<br>
-  {{user.active}}<br>
-  {{user.teams}}<br>
-  {{user.admin}}<br>
+  <div class="form-group">
+    <label for="name">Nome</label>
+    <input name="name" type="text" id="name" placeholder="Nome" class="form-control" [(ngModel)]="user.name" required>
+  </div>
+  
+  <div class="form-group">
+    <label for="name">Email</label>
+    <input name="email" type="email" id="email" placeholder="Email" class="form-control" [(ngModel)]="user.email" required>
+  </div>
+  
+  <div class="form-group">
+    <label for="name">Usu&aacute;rio</label>
+    <input name="user" type="text" id="user" placeholder="Usu&aacute;rio" class="form-control" [(ngModel)]="user.user" required>
+  </div>
 
-</p>
-
-  <form (submit)="saveUser()">
-    <div>
-      <label for="name">Nome</label>
-      <input name="name" type="text" id="name" placeholder="Nome" class="form-control" [(ngModel)]="user.name" required>
-    </div>
-    <div>
-      <label for="name">Email</label>
-      <input name="email" type="email" id="email" placeholder="Email" class="form-control" [(ngModel)]="user.email" required>
-    </div>
-    <div>
-      <label for="name">Usuário</label>
-      <input name="user" type="text" id="user" placeholder="Usuário" class="form-control" [(ngModel)]="user.user" required>
-    </div>
+  <div class="form-group">
+    <label for="name">Senha</label>
+    <input name="password" type="password" id="password" placeholder="Senha" class="form-control" [(ngModel)]="user.password" required>
+  </div>
+  <!--
+  <div>
     <label class="custom-control custom-checkbox">
       <input name="admin" type="checkbox" class="custom-control-input" [(ngModel)]="user.admin">
-      <span class="custom-control-indicator"></span>
       <span class="custom-control-description">Administrador</span>
     </label>
-    <button type="submit" class="btn btn-lg btn-primary">Atualizar</button>
-  </form>
-  
+  </div>
+
+  <div>
+    <label class="custom-control custom-checkbox">
+      <input name="admin" type="checkbox" class="custom-control-input" [(ngModel)]="user.active">
+      <span class="custom-control-description">Ativo</span>
+    </label>
+  </div>
+
+  <div>
+    <label class="custom-control custom-checkbox" *ngFor="let team of teams | async">
+      <input name="admin" type="checkbox" class="custom-control-input" [(ngModel)]="user.active">
+      <span class="custom-control-description">Ativo</span>
+    </label>
+  </div>
+  -->
+  <button type="submit" class="btn btn-lg btn-primary">Atualizar</button>
+</form>

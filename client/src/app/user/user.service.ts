@@ -27,10 +27,18 @@ export class UserService {
 
   save(user: User) {
     if (user._id) {
+
+      console.log('update', user);
+      console.log(`${Globals.API_URL}/user/${user._id}`);
+      console.log(JSON.stringify(user));
+
       return this.http
         .put(`${Globals.API_URL}/user/${user._id}`, JSON.stringify(user), { headers: this.headers })
         .map(() => console.log('usuario alterado com suesso'));
     } else {
+
+      console.log('insert', user);
+
       return this.http
         .post(`${Globals.API_URL}/user/`, JSON.stringify(user), { headers: this.headers })
         .map(() => console.log('usuario inserido com suesso'));
