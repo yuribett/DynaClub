@@ -19,7 +19,6 @@ import { UserService } from './user/user.service';
 //Other
 import { routing } from './app.routes';
 import 'rxjs/add/operator/map';
-//import { ExtendedXHRBackend } from './auth/extended.xhr.backend';
 import { LoggedInGuard } from './auth/logged.in.guard';
 import { HttpService } from './auth/http.service';
 
@@ -38,7 +37,6 @@ import { HttpService } from './auth/http.service';
     DashboardModule
   ],
   providers: [
-    //{ provide: XHRBackend, useClass: ExtendedXHRBackend },
     { provide: Http, useClass: HttpService },
     LoggedInGuard,
     AuthService,
