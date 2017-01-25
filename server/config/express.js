@@ -8,6 +8,7 @@ var app = express();
 app.set('secret', '3mG!pYBa8#5r1J6'); 
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -21,18 +22,7 @@ app.use(function(req, res, next) {
     else {
       next();
     }
-    
-    //next();
 });
-
-/*
-app.options("/*", function(req, res, next){
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-  res.sendStatus(200);
-});
-*/
 
 //TODO project still in dev mode
 //app.use(express.static('../client/dist/'));
