@@ -15,20 +15,26 @@ export class LoginComponent implements OnInit {
     public password: string;
     private router: Router;
     private authService : AuthService;
+    private app: AppComponent;
 
-    constructor( router: Router, authService : AuthService, private app: AppComponent, private userService: UserService) { 
+    constructor( router: Router, authService : AuthService, app: AppComponent, private userService: UserService) { 
         this.router = router;
         this.authService = authService;
+        this.app = app;
     }
 
     ngOnInit() {
     }
 
     signin() {
+        let _self = this;
         this.authService.autentica(new AuthLogin(this.user, this.password)).subscribe(e => {
             if(this.authService.isLoggedIn()){
-                this.app.name = this.userService.getStoredUser().name;
-                this.app.admin = this.userService.getStoredUser().admin;
+                console.log('>>>>>');
+
+                _self.app.name = this.userService.getStoredUser().name;
+                _self.app.admin = this.userService.getStoredUser().admin;
+
                 this.router.navigate(['/']);
             }
         });

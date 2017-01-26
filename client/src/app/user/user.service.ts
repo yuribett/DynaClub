@@ -3,6 +3,7 @@ import { User } from './user';
 import { Observable } from 'rxjs';
 import { Injectable, Injector } from '@angular/core';
 import { Globals } from '../app.globals';
+import { AppComponent } from '../app.component';
 
 @Injectable()
 export class UserService {

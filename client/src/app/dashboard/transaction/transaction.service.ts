@@ -11,7 +11,6 @@ export class TransactionService {
 
   http: Http;
   headers: Headers;
-  url: string = 'http://localhost:3000/transaction/';
 
   constructor(http: Http) {
     this.http = http;
@@ -20,7 +19,6 @@ export class TransactionService {
   }
 
   findByUser(user: User) {
-    console.log(user._id);
     return this.http
       .get(Globals.API_URL + '/transaction/' + user._id)
       .map(res => res.json());
