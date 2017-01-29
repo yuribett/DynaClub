@@ -17,6 +17,7 @@ import { MenuComponent } from './menu/menu.component';
 //Services
 import { AuthService } from './auth/auth.service';
 import { UserService } from './user/user.service';
+import { AppService } from './app.service';
 
 //Others
 import { routing } from './app.routes';
@@ -44,6 +45,7 @@ import { HttpService } from './auth/http.service';
     LoggedInGuard,
     AuthService,
     UserService,
+    AppService,
     MenuComponent // TODO wtf?
     ],
   bootstrap: [AppComponent]

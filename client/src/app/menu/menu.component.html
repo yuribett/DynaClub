@@ -14,10 +14,9 @@
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-
       <ul class="nav navbar-nav">
         <li class="active"><a [routerLink]="['/']">Dashboard <span class="sr-only">(current)</span></a></li>
-        <li class="dropdown" *ngIf="admin">
+        <li class="dropdown" *ngIf="user.admin">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin<span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a [routerLink]="['/teams']">Equipes</a></li>
@@ -29,7 +28,7 @@
 
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{name}} (FDSC)<span class="caret"></span></a>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{user.name}} (FDSC)<span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a href="#">FDSC &nbsp; <i class="glyphicon glyphicon-ok" aria-hidden="true"></i></a></li>
             <li><a href="#">DynaClub</a></li>

@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 import { AppComponent } from '../app.component';
 import { UserService } from '../user/user.service';
+import { AppService } from '../app.service';
+import { User } from '../user/user';
 
 @Component({
     selector: 'app-login',
@@ -17,10 +19,15 @@ export class LoginComponent implements OnInit {
     private authService : AuthService;
     private app: AppComponent;
 
-    constructor( router: Router, authService : AuthService, app: AppComponent, private userService: UserService) { 
-        this.router = router;
-        this.authService = authService;
-        this.app = app;
+    constructor( 
+        router: Router, 
+        authService : AuthService, 
+        app: AppComponent, 
+        private userService: UserService, 
+        private _sharedService: AppService) { 
+            this.router = router;
+            this.authService = authService;
+            this.app = app;
     }
 
     ngOnInit() {
@@ -30,15 +37,16 @@ export class LoginComponent implements OnInit {
         let _self = this;
         this.authService.autentica(new AuthLogin(this.user, this.password)).subscribe(e => {
             if(this.authService.isLoggedIn()){
-                console.log('>>>>>');
-
-                _self.app.name = this.userService.getStoredUser().name;
-                _self.app.admin = this.userService.getStoredUser().admin;
+                _self.addAppData(_self.userService.getStoredUser());
 
                 this.router.navigate(['/']);
             }
         });
         
+    }
+
+    addAppData(user: User){
+        this._sharedService.setUser(user);
     }
 
 }
