@@ -11,21 +11,25 @@ import { UserService } from '../user/user.service';
 })
 export class MenuComponent implements OnInit {
 
-  user: User;
-  data: string[] = [];
-
+  user: User = new User();
+ 
   constructor(private auth: AuthService, private appService: AppService, private userService: UserService) {
-    if(this.auth.isLoggedIn()){
+    var _self = this;
+    if (this.auth.isLoggedIn()) {
       this.user = userService.getStoredUser();
+      //getting remote to double check admin permitions
+      userService.findById(userService.getStoredUser()._id).subscribe(user => {
+        console.log('>>>>>>',user);
+        _self.user = user
+      });
     }
   }
 
-  ngOnInit():any {
-      let _self = this;
-      this.appService.getUser().subscribe((loggedUser: User) => {
-         _self.user = loggedUser;
-     });
-
+  ngOnInit(): any {
+    let _self = this;
+    this.appService.getUser().subscribe((loggedUser: User) => {
+      _self.user = loggedUser;
+    });
   }
 
   logout(e) {

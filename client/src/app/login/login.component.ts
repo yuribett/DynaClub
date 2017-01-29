@@ -35,10 +35,9 @@ export class LoginComponent implements OnInit {
 
     signin() {
         let _self = this;
-        this.authService.autentica(new AuthLogin(this.user, this.password)).subscribe(e => {
+        this.authService.autentica(new AuthLogin(this.user, this.password)).subscribe(user => {
             if(this.authService.isLoggedIn()){
-                _self.addAppData(_self.userService.getStoredUser());
-
+                _self.addAppData(user);
                 this.router.navigate(['/']);
             }
         });
