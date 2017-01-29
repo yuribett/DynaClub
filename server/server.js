@@ -1,6 +1,6 @@
 var http = require('http');
 var app = require('./config/express');
-require('./config/database')('mongodb://mongodb.dynamix.com.br:27017/dynaclub');
+require('./config/database')('mongodb://dynamix:dynamix@ds117839.mlab.com:17839/dynaclub');
 
 http.createServer(app)
 .listen(3000, function() {
