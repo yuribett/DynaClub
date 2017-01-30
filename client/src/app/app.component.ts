@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MenuComponent } from './menu/menu.component';
 import { AuthService } from './auth/auth.service';
 import { UserService } from './user/user.service';
 
@@ -8,15 +9,15 @@ import { UserService } from './user/user.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  
-    name: string = "";
-    admin: boolean = false;
 
-    constructor(private auth: AuthService){ }
-
-    logout(e) {
-      e.preventDefault();
-      this.auth.logout();
+  name: string;
+  admin: boolean;
+ 
+  constructor(private authService: AuthService, private user: UserService) {
+    if(this.authService.isLoggedIn()){
+        this.name = this.user.getStoredUser().name;
+        this.admin = this.user.getStoredUser().admin;
     }
+  }
 
 }

@@ -3,6 +3,7 @@ import { User } from './user';
 import { Observable } from 'rxjs';
 import { Injectable, Injector } from '@angular/core';
 import { Globals } from '../app.globals';
+import { AppComponent } from '../app.component';
 
 @Injectable()
 export class UserService {
@@ -25,12 +26,20 @@ export class UserService {
       .map(res => res.json());
   }
 
-  save(user: User) {
+  save(user: User): Observable<void> {
     if (user._id) {
+
+      console.log('update', user);
+      console.log(`${Globals.API_URL}/user/${user._id}`);
+      console.log(JSON.stringify(user));
+
       return this.http
         .put(`${Globals.API_URL}/user/${user._id}`, JSON.stringify(user), { headers: this.headers })
         .map(() => console.log('usuario alterado com suesso'));
     } else {
+
+      console.log('insert', user);
+
       return this.http
         .post(`${Globals.API_URL}/user/`, JSON.stringify(user), { headers: this.headers })
         .map(() => console.log('usuario inserido com suesso'));

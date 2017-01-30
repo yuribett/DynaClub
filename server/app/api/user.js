@@ -44,6 +44,7 @@ module.exports = function(app) {
 	};
 
 	api.update = function(req, res) {
+		console.log('update');
 		model.findByIdAndUpdate(req.params.id, req.body)
 		.then(function(team) {
 			res.json(team);

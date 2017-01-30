@@ -10,6 +10,8 @@ import { User } from '../../user/user';
 export class ProfileComponent implements OnInit {
 
   user: User = new User();
+  //teams: Team[] = []; //TODO 
+
   service: UserService;
 
   constructor(service: UserService) {
@@ -26,7 +28,7 @@ export class ProfileComponent implements OnInit {
   }
 
   saveUser() {
-    this.service.save(this.user);
+    this.service.save(this.user).subscribe(() => console.log('Dados alterados'));
   }
 
 }
