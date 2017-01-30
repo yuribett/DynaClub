@@ -26,7 +26,7 @@ export class UserService {
       .map(res => res.json());
   }
 
-  save(user: User): Observable<void> {
+  save(user: User): Observable<User> {
     if (user._id) {
 
       console.log('update', user);
@@ -35,14 +35,14 @@ export class UserService {
 
       return this.http
         .put(`${Globals.API_URL}/user/${user._id}`, JSON.stringify(user), { headers: this.headers })
-        .map(() => console.log('usuario alterado com suesso'));
+        .map((res) => res.json());
     } else {
 
       console.log('insert', user);
 
       return this.http
         .post(`${Globals.API_URL}/user/`, JSON.stringify(user), { headers: this.headers })
-        .map(() => console.log('usuario inserido com suesso'));
+        .map((res) => res.json());
     }
   }
 

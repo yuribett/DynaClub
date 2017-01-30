@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../user/user.service';
 import { User } from '../../user/user';
+import { AppService } from '../../app.service';
 
 @Component({
   selector: 'app-profile',
@@ -10,15 +11,12 @@ import { User } from '../../user/user';
 export class ProfileComponent implements OnInit {
 
   user: User = new User();
-  //teams: Team[] = []; //TODO 
 
-  service: UserService;
+  constructor(private userService: UserService, private appService: AppService) {
+    this.userService = userService;
 
-  constructor(service: UserService) {
-    this.service = service;
-
-    this.service
-      .findById(service.getStoredUser()._id)
+    this.userService
+      .findById(userService.getStoredUser()._id)
       .subscribe(profile => {
         this.user = profile;
       }, erro => console.log(erro));
@@ -28,7 +26,7 @@ export class ProfileComponent implements OnInit {
   }
 
   saveUser() {
-    this.service.save(this.user).subscribe(() => console.log('Dados alterados'));
+    this.userService.save(this.user).subscribe(updatedUser => this.appService.setUser(updatedUser));
   }
 
 }

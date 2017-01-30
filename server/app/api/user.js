@@ -45,9 +45,10 @@ module.exports = function(app) {
 
 	api.update = function(req, res) {
 		console.log('update');
-		model.findByIdAndUpdate(req.params.id, req.body)
-		.then(function(team) {
-			res.json(team);
+		model.findByIdAndUpdate(req.params.id, req.body, {new: true})
+		.then(function(user) {
+			console.log(user);
+			res.json(user);
 		}, function(error) {
 			console.log(error);
 			res.sendStatus(500);
