@@ -26,7 +26,7 @@ export class UserService {
       .map(res => res.json());
   }
 
-  save(user: User) {
+  save(user: User): Observable<void> {
     if (user._id) {
 
       console.log('update', user);

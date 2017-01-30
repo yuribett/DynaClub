@@ -28,7 +28,7 @@ export class ProfileComponent implements OnInit {
   }
 
   saveUser() {
-    this.service.save(this.user);
+    this.service.save(this.user).subscribe(() => console.log('Dados alterados'));
   }
 
 }
