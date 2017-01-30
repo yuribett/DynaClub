@@ -1,0 +1,16 @@
+.jumbotron {
+    margin-top: 4px;
+    border-radius: 0;
+}
+
+#symbol {
+    font-size: 30px;
+}
+
+#dynasReceived {
+    font-size: 80px;
+}
+
+#myDynas {
+    font-size: 60px;
+}

@@ -1,12 +1,9 @@
 .transaction {
     padding: 10px;
     box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-    transition: ease 0.2s;
     margin-top: 5px;
-}
-
-.transaction:hover {
-    margin-left: 1px;
+    border-left: 3px solid transparent;
+    background-color: #303030;
 }
 
 .debit span, .credit span {
@@ -20,14 +17,14 @@
 }
 
 .debit:hover {
-    box-shadow: 0px 2px 2px rgba(206, 72, 68, 0.3);
+    border-left: 3px solid #ce4844;
 }
 
 .credit h1, .credit span {
-    color: #1b809e;
+    color: #337ab7;
     font-weight: bold;
 }
 
 .credit:hover {
-    box-shadow: 0px 2px 2px rgba(27, 128, 158, 0.3);
+    border-left: 3px solid #337ab7;
 }
