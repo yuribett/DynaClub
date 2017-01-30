@@ -12,6 +12,7 @@ module.exports = function(app) {
              user: req.body.user,
              password: req.body.password
          })
+         .populate('teams')
          .then(function(auth) {
              if (!auth) {
                  console.log('Login/password incorrect');

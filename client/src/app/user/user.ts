@@ -1,3 +1,5 @@
+import { Team } from '../teams/team';
+
 export class User {
     _id: string;
     name: string;
@@ -5,6 +7,6 @@ export class User {
     email: string;
     password: string;
     admin: boolean;
-    teams: string;
+    teams: Team[];
     active: boolean;
 }
