@@ -16,7 +16,7 @@ export class AuthService {
 
   constructor(private http: Http, private route: Router, private user: UserService) { }
 
-  autentica(login: AuthLogin): Observable<User> {
+  autentica(login: AuthLogin) { //: Observable<User> {
     var headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
@@ -27,15 +27,17 @@ export class AuthService {
         if (token) {
           this._loggedIn.next(true);
           localStorage.setItem(Globals.LOCAL_TOKEN, token);
+          localStorage.setItem(Globals.CURRENT_TEAM, JSON.stringify(res.json().teams[0]));
           this.user.storeUser(res.json());
-          return res.json();
+          //return res.json();
         }
-        return null;
+        //return null;
       });
   }
 
   logout() {
     localStorage.removeItem(Globals.LOCAL_TOKEN);
+    localStorage.removeItem(Globals.CURRENT_TEAM);
     this.user.removeStoredUser();
     this._loggedIn.next(false);
     this.route.navigate(['/login']);
