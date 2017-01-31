@@ -3,6 +3,8 @@
         <app-wallet></app-wallet>
     </div>
     <div class="col-md-8">
-        <app-summary></app-summary>
+        <div *ngFor="let transaction of transactions">
+            <app-transaction [transaction]="transaction"></app-transaction>
+        </div>
     </div>
 </div>

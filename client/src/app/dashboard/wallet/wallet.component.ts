@@ -7,7 +7,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class WalletComponent implements OnInit {
 
-  constructor() { }
+  myDynas: Number;
+  dynasReceived: Number;
+
+  constructor() {
+    this.myDynas = Math.floor(Math.random() * 11) * 100;
+    this.dynasReceived = Math.floor(Math.random() * 11) * 100;
+  }
 
   ngOnInit() {
   }
