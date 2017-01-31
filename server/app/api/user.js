@@ -46,6 +46,7 @@ module.exports = function(app) {
 	api.update = function(req, res) {
 		console.log('update');
 		model.findByIdAndUpdate(req.params.id, req.body, {new: true})
+		.populate('teams')
 		.then(function(user) {
 			console.log(user);
 			res.json(user);
