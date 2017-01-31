@@ -9,7 +9,14 @@ module.exports = function(app) {
 
     api.listByUser = function(req, res) {
         let user = req.params.user;
-        model.find({ $or: [{ 'to': user }, { 'from': user }] })
+        let team = req.params.team;
+        model.find({
+                $or: [
+                    { 'to': user },
+                    { 'from': user }
+                ],
+                'team': team
+            })
             .populate('to from')
             .then(function(transactions) {
                 res.json(transactions);

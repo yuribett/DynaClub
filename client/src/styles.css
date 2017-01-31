@@ -1089,12 +1089,12 @@ th {
   box-sizing: border-box;
 }
 html {
-  font-size: 10px;
+  font-size: 20px;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 body {
   font-family: "Titillium Web", "Lato", Helvetica, Arial, sans-serif;
-  font-size: 15px;
+  font-size: 20px;
   line-height: 1.42857143;
   color: #ffffff;
   background-color: #222222;

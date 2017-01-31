@@ -1,3 +1,4 @@
+import { Team } from '../../teams/team';
 import { Globals } from '../../app.globals';
 import { User } from '../../user/user';
 import { TransactionComponent } from './transaction.component';
@@ -18,9 +19,9 @@ export class TransactionService {
     this.headers.append('Content-Type', 'application/json');
   }
 
-  findByUser(user: User) {
+  findByUser(user: User, team: Team) {
     return this.http
-      .get(Globals.API_URL + '/transaction/' + user._id)
+      .get(Globals.API_URL + '/transaction/' + user._id + '/' + team._id + '/1')
       .map(res => res.json());
   }
 

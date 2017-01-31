@@ -1,21 +1,11 @@
 module.exports = function(app) {
 
-	var api = app.api.transaction;
+    var api = app.api.transaction;
 
-/*
-	app.route('/transaction')
-		.post(api.insert);
-
-	app.route('/transaction/:id')
-		.get(api.findById)
-		.delete(api.delete)
-		.put(api.update);
-*/
-
-    app.route('/transaction/:user')
+    app.route('/transaction/:user/:team/:timeline')
         .get(api.listByUser);
 
-	app.route('/transaction')
-		.post(api.insert);
-        
+    app.route('/transaction')
+        .post(api.insert);
+
 };
