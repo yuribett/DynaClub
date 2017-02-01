@@ -6,9 +6,11 @@ import { CommonModule } from '@angular/common';
 import { DashboardComponent } from './dashboard.component';
 import { DonateComponent } from './donate/donate.component';
 
+import { FormsModule } from '@angular/forms';
+
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule, FormsModule
   ],
   exports: [DashboardComponent, TransactionComponent, WalletComponent],
   declarations: [DashboardComponent, TransactionComponent, WalletComponent, DonateComponent],

@@ -24,7 +24,7 @@ export class DashboardComponent implements OnInit {
     this.transactionService = transactionService;
     this.userService = userService;
     this.appService = appService;
-    let _currentTeam: Team = JSON.parse(localStorage.getItem(Globals.CURRENT_TEAM));;
+    let _currentTeam: Team = JSON.parse(localStorage.getItem(Globals.CURRENT_TEAM));
     this.loadTransactions(_currentTeam);
   }
 

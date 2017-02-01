@@ -3,7 +3,7 @@ import { Team } from '../../teams/team';
 import { UserService } from '../../user/user.service';
 import { Globals } from '../../app.globals';
 import { User } from '../../user/user';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Directive, Output, EventEmitter, Input, SimpleChange } from '@angular/core';
 
 @Component({
   selector: 'app-donate',
@@ -13,7 +13,7 @@ import { Component, OnInit } from '@angular/core';
 export class DonateComponent implements OnInit {
 
   teamUsers: Array<User>;
-  userSelected: User;
+  selectedUser: User;
   userService: UserService;
   appService: AppService;
 
@@ -30,15 +30,14 @@ export class DonateComponent implements OnInit {
     });
   }
 
-  onChange(userSelected: User) {
-    console.log('Chegou um usuario doido aqui:', userSelected);
-    this.userSelected = userSelected;
+  onChange() {
+    console.log('user selected: ', this.selectedUser);
   }
 
   loadTransactions(team: Team) {
     this.teamUsers = null;
     this.userService.findByTeam(team).subscribe(users => {
-      this.teamUsers = users
+      this.teamUsers = users.filter(user => this.userService.getStoredUser()._id != user._id);
     });
   }
 
