@@ -10,7 +10,7 @@ module.exports = function(app) {
     api.listByUser = function(req, res) {
         let user = req.params.user;
         model.find({ $or: [{ 'to': user }, { 'from': user }] })
-            .populate('to from')
+            .populate('to from sprint')
             .then(function(transactions) {
                 res.json(transactions);
             }, function(error) {
