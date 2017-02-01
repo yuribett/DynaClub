@@ -15,7 +15,6 @@ export class TransactionComponent implements OnInit {
 
   constructor(userService: UserService) {
     this.loggedUser = userService.getStoredUser();
-    console.log(this.loggedUser);
   }
 
   isCredit(): boolean {

@@ -1,3 +1,4 @@
+import { Team } from '../teams/team';
 import { Http, Headers, Response } from '@angular/http';
 import { User } from './user';
 import { Observable } from 'rxjs';
@@ -10,7 +11,7 @@ export class UserService {
 
   private headers: Headers;
   private http: Http;
-  
+
   constructor(http: Http) {
     this.http = http;
     this.headers = new Headers();
@@ -23,6 +24,15 @@ export class UserService {
   findById(id: string): Observable<User> {
     return this.http
       .get(`${Globals.API_URL}/user/${id}`)
+      .map(res => res.json());
+  }
+
+  /**
+   * Find all the users in the Team.
+   */
+  findByTeam(team: Team): Observable<Array<User>> {
+    return this.http
+      .get(`${Globals.API_URL}/userTeam/${team._id}`)
       .map(res => res.json());
   }
 

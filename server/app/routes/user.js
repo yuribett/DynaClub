@@ -10,5 +10,8 @@ module.exports = function(app) {
 		.get(api.findById)
         .put(api.update)
 		.delete(api.delete);
+
+	app.route('/userTeam/:team')
+		.get(api.findByTeam);
         
 };
