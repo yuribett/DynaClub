@@ -2,7 +2,7 @@ module.exports = function(app) {
 
     var api = app.api.transaction;
 
-    app.route('/transaction/:user/:team/:timeline')
+    app.route('/transaction/:user/:team/:sprint')
         .get(api.listByUser);
 
     app.route('/transaction')
