@@ -28,6 +28,11 @@ var schema = mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: 'Team',
         required: true
+    },
+    sprint : {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Sprint',
+        required: true
     }
 
 });

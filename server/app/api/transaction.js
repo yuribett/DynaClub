@@ -9,11 +9,16 @@ module.exports = function(app) {
     api.listByUser = function(req, res) {
         let user = req.params.user;
         let team = req.params.team;
+        let sprint = req.params.sprint;
         model.find({
-                $or: [{ 'to': user }, { 'from': user }],
-                'team': team
+                $or: [
+                    { 'to': user },
+                    { 'from': user }
+                ],
+                'team': team,
+                'sprint': sprint
             })
-            .populate('to from')
+            .populate('to from sprint')
             .then(function(transactions) {
                 res.json(transactions);
             }, function(error) {

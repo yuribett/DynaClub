@@ -13,6 +13,7 @@ import { LoginComponent } from './login/login.component';
 import { AdminComponent } from './admin/admin.component';
 import { ProfileComponent } from './settings/profile/profile.component';
 import { MenuComponent } from './menu/menu.component';
+import { RankingComponent } from './ranking/ranking.component';
 
 //Services
 import { AuthService } from './auth/auth.service';
@@ -31,7 +32,8 @@ import { HttpService } from './auth/http.service';
     LoginComponent,
     AdminComponent,
     ProfileComponent,
-    MenuComponent
+    MenuComponent,
+    RankingComponent
   ],
   imports: [
     BrowserModule,
