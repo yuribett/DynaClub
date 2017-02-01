@@ -6,7 +6,15 @@
     background-color: #303030;
 }
 
-.debit span, .credit span {
+.symbol {
+    font-size: 20px;
+}
+
+.amount {
+    font-size: 60px;
+}
+
+.debit .glyphicon, .credit .glyphicon {
     font-size: 40px;
     margin-top: 15px;
 }
