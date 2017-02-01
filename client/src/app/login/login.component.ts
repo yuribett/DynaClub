@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
         this.authService.autentica(new AuthLogin(this.user, this.password)).subscribe(() => {
             if(this.authService.isLoggedIn()){
                 _self.addAppData();
-                this.router.navigate(['/']);
+                this.router.navigate(['/dashboard']);
             } else {
                 this.msgError = 'Usu&aacute;rio ou senha incorreto.';
             }
