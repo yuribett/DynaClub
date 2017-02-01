@@ -19,7 +19,7 @@ module.exports = function(app) {
                 'team': team,
                 'sprint': sprint
             })
-            .populate('to from, sprint')
+            .populate('to from sprint')
             .then(function(transactions) {
                 res.json(transactions);
             }, function(error) {
