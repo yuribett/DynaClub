@@ -2,10 +2,20 @@ var express = require('express');
 var consign = require('consign');
 var bodyParser = require('body-parser');
 var path = require('path');
+var morgan = require('morgan');
+var logger = require('../services/logger.js');
 
 var app = express();
 
 app.set('secret', '3mG!pYBa8#5r1J6'); 
+
+app.use(morgan("common", {
+    stream: {
+        write: function(mensagem){
+            logger.info(mensagem);
+        }
+    }
+}));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -32,6 +42,7 @@ consign({cwd: 'app'})
     .then('api')
     .then('routes/auth.js')
     .then('routes')
+    .then('services')
     .into(app);
 
 module.exports = app;
