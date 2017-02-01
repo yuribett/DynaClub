@@ -28,7 +28,7 @@
       </ul>
 
       <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown">
+        <li [routerLinkActive]="['active']" class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{user.name}} ({{currentTeam.name}})<span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li *ngFor="let team of user.teams"><a href="#" (click)="changeTeam($event, team)">{{team.name}}&nbsp;<i class="glyphicon glyphicon-ok" aria-hidden="true" *ngIf="team._id == currentTeam._id"></i></a></li>  <!--  -->
