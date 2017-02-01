@@ -35,6 +35,7 @@ export class DashboardComponent implements OnInit {
   }
 
   loadTransactions(team: Team) {
+    this.transactions = null;
     this.transactionService.findByUser(this.userService.getStoredUser(), team).subscribe(
       p => this.transactions = p,
       err => console.log(err)
