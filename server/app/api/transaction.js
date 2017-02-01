@@ -6,15 +6,11 @@ module.exports = function(app) {
 
     var model = mongoose.model('Transaction');
 
-
     api.listByUser = function(req, res) {
         let user = req.params.user;
         let team = req.params.team;
         model.find({
-                $or: [
-                    { 'to': user },
-                    { 'from': user }
-                ],
+                $or: [{ 'to': user }, { 'from': user }],
                 'team': team
             })
             .populate('to from')
@@ -27,7 +23,6 @@ module.exports = function(app) {
 
     };
 
-
     api.insert = function(req, res) {
         model.create(req.body)
             .then(function(transaction) {
@@ -39,22 +34,5 @@ module.exports = function(app) {
             });
     };
 
-    /*
-        api.findById = function(req, res) {
-    		
-    	};
-
-    	api.insert = function(req, res) {
-    		
-    	};
-
-        api.update = function(req, res) {
-    		
-    	};
-
-        api.delete = function(req, res) {
-    		
-    	};
-    */
     return api;
 };

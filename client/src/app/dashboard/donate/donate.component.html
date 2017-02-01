@@ -1,5 +1,45 @@
 <div class="jumbotron">
-  <button type="button" class="btn btn-primary btn-lg btn-block">Doar</button>
-  <br>
-  <button type="button" class="btn btn-success btn-lg btn-block">Pechinchar</button>
+
+    <div class="buttonsPanel">
+        <button type="button" class="btn btn-primary btn-lg btn-block mainButtons">Doar</button>
+        <br>
+        <button type="button" class="btn btn-success btn-lg btn-block mainButtons">Pechinchar</button>
+    </div>
+
+    <div class="donatePanel" style="display: none;">
+        <form>
+
+            <div class="form-group">
+                <select class="form-control" id="inputValue">
+                	<option>Quanto?</option>
+                	<option value="10">D$ 10</option>
+					<option value="20">D$ 20</option>
+					<option value="50">D$ 50</option>
+					<option value="100">D$ 100</option>
+					<option value="200">D$ 200</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <select class="form-control" id="inputUser" #t  (change)="onChange($t.value)">
+                	<option>Para quem?</option>
+					<option [value]="user" *ngFor="let user of teamUsers">{{user.name}}</option>					
+                </select>				
+            </div>
+
+            <div class="form-group">
+                <select class="form-control" id="inputReason">
+                	<option>Porque?</option>
+                	<option>Porque eu quis</option>
+					<option>Sem motivo aparente</option>
+					<option>Motivo desconhecido</option>
+					<option>Adult&eacute;rio</option>
+					<option>Outros</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-default">Enviar</button>
+            <button type="button" class="btn btn-danger btn-default">Cancelar</button>
+        </form>
+    </div>
 </div>

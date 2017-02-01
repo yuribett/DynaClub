@@ -1,3 +1,4 @@
+import { User } from '../../user/user';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,9 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DonateComponent implements OnInit {
 
+  teamUsers: Array<User>;
+  userSelected: User;
+
   constructor() { }
 
   ngOnInit() {
+  }
+
+  onChange(userSelected: User) {
+    this.userSelected = userSelected;
   }
 
 }
