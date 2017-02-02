@@ -1,84 +1,85 @@
 var mongoose = require('mongoose');
 
-module.exports = function (app) {
+module.exports = function(app) {
 
-	var api = {};
+    var api = {};
 
-	var model = mongoose.model('User');
+    var model = mongoose.model('User');
 
-	api.list = function (req, res) {
+    api.list = function(req, res) {
 
-		model.find()
-			.populate('teams')
-			.then(function (users) {
-				res.json(users);
-			}, function (error) {
-				console.log(error);
-				res.sendStatus(500);
-			});
+        model.find()
+            .populate('teams')
+            .then(function(users) {
+                res.json(users);
+            }, function(error) {
+                console.log(error);
+                res.sendStatus(500);
+            });
 
-	};
+    };
 
-	api.findById = function (req, res) {
-		model.findOne({
-			_id: req.params.id,
-		})
-			.populate('teams')
-			.then(function (user) {
-				res.json(user);
-			}, function (error) {
-				console.log(error);
-				res.sendStatus(500);
-			});
-	};
+    api.findById = function(req, res) {
+        model.findOne({
+                _id: req.params.id,
+            })
+            .populate('teams')
+            .then(function(user) {
+                res.json(user);
+            }, function(error) {
+                console.log(error);
+                res.sendStatus(500);
+            });
+    };
 
-	api.findByTeam = function (req, res) {
-		model.find({
-			teams: { $in: [req.params.team] }
-		})
-			.populate('teams')
-			.then(function (user) {
-				res.json(user);
-			}, function (error) {
-				console.log(error);
-				res.sendStatus(500);
-			});
-	};
+    api.findByTeam = function(req, res) {
+        model.find({
+                teams: { $in: [req.params.team] },
+                active: true
+            })
+            .populate('teams')
+            .then(function(user) {
+                res.json(user);
+            }, function(error) {
+                console.log(error);
+                res.sendStatus(500);
+            });
+    };
 
-	api.insert = function (req, res) {
-		model.create(req.body)
-			.then(function (user) {
-				res.json(user);
-			}, function (error) {
-				console.log('cannot insert user');
-				console.log(error);
-				res.sendStatus(500);
-			});
-	};
+    api.insert = function(req, res) {
+        model.create(req.body)
+            .then(function(user) {
+                res.json(user);
+            }, function(error) {
+                console.log('cannot insert user');
+                console.log(error);
+                res.sendStatus(500);
+            });
+    };
 
-	api.update = function (req, res) {
-		console.log('update');
-		model.findByIdAndUpdate(req.params.id, req.body, { new: true })
-			.populate('teams')
-			.then(function (user) {
-				console.log(user);
-				res.json(user);
-			}, function (error) {
-				console.log(error);
-				res.sendStatus(500);
-			})
-	};
+    api.update = function(req, res) {
+        console.log('update');
+        model.findByIdAndUpdate(req.params.id, req.body, { new: true })
+            .populate('teams')
+            .then(function(user) {
+                console.log(user);
+                res.json(user);
+            }, function(error) {
+                console.log(error);
+                res.sendStatus(500);
+            })
+    };
 
-	api.delete = function (req, res) {
-		model.remove({ '_id': req.params.id })
-			.then(function () {
-				res.sendStatus(200);
-			}, function (error) {
-				console.log(error);
-				res.sendStatus(500);
-			});
-	};
+    api.delete = function(req, res) {
+        model.remove({ '_id': req.params.id })
+            .then(function() {
+                res.sendStatus(200);
+            }, function(error) {
+                console.log(error);
+                res.sendStatus(500);
+            });
+    };
 
 
-	return api;
+    return api;
 };

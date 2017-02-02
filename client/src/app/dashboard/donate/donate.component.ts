@@ -3,38 +3,67 @@ import { Team } from '../../teams/team';
 import { UserService } from '../../user/user.service';
 import { Globals } from '../../app.globals';
 import { User } from '../../user/user';
-import { Component, OnInit, Directive, Output, EventEmitter, Input, SimpleChange } from '@angular/core';
+import { Component, OnInit, trigger, state, style, transition, animate } from '@angular/core';
 
 @Component({
-  selector: 'app-donate',
-  templateUrl: './donate.component.html',
-  styleUrls: ['./donate.component.css']
+	selector: 'app-donate',
+	templateUrl: './donate.component.html',
+	styleUrls: ['./donate.component.css'],
+	animations: [
+		trigger('slideIn', [
+			state('visible', style({
+				transform: 'translate3d(0, 0, 0)'
+			})),
+			state('hidden', style({
+				transform: 'translate3d(200%, 0, 0)', display: 'none'
+			})),
+			transition('hidden => visible', animate('400ms ease')),
+			transition('visible => hidden', animate('400ms ease'))
+		]),
+		trigger('slideOut', [
+			state('visible', style({
+				transform: 'translate3d(0, 0, 0)'
+			})),
+			state('hidden', style({
+				transform: 'translate3d(-200%, 0, 0)', display: 'none'
+			})),
+			transition('hidden => visible', animate('400ms ease')),
+			transition('visible => hidden', animate('400ms ease'))
+		]),
+	]
 })
 export class DonateComponent implements OnInit {
 
-  teamUsers: Array<User>;
-  selectedUser: User;
-  userService: UserService;
-  appService: AppService;
+	teamUsers: Array<User>;
+	selectedUser: User;
+	userService: UserService;
+	appService: AppService;
+	buttonsState: String = 'visible';
+	formState: String = 'hidden'
 
-  constructor(userService: UserService, appService: AppService) {
-    this.userService = userService;
-    this.appService = appService;
-    let _currentTeam: Team = JSON.parse(localStorage.getItem(Globals.CURRENT_TEAM));
-    this.loadUsers(_currentTeam);
-  }
+	constructor(userService: UserService, appService: AppService) {
+		this.userService = userService;
+		this.appService = appService;
+		let _currentTeam: Team = JSON.parse(localStorage.getItem(Globals.CURRENT_TEAM));
+		this.loadUsers(_currentTeam);
+	}
 
-  ngOnInit() {
-    this.appService.getCurrentTeam().subscribe((team: Team) => {
-      this.loadUsers(team);
-    });
-  }
+	ngOnInit() {
+		this.appService.getCurrentTeam().subscribe((team: Team) => {
+			this.loadUsers(team);
+		});
+	}
 
-  loadUsers(team: Team) {
-    this.teamUsers = null;
-    this.userService.findByTeam(team).subscribe(users => {
-      this.teamUsers = users.filter(user => this.userService.getStoredUser()._id != user._id);
-    });
-  }
+	toggleMenu() {
+		this.buttonsState = this.buttonsState === 'hidden' ? 'visible' : 'hidden';
+		this.formState = this.formState === 'hidden' ? 'visible' : 'hidden';
+	}
+
+	loadUsers(team: Team) {
+		this.teamUsers = null;
+		this.userService.findByTeam(team).subscribe(users => {
+			this.teamUsers = users.filter(user => this.userService.getStoredUser()._id != user._id);
+		});
+	}
 
 }
