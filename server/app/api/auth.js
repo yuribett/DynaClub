@@ -13,24 +13,24 @@ module.exports = function (app) {
 			user: req.body.user,
 			password: req.body.password
 		})
-		.populate('teams')
-		.then(function (auth) {
-			if (!auth) {
-				logger.error('Login or password incorrect: ' + req.body.user);
-				res.sendStatus(401);
-			} else {
-				logger.info('User authenticated: ' + req.body.user);
-				var token = jwt.sign({ auth: auth.user }, app.get('secret'), {
-					expiresIn: 7614000
-				});
-				//setting password to null to response
-				auth.password = null;
+			.populate('teams')
+			.then(function (auth) {
+				if (!auth) {
+					logger.error('Login or password incorrect: ' + req.body.user);
+					res.sendStatus(401);
+				} else {
+					logger.info('User authenticated: ' + req.body.user);
+					var token = jwt.sign({ auth: auth.user }, app.get('secret'), {
+						expiresIn: 7614000
+					});
+					//setting password to null to response
+					auth.password = null;
 
-				res.set('x-access-token', token);
-				res.json(auth);
-				res.end();
-			}
-		});
+					res.set('x-access-token', token);
+					res.json(auth);
+					res.end();
+				}
+			});
 	};
 
 	api.verifyToken = function (req, res, next) {
