@@ -27,29 +27,29 @@ import { LoggedInGuard } from './auth/logged.in.guard';
 import { HttpService } from './auth/http.service';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    AdminComponent,
-    ProfileComponent,
-    MenuComponent,
-    RankingComponent
-  ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    HttpModule,
-    routing,
-    DashboardModule
-  ],
-  providers: [
-    { provide: Http, useClass: HttpService },
-    LoggedInGuard,
-    AuthService,
-    UserService,
-    AppService,
-    MenuComponent // TODO wtf?
-    ],
-  bootstrap: [AppComponent]
+	declarations: [
+		AppComponent,
+		LoginComponent,
+		AdminComponent,
+		ProfileComponent,
+		MenuComponent,
+		RankingComponent
+	],
+	imports: [
+		BrowserModule,
+		FormsModule,
+		HttpModule,
+		routing,
+		DashboardModule
+	],
+	providers: [
+		{ provide: Http, useClass: HttpService },
+		LoggedInGuard,
+		AuthService,
+		UserService,
+		AppService,
+		MenuComponent // TODO wtf?
+	],
+	bootstrap: [AppComponent]
 })
 export class AppModule { }

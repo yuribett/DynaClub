@@ -4,29 +4,29 @@ import { User } from '../../user/user';
 import { AppService } from '../../app.service';
 
 @Component({
-  selector: 'app-profile',
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+	selector: 'app-profile',
+	templateUrl: './profile.component.html',
+	styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
 
-  user: User = new User();
+	user: User = new User();
 
-  constructor(private userService: UserService, private appService: AppService) {
-    this.userService = userService;
+	constructor(private userService: UserService, private appService: AppService) {
+		this.userService = userService;
 
-    this.userService
-      .findById(userService.getStoredUser()._id)
-      .subscribe(profile => {
-        this.user = profile;
-      }, erro => console.log(erro));
-  }
+		this.userService
+			.findById(userService.getStoredUser()._id)
+			.subscribe(profile => {
+				this.user = profile;
+			}, erro => console.log(erro));
+	}
 
-  ngOnInit() {
-  }
+	ngOnInit() {
+	}
 
-  saveUser() {
-    this.userService.save(this.user).subscribe(updatedUser => this.appService.setUser(updatedUser));
-  }
+	saveUser() {
+		this.userService.save(this.user).subscribe(updatedUser => this.appService.setUser(updatedUser));
+	}
 
 }
