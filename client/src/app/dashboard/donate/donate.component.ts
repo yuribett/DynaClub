@@ -20,21 +20,17 @@ export class DonateComponent implements OnInit {
   constructor(userService: UserService, appService: AppService) {
     this.userService = userService;
     this.appService = appService;
-    let _currentTeam: Team = JSON.parse(localStorage.getItem(Globals.CURRENT_TEAM));;
-    this.loadTransactions(_currentTeam);
+    let _currentTeam: Team = JSON.parse(localStorage.getItem(Globals.CURRENT_TEAM));
+    this.loadUsers(_currentTeam);
   }
 
   ngOnInit() {
     this.appService.getCurrentTeam().subscribe((team: Team) => {
-      this.loadTransactions(team);
+      this.loadUsers(team);
     });
   }
 
-  onChange() {
-    console.log('user selected: ', this.selectedUser);
-  }
-
-  loadTransactions(team: Team) {
+  loadUsers(team: Team) {
     this.teamUsers = null;
     this.userService.findByTeam(team).subscribe(users => {
       this.teamUsers = users.filter(user => this.userService.getStoredUser()._id != user._id);
