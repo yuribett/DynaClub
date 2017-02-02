@@ -3,7 +3,7 @@ var consign = require('consign');
 var bodyParser = require('body-parser');
 var path = require('path');
 var morgan = require('morgan');
-var logger = require('../services/logger.js');
+var logger = require('../app/services/logger.js');
 
 var app = express();
 
