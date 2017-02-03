@@ -33,6 +33,11 @@ var schema = mongoose.Schema({
 		type: mongoose.Schema.ObjectId,
 		ref: 'Sprint',
 		required: true
+	},
+	transactionType: {
+		type: mongoose.Schema.ObjectId,
+		ref: 'TransactionType',
+		required: true
 	}
 
 });
