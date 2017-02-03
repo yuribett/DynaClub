@@ -1,6 +1,6 @@
 import { trigger, state, style, transition, animate } from '@angular/core';
 
-export const slideIn = trigger('slideIn', [
+export const slideLeft = trigger('slideIn', [
     state('visible', style({
         transform: 'translate3d(0, 0, 0)'
     })),
@@ -8,10 +8,10 @@ export const slideIn = trigger('slideIn', [
         transform: 'translate3d(200%, 0, 0)', display: 'none'
     })),
     transition('hidden => visible', animate('400ms ease')),
-    transition('visible => hidden', animate('400ms ease'))
+    transition('visible => hidden', animate('00ms ease'))
 ]);
 
-export const slideOut = trigger('slideOut', [
+export const slideRight = trigger('slideOut', [
     state('visible', style({
         transform: 'translate3d(0, 0, 0)'
     })),
@@ -19,5 +19,5 @@ export const slideOut = trigger('slideOut', [
         transform: 'translate3d(-200%, 0, 0)', display: 'none'
     })),
     transition('hidden => visible', animate('400ms ease')),
-    transition('visible => hidden', animate('400ms ease'))
+    transition('visible => hidden', animate('00ms ease'))
 ]);
