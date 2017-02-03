@@ -7,22 +7,18 @@
     </div>
 
     <div class="donatePanel" [@slideIn]="formState">
-        <form>
+        <form (ngSubmit)="donate($event)">
 
             <div class="form-group">
-                <select class="form-control" name="inputValue">
-                	<option selected disabled>Quanto?</option>
-                	<option value="10">D$ 10</option>
-					<option value="20">D$ 20</option>
-					<option value="50">D$ 50</option>
-					<option value="100">D$ 100</option>
-					<option value="200">D$ 200</option>
-                </select>
+                <div class="input-group">
+                    <div class="input-group-addon">D$</div>
+                    <input [(ngModel)]="transaction.amount" required type="number" min="1" max="1000" name="inputAmount" class="form-control" placeholder="Quanto?">
+                </div>
             </div>
 
             <div class="form-group">
-                <select class="form-control" name="inputUser" [ngModel]="selectedUser">
-                	<option disabled selected [value]="selectedUser">Para quem?</option>
+                <select [(ngModel)]="transaction.to" class="form-control" name="inputUser">
+                	<option [value]="transaction.to" disabled selected>Para quem?</option>
 					<option [ngValue]="user" *ngFor="let user of teamUsers">{{user.name}}</option>					
                 </select>
             </div>
@@ -30,16 +26,22 @@
             <div class="form-group">
                 <select class="form-control" name="inputReason">
                 	<option selected disabled>Porque?</option>
-                	<option>Porque eu quis</option>
-					<option>Sem motivo aparente</option>
-					<option>Motivo desconhecido</option>
-					<option>Adult&eacute;rio</option>
-					<option>Outros</option>
+                	<option value="1">Porque eu quis</option>
+					<option value="2">Sem motivo aparente</option>
+					<option value="3">Motivo desconhecido</option>
+					<option value="4">Fui obrigado</option>
+					<option value="5">Adult&eacute;rio</option>
+					<option value="6">Outros</option>
                 </select>
             </div>
+
+            <div class="form-group">
+                <textarea [(ngModel)]="transaction.message" class="form-control" name="inputMessage" rows="2" placeholder="Mande uma mensagem..."></textarea>
+            </div>
+
             <div class="btn-group btn-group-justified" role="group">
                 <div class="btn-group" role="group">
-                    <button type="submit" class="btn btn-primary btn-default" (click)="toggleMenu()">Enviar</button>
+                    <button type="submit" class="btn btn-primary btn-default">Enviar</button>
                 </div>
 
                 <div class="btn-group" role="group">
