@@ -24,7 +24,7 @@ export class MenuComponent implements OnInit {
 			userService.findById(userService.getStoredUser()._id).subscribe(user => {
 				_self.user = user
 			});
-			this.currentTeam = JSON.parse(localStorage.getItem(Globals.CURRENT_TEAM));
+			this.currentTeam = JSON.parse(this.appService.getStorage().getItem(Globals.CURRENT_TEAM));
 		}
 	}
 
@@ -40,14 +40,15 @@ export class MenuComponent implements OnInit {
 
 	logout(e) {
 		e.preventDefault();
+		this.appService.clearStorage();
 		this.auth.logout();
 	}
 
 	changeTeam(e, team: Team) {
 		e.preventDefault();
 		this.appService.setCurrentTeam(team);
-		localStorage.removeItem(Globals.CURRENT_TEAM);
-		localStorage.setItem(Globals.CURRENT_TEAM, JSON.stringify(team));
+		this.appService.getStorage().removeItem(Globals.CURRENT_TEAM);
+		this.appService.getStorage().setItem(Globals.CURRENT_TEAM, JSON.stringify(team));
 	}
 
 }

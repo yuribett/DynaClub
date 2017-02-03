@@ -4,7 +4,7 @@ import { User } from './user';
 import { Observable } from 'rxjs';
 import { Injectable, Injector } from '@angular/core';
 import { Globals } from '../app.globals';
-import { AppComponent } from '../app.component';
+import { AppService } from '../app.service';
 
 @Injectable()
 export class UserService {
@@ -12,7 +12,7 @@ export class UserService {
 	private headers: Headers;
 	private http: Http;
 
-	constructor(http: Http) {
+	constructor(http: Http, private appService: AppService) {
 		this.http = http;
 		this.headers = new Headers();
 		this.headers.append('Content-Type', 'application/json');
@@ -61,15 +61,15 @@ export class UserService {
 	}
 
 	getStoredUser(): User {
-		return JSON.parse(localStorage.getItem(Globals.LOCAL_USER));
+		return JSON.parse(this.appService.getStorage().getItem(Globals.LOCAL_USER));
 	}
 
 	storeUser(user: User) {
-		localStorage.setItem(Globals.LOCAL_USER, JSON.stringify(user));
+		this.appService.getStorage().setItem(Globals.LOCAL_USER, JSON.stringify(user));
 	}
 
 	removeStoredUser() {
-		localStorage.removeItem(Globals.LOCAL_USER);
+		this.appService.getStorage().removeItem(Globals.LOCAL_USER);
 	}
 
 }

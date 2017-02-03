@@ -3,6 +3,7 @@ import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { User } from './user/user';
 import { Team } from './teams/team';
+import { Globals } from './app.globals';
 
 @Injectable()
 export class AppService {
@@ -28,6 +29,30 @@ export class AppService {
 
 	getCurrentTeam(): Observable<Team> {
 		return this.subjectCurrentTeam.asObservable();
+	}
+
+
+
+
+	getStorage() {
+		if(localStorage.getItem(Globals.USER_LOCAL_STORAGE) == "1"){
+			return localStorage;
+		} else {
+			return sessionStorage;
+		}
+	}
+
+	setLocalStorage(local: boolean) {
+		if(local){
+			localStorage.setItem(Globals.USER_LOCAL_STORAGE, "1");
+		} else {
+			localStorage.setItem(Globals.USER_LOCAL_STORAGE, "0");
+		}
+	}
+
+	clearStorage() {
+		localStorage.clear();
+		sessionStorage.clear();
 	}
 
 }

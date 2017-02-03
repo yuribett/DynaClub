@@ -24,7 +24,7 @@ export class DonateComponent implements OnInit {
 	constructor(userService: UserService, appService: AppService) {
 		this.userService = userService;
 		this.appService = appService;
-		let _currentTeam: Team = JSON.parse(localStorage.getItem(Globals.CURRENT_TEAM));
+		let _currentTeam: Team = JSON.parse(this.appService.getStorage().getItem(Globals.CURRENT_TEAM));
 		this.loadUsers(_currentTeam);
 	}
 
