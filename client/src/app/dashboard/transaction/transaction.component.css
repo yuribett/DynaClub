@@ -7,6 +7,12 @@
     background-color: #303030; 
 }
 
+.messageContainer {
+    font-family: "Titillium Web", Helvetica, Arial, sans-serif;
+    font-weight: 200;
+    font-size: 90%;
+}
+
 @media only screen and (max-device-width: 780px) { 
     .transaction {
         margin-left: 0;
