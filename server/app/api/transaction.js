@@ -18,6 +18,7 @@ module.exports = function (app) {
 			'team': team,
 			'sprint': sprint
 		})
+			.sort({ date: -1 })
 			.populate('to from sprint, transactionType')
 			.then(function (transactions) {
 				res.json(transactions);
