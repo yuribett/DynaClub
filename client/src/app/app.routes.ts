@@ -6,8 +6,13 @@ import { AdminComponent } from './admin/admin.component';
 import { ProfileComponent } from './settings/profile/profile.component';
 import { LoggedInGuard } from './auth/logged.in.guard';
 import { RankingComponent } from './ranking/ranking.component';
+import { TestComponent } from './test/test.component';
 
 const appRoutes: Routes = [
+	//for tests
+	{ path: 'test', component: TestComponent, canActivate: [LoggedInGuard] },
+
+	//real app
 	{ path: 'dashboard', component: DashboardComponent, canActivate: [LoggedInGuard] },
 	{ path: 'login', component: LoginComponent },
 	{ path: 'admin', component: AdminComponent, canActivate: [LoggedInGuard] },

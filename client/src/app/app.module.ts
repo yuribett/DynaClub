@@ -27,6 +27,7 @@ import { routing } from './app.routes';
 import 'rxjs/add/operator/map';
 import { LoggedInGuard } from './auth/logged.in.guard';
 import { HttpService } from './auth/http.service';
+import { TestComponent } from './test/test.component';
 
 @NgModule({
 	declarations: [
@@ -36,7 +37,8 @@ import { HttpService } from './auth/http.service';
 		ProfileComponent,
 		MenuComponent,
 		RankingComponent,
-		SprintComponent
+		SprintComponent,
+		TestComponent
 	],
 	imports: [
 		BrowserModule,
