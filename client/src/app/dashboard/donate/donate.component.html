@@ -24,14 +24,9 @@
             </div>
 
             <div class="form-group">
-                <select class="form-control" name="inputReason">
-                	<option selected disabled>Porque?</option>
-                	<option value="1">Porque eu quis</option>
-					<option value="2">Sem motivo aparente</option>
-					<option value="3">Motivo desconhecido</option>
-					<option value="4">Fui obrigado</option>
-					<option value="5">Adult&eacute;rio</option>
-					<option value="6">Outros</option>
+                <select [(ngModel)]="transaction.transactionType" class="form-control" name="inputTypes">
+                	<option [value]="transaction.transactionType" disabled selected>Porque?</option>
+					<option [ngValue]="type" *ngFor="let type of transactionTypes">{{type.description}}</option>					
                 </select>
             </div>
 

@@ -1,3 +1,8 @@
+import { Sprint } from '../../sprint/sprint';
+import { SprintService } from '../../sprint/sprint.service';
+import { TransactionService } from '../transaction/transaction.service';
+import { TransactionType } from '../transaction/transaction-type/transaction-type';
+import { TransactionTypeService } from '../transaction/transaction-type/transaction-type.service';
 import { Transaction } from '../transaction/transaction';
 import { AppService } from '../../app.service';
 import { Team } from '../../teams/team';
@@ -16,16 +21,21 @@ import { Component, OnInit } from '@angular/core';
 export class DonateComponent implements OnInit {
 
 	teamUsers: Array<User>;
-	userService: UserService;
-	appService: AppService;
+	transactionTypes: Array<TransactionType>;
 	buttonsState: String = 'visible';
 	formState: String = 'hidden';
-	transaction: Transaction = new Transaction();;
-	
-	constructor(userService: UserService, appService: AppService) {
-		this.userService = userService;
-		this.appService = appService;
+	transaction: Transaction = new Transaction();
+	currentSprint: Sprint;
+
+	constructor(private userService: UserService, private appService: AppService, private transactionService: TransactionService,
+		private transactionTypeService: TransactionTypeService, private sprintService: SprintService) {
 		let _currentTeam: Team = JSON.parse(this.appService.getStorage().getItem(Globals.CURRENT_TEAM));
+		this.transactionTypeService.find().subscribe(types => {
+			this.transactionTypes = types;
+		});
+		this.sprintService.findCurrentSprint().subscribe(sprint => {
+			this.currentSprint = sprint;
+		});
 		this.loadUsers(_currentTeam);
 	}
 
@@ -50,9 +60,12 @@ export class DonateComponent implements OnInit {
 	donate() {
 		this.transaction.from = this.userService.getStoredUser();
 		this.transaction.date = new Date();
-		this.transaction.team = JSON.parse(localStorage.getItem(Globals.CURRENT_TEAM));//Mudar com as alteracoes do Yuri
-		console.log('Enviando transaction: ', this.transaction);
-		this.transaction = new Transaction();
+		this.transaction.team = JSON.parse(this.appService.getStorage().getItem(Globals.CURRENT_TEAM));
+		this.transaction.sprint = this.currentSprint;
+		this.transactionService.insert(this.transaction).subscribe(transaction => {
+			this.transaction = new Transaction();
+			this.toggleMenu();
+		});
 	}
 
 }

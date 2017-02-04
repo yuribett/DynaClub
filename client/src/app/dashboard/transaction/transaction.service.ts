@@ -1,3 +1,4 @@
+import { Transaction } from './transaction';
 import { Team } from '../../teams/team';
 import { Globals } from '../../app.globals';
 import { User } from '../../user/user';
@@ -21,8 +22,15 @@ export class TransactionService {
 
   findByUser(user: User, team: Team) {
     return this.http
-      .get(Globals.API_URL + '/transaction/' + user._id + '/' + team._id + '/5891f0b5bbcf3e29a0142139')
+      .get(`${Globals.API_URL}/transaction/` + user._id + '/' + team._id + '/5891f0b5bbcf3e29a0142139')
       .map(res => res.json());
+  }
+
+  insert(transaction: Transaction): Observable<Transaction>  {
+    console.log(transaction);
+    return this.http
+      .post(`${Globals.API_URL}/transaction/`, JSON.stringify(transaction), { headers: this.headers })
+      .map((res) => res.json());
   }
 
 }

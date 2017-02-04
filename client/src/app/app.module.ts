@@ -14,11 +14,13 @@ import { AdminComponent } from './admin/admin.component';
 import { ProfileComponent } from './settings/profile/profile.component';
 import { MenuComponent } from './menu/menu.component';
 import { RankingComponent } from './ranking/ranking.component';
+import { SprintComponent } from './sprint/sprint.component';
 
 //Services
 import { AuthService } from './auth/auth.service';
 import { UserService } from './user/user.service';
 import { AppService } from './app.service';
+import { SprintService } from './sprint/sprint.service';
 
 //Others
 import { routing } from './app.routes';
@@ -33,7 +35,8 @@ import { HttpService } from './auth/http.service';
 		AdminComponent,
 		ProfileComponent,
 		MenuComponent,
-		RankingComponent
+		RankingComponent,
+		SprintComponent
 	],
 	imports: [
 		BrowserModule,
@@ -48,7 +51,8 @@ import { HttpService } from './auth/http.service';
 		AuthService,
 		UserService,
 		AppService,
-		MenuComponent // TODO wtf?
+		SprintService,
+		MenuComponent // TODO wtf? Really... W.T.F!
 	],
 	bootstrap: [AppComponent]
 })
