@@ -10,7 +10,7 @@ import { TestComponent } from './test/test.component';
 
 const appRoutes: Routes = [
 	//for tests
-	{ path: 'test', component: TestComponent, canActivate: [LoggedInGuard] },
+	{ path: 'test', component: TestComponent },
 
 	//real app
 	{ path: 'dashboard', component: DashboardComponent, canActivate: [LoggedInGuard] },
