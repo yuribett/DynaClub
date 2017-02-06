@@ -6,7 +6,7 @@ import * as io from 'socket.io-client';
 @Injectable()
 export class TestService {
 
-	private url = 'http://localhost:3000/ioTransaction';
+	private url = 'http://localhost:3000';
 	private socket;
 
 	sendMessage(message) {
