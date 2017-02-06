@@ -4,7 +4,6 @@ var bodyParser = require('body-parser');
 var path = require('path');
 var morgan = require('morgan');
 var logger = require('../app/services/logger.js');
-var http = require('http');
 var app = express();
 
 app.set('secret', '3mG!pYBa8#5r1J6');
