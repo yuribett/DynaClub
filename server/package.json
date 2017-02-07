@@ -18,6 +18,8 @@
     "memcached": "^2.2.2",
     "mongoose": "^4.7.6",
     "morgan": "^1.7.0",
+    "redis": "^2.6.5",
+    "socket.io": "^1.7.2",
     "winston": "^2.3.1"
   }
 }
