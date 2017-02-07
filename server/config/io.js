@@ -4,7 +4,8 @@ module.exports = function (server) {
 	io.origins('*:*');
 
 	io.on('connection', (socket) => {
-		console.log('user connected');
+		console.log('user connected' + socket.id);
+
 		socket.on('disconnect', function () {
 			console.log('user disconnected');
 		});
@@ -12,10 +13,9 @@ module.exports = function (server) {
 			io.emit('message', { type: 'new-message', text: message });
 		});
 	});
-	
+
+	return io;
 };
-
-
 
 /* Redis
 
