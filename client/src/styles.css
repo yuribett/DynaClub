@@ -3,9 +3,12 @@
 /* INÍCIO ESTILOS CUSTOMIZADOS */
 .form-container {
     background-color: #303030;
-    padding: 20px;
     border-radius: 5px;
     margin-bottom: 20px;
+    padding-bottom: 20px;
+}
+.col-left {
+  text-align: left
 }
 /* FIM ESTILOS CUSTOMIZADOS */
 

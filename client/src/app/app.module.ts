@@ -6,6 +6,9 @@ import { HttpModule, Http } from '@angular/http';
 
 //Modules
 import { DashboardModule } from './dashboard/dashboard.module';
+import { TeamModule } from './teams/team.module';
+import { DynaCommonModule } from './dyna-common/dyna-common.module'
+import { Ng2Bs3ModalModule } from 'ng2-bs3-modal/ng2-bs3-modal';
 
 //Components
 import { AppComponent } from './app.component';
@@ -38,7 +41,10 @@ import { HttpService } from './auth/http.service';
     FormsModule,
     HttpModule,
     routing,
-    DashboardModule
+    DashboardModule,
+    TeamModule,
+    DynaCommonModule,
+    Ng2Bs3ModalModule
   ],
   providers: [
     { provide: Http, useClass: HttpService },
