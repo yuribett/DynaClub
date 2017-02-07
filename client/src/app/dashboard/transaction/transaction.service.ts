@@ -4,8 +4,9 @@ import { Globals } from '../../app.globals';
 import { User } from '../../user/user';
 import { TransactionComponent } from './transaction.component';
 import { Injectable } from '@angular/core';
-import { Http, Headers } from '@angular/http';
+import { Response, Http, Headers } from '@angular/http';
 import { Observable } from 'rxjs';
+import { Subject } from 'rxjs/Subject';
 
 
 @Injectable()
@@ -13,6 +14,7 @@ export class TransactionService {
 
   http: Http;
   headers: Headers;
+  subjectTransactionAdded: Subject<Transaction> = new Subject<Transaction>();
 
   constructor(http: Http) {
     this.http = http;
@@ -26,11 +28,21 @@ export class TransactionService {
       .map(res => res.json());
   }
 
-  insert(transaction: Transaction): Observable<Transaction>  {
-    console.log(transaction);
+  insert(transaction: Transaction): Observable<Transaction> {
     return this.http
       .post(`${Globals.API_URL}/transaction/`, JSON.stringify(transaction), { headers: this.headers })
-      .map((res) => res.json());
+      .map(this.extractData);
+  }
+
+  private extractData(res: Response) {
+    let body = res.json();
+    let response = body.data || {};
+    //this.subjectTransactionAdded.next(response);
+    return response;
+  }
+
+  getTransactionAdded(): Observable<Transaction> {
+    return this.subjectTransactionAdded.asObservable();
   }
 
 }
