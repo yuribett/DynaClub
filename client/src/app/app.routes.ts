@@ -7,16 +7,25 @@ import { TeamSearchComponent } from './teams/team-search/team-search.component';
 import { TeamDetailComponent } from './teams/team-detail/team-detail.component';
 import { ProfileComponent } from './settings/profile/profile.component';
 import { LoggedInGuard } from './auth/logged.in.guard';
+import { RankingComponent } from './ranking/ranking.component';
+import { TestComponent } from './test/test.component';
 
 const appRoutes: Routes = [
-    {path: '', component: DashboardComponent, canActivate: [LoggedInGuard]  },
-    {path: 'teams', component: TeamSearchComponent},
-    {path: 'team/edit/:id', component: TeamDetailComponent },
-    {path: 'team/new', component: TeamDetailComponent },
-    {path: 'login', component: LoginComponent},
-    {path: 'admin', component: AdminComponent, canActivate: [LoggedInGuard]  },
-    {path: 'profile', component: ProfileComponent, canActivate: [LoggedInGuard]  },
-    {path: '**', component: DashboardComponent, canActivate: [LoggedInGuard]  }
+
+	//for tests
+	{ path: 'test', component: TestComponent },
+
+	//real app
+	{ path: 'dashboard', component: DashboardComponent, canActivate: [LoggedInGuard] },
+	{ path: 'login', component: LoginComponent },
+	{ path: 'admin', component: AdminComponent, canActivate: [LoggedInGuard] },
+	{ path: 'teams', component: TeamSearchComponent },
+    { path: 'team/edit/:id', component: TeamDetailComponent },
+    { path: 'team/new', component: TeamDetailComponent },
+	{ path: 'ranking', component: RankingComponent, canActivate: [LoggedInGuard] },
+	{ path: 'profile', component: ProfileComponent, canActivate: [LoggedInGuard] },
+	{ path: '**', component: DashboardComponent, canActivate: [LoggedInGuard] }
+
 ];
 
 export const routing = RouterModule.forRoot(appRoutes);

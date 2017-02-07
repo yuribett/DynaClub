@@ -1,15 +1,34 @@
 .transaction {
     padding: 10px;
     box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-    transition: ease 0.2s;
     margin-top: 5px;
+    margin-bottom: 0;
+    border-left: 3px solid transparent;
+    background-color: #303030; 
 }
 
-.transaction:hover {
-    margin-left: 1px;
+.messageContainer {
+    font-family: "Titillium Web", Helvetica, Arial, sans-serif;
+    font-weight: 200;
+    font-size: 90%;
 }
 
-.debit span, .credit span {
+@media only screen and (max-device-width: 780px) { 
+    .transaction {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+.symbol {
+    font-size: 20px;
+}
+
+.amount {
+    font-size: 60px;
+}
+
+.debit .glyphicon, .credit .glyphicon {
     font-size: 40px;
     margin-top: 15px;
 }
@@ -20,14 +39,14 @@
 }
 
 .debit:hover {
-    box-shadow: 0px 2px 2px rgba(206, 72, 68, 0.3);
+    border-left: 3px solid #ce4844;
 }
 
 .credit h1, .credit span {
-    color: #1b809e;
+    color: #337ab7;
     font-weight: bold;
 }
 
 .credit:hover {
-    box-shadow: 0px 2px 2px rgba(27, 128, 158, 0.3);
+    border-left: 3px solid #337ab7;
 }

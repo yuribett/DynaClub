@@ -1,14 +1,15 @@
 <div class="row transaction {{getStyle()}}">
-    <div class="col-md-3">
-        <h1>D$ {{transaction.amount}}</h1>
+    <div class="col-md-3 col-sm-3 col-xs-6">
+        <span class="symbol">D$ </span>
+        <span class="amount">{{transaction.amount}}</span>
     </div>
 
-    <div class="col-md-1">
+    <div class="col-md-1 col-sm-1 col-xs-6">
         <span *ngIf="isCredit()" class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
         <span *ngIf="!isCredit()" class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
     </div>
 
-    <div class="col-md-8">
+    <div class="col-md-8 col-sm-8 col-xs-12 messageContainer">
         <div class="row">
             <div style="display: none;">
                 from {{transaction.from.name}}<br> to {{transaction.to.name}}
