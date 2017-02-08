@@ -1,59 +1,60 @@
-var mongoose = require('mongoose');
+let mongoose = require('mongoose');
+let logger = require('../services/logger.js');
 
-module.exports = function (app) {
+module.exports = app => {
 
-	var api = {};
+	let api = {};
 
-	var model = mongoose.model('Team');
+	let model = mongoose.model('Team');
 
-	api.list = function (req, res) {
+	api.list =  (req, res) => {
 		model.find()
-			.then(function (teams) {
+			.then( (teams) => {
 				res.json(teams);
-			}, function (error) {
-				console.log(error);
+			}, (error) => {
+				logger.error(error);
 				res.sendStatus(500);
 			});
 	};
 
-	api.findById = function (req, res) {
+	api.findById =  (req, res) => {
 		model.findOne({
 			_id: req.body._id,
-		}).then(function (team) {
+		}).then( (team) => {
 			res.json(team);
-		}, function (error) {
-			console.log(error);
+		}, (error) => {
+			logger.error(error);
 			res.sendStatus(500);
 		});
 	};
 
-	api.insert = function (req, res) {
+	api.insert = (req, res) => {
 		model.create(req.body)
-			.then(function (team) {
+			.then( (team) => {
 				res.json(team);
-			}, function (error) {
-				console.log('cannot insert team');
-				console.log(error);
+			}, (error) => {
+				logger.error('cannot insert team');
+				logger.error(error);
 				res.sendStatus(500);
 			});
 	};
 
-	api.update = function (req, res) {
+	api.update = (req, res) => {
 		model.findByIdAndUpdate(req.params.id, req.body)
-			.then(function (team) {
+			.then( (team) => {
 				res.json(team);
-			}, function (error) {
-				console.log(error);
+			}, (error) => {
+				logger.error(error);
 				res.sendStatus(500);
 			})
 	};
 
-	api.delete = function (req, res) {
+	api.delete = (req, res) => {
 		model.remove({ '_id': req.params.id })
-			.then(function () {
+			.then( () => {
 				res.sendStatus(200);
-			}, function (error) {
-				console.log(error);
+			}, (error) => {
+				logger.error(error);
 				res.sendStatus(500);
 			});
 	};

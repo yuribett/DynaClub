@@ -1,6 +1,6 @@
-module.exports = function (app) {
+module.exports = app => {
 
-	var api = app.api.configs;
+	let api = app.api.configs;
 
 	app.route('/configs')
 		.get(api.list)

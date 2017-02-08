@@ -1,58 +1,59 @@
-var mongoose = require('mongoose');
+let mongoose = require('mongoose');
+let logger = require('../services/logger.js');
 
-module.exports = function (app) {
+module.exports = app => {
 
-	var api = {};
+	let api = {};
 
-	var model = mongoose.model('Sprint');
+	let model = mongoose.model('Sprint');
 
-	api.list = function (req, res) {
+	api.list = (req, res) => {
 		model.find()
-			.then(function (doc) {
+			.then( (doc) => {
 				res.json(doc);
-			}, function (error) {
-				console.log(error);
+			}, (error) => {
+				logger.error(error);
 				res.sendStatus(500);
 			});
 	};
 
-	api.findById = function (req, res) {
+	api.findById = (req, res) => {
 		model.findOne({
 			_id: req.params.id,
-		}).then(function (doc) {
+		}).then( (doc) => {
 			res.json(doc);
-		}, function (error) {
-			console.log(error);
+		}, (error) => {
+			logger.error(error);
 			res.sendStatus(500);
 		});
 	};
 
-	api.insert = function (req, res) {
+	api.insert = (req, res) => {
 		model.create(req.body)
-			.then(function (doc) {
+			.then( (doc) => {
 				res.json(doc);
-			}, function (error) {
-				console.log(error);
+			}, (error) => {
+				logger.error(error);
 				res.sendStatus(500);
 			});
 	};
 
-	api.update = function (req, res) {
+	api.update = (req, res) => {
 		model.findByIdAndUpdate(req.params.id, req.body)
-			.then(function (doc) {
+			.then( (doc) => {
 				res.json(doc);
-			}, function (error) {
-				console.log(error);
+			}, (error) => {
+				logger.error(error);
 				res.sendStatus(500);
 			})
 	};
 
-	api.delete = function (req, res) {
+	api.delete = (req, res) => {
 		model.remove({ '_id': req.params.id })
-			.then(function () {
+			.then( () => {
 				res.sendStatus(200);
-			}, function (error) {
-				console.log(error);
+			}, (error) => {
+				logger.error(error);
 				res.sendStatus(500);
 			});
 	};

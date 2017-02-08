@@ -1,11 +1,9 @@
-var memcached = require('memcached');
+let memcached = require('memcached');
 
-module.exports = function(){
-  return createMencachedClient;
-}
+module.exports = () => createMencachedClient;
 
 function createMencachedClient(){
-  var client = new memcached('localhost:11211', {
+  let client = new memcached('localhost:11211', {
       retries: 10,
       retry: 10000,
       remove: true

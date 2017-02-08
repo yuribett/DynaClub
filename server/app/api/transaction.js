@@ -1,12 +1,13 @@
-var mongoose = require('mongoose');
+let mongoose = require('mongoose');
+let logger = require('../services/logger.js');
 
-module.exports = function (app) {
+module.exports =  app => {
 
-	var api = {};
+	let api = {};
 
-	var model = mongoose.model('Transaction');
+	let model = mongoose.model('Transaction');
 
-	api.listByUser = function (req, res) {
+	api.listByUser = (req, res) => {
 		let user = req.params.user;
 		let team = req.params.team;
 		let sprint = req.params.sprint;
@@ -19,23 +20,23 @@ module.exports = function (app) {
 			'sprint': sprint
 		})
 			.sort({ date: -1 })
-			.populate('to from sprint, transactionType')
-			.then(function (transactions) {
+			.populate('to from sprint transactionType')
+			.then( (transactions) => {
 				res.json(transactions);
-			}, function (error) {
-				console.log(error);
+			}, (error) => {
+				logger.error(error);
 				res.sendStatus(500);
 			});
 
 	};
 
-	api.insert = function (req, res) {
+	api.insert = (req, res) => {
 		model.create(req.body)
-			.then(function (transaction) {
+			.then( (transaction) => {
 				res.json(transaction);
-			}, function (error) {
-				console.log('cannot insert transaction');
-				console.log(error);
+			}, (error) => {
+				logger.error('cannot insert transaction');
+				logger.error(error);
 				res.sendStatus(500);
 			});
 	};

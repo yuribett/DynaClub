@@ -1,39 +1,40 @@
-var mongoose = require('mongoose');
+let mongoose = require('mongoose');
+let logger = require('../services/logger.js');
 
-module.exports = function (app) {
+module.exports = app => {
 
-	var api = {};
+	let api = {};
 
-	var model = mongoose.model('Configs');
+	let model = mongoose.model('Configs');
 
-	api.list = function (req, res) {
+	api.list = (req, res) => {
 		model.find()
-			.then(function (configs) {
+			.then( (configs) => {
 				res.json(configs);
-			}, function (error) {
-				console.log(error);
+			}, (error) => {
+				logger.error(error);
 				res.sendStatus(500);
 			});
 	};
 
-	api.insert = function (req, res) {
+	api.insert = (req, res) => {
 		model.create(req.body)
-			.then(function (configs) {
+			.then( (configs) => {
 				res.json(configs);
-			}, function (error) {
-				console.log('cannot insert configs');
-				console.log(error);
+			}, (error) => {
+				logger.error('cannot insert configs');
+				logger.error(error);
 				res.sendStatus(500);
 			});
 	};
 
-	api.update = function (req, res) {
+	api.update = (req, res) => {
 		model.update(req.body)
-			.then(function (configs) {
+			.then( (configs) => {
 				res.json(configs);
-			}, function (error) {
-				console.log('cannot update configs');
-				console.log(error);
+			}, (error) => {
+				logger.error('cannot update configs');
+				logger.error(error);
 				res.sendStatus(500);
 			});
 	};

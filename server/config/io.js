@@ -1,15 +1,14 @@
-module.exports = function (server) {
+module.exports = server => {
 	let io = require('socket.io').listen(server);
-
 	io.origins('*:*');
 
-	io.on('connection', (socket) => {
-		console.log('user connected' + socket.id);
+	io.on('connection', socket => {
+		
+		console.log('user connected ' + socket.id);
 
-		socket.on('disconnect', function () {
-			console.log('user disconnected');
-		});
-		socket.on('add-message', (message) => {
+		socket.on('disconnect', () => console.log('user disconnected'));
+
+		socket.on('add-message', message => {
 			io.emit('message', { type: 'new-message', text: message });
 		});
 	});

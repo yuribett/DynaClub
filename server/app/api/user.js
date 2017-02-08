@@ -1,81 +1,82 @@
-var mongoose = require('mongoose');
+let mongoose = require('mongoose');
+let logger = require('../services/logger.js');
 
-module.exports = function(app) {
+module.exports = app => {
 
-    var api = {};
+    let api = {};
 
-    var model = mongoose.model('User');
+    let model = mongoose.model('User');
 
-    api.list = function(req, res) {
+    api.list = (req, res) => {
 
         model.find()
             .populate('teams')
-            .then(function(users) {
+            .then((users) => {
                 res.json(users);
-            }, function(error) {
-                console.log(error);
+            }, (error) => {
+                logger.error(error);
                 res.sendStatus(500);
             });
 
     };
 
-    api.findById = function(req, res) {
+    api.findById = (req, res) => {
         model.findOne({
                 _id: req.params.id,
             })
             .populate('teams')
-            .then(function(user) {
+            .then((user) => {
                 res.json(user);
-            }, function(error) {
-                console.log(error);
+            }, (error) => {
+                logger.error(error);
                 res.sendStatus(500);
             });
     };
 
-    api.findByTeam = function(req, res) {
+    api.findByTeam = (req, res) => {
         model.find({
                 teams: { $in: [req.params.team] },
                 active: true
             })
             .populate('teams')
-            .then(function(user) {
+            .then((user) => {
                 res.json(user);
-            }, function(error) {
-                console.log(error);
+            }, (error) => {
+                logger.error(error);
                 res.sendStatus(500);
             });
     };
 
-    api.insert = function(req, res) {
+    api.insert = (req, res) => {
         model.create(req.body)
-            .then(function(user) {
+            .then((user) => {
                 res.json(user);
-            }, function(error) {
-                console.log('cannot insert user');
-                console.log(error);
+            }, (error) => {
+                logger.error('cannot insert user');
+                logger.error(error);
                 res.sendStatus(500);
             });
     };
 
-    api.update = function(req, res) {
-        console.log('update');
+    api.update = (req, res) => {
+        logger.error('update');
         model.findByIdAndUpdate(req.params.id, req.body, { new: true })
             .populate('teams')
-            .then(function(user) {
-                console.log(user);
+            .then((user) => {
+                logger.error(user);
                 res.json(user);
-            }, function(error) {
-                console.log(error);
+            }, (error) => {
+                logger.error(error);
                 res.sendStatus(500);
             })
     };
 
-    api.delete = function(req, res) {
+    api.delete = (req, res) => {
         model.remove({ '_id': req.params.id })
-            .then(function() {
+            .then(() => {
                 res.sendStatus(200);
-            }, function(error) {
-                console.log(error);
+            }, (error) => {
+                logger.error(error);
                 res.sendStatus(500);
             });
     };
