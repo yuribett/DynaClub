@@ -23,7 +23,6 @@ export class TeamSearchComponent implements OnInit {
   }
 
   loadTeams(): void {
-    console.log('loading teams');
     this.teamService
         .list()
         .then(teams => this.teams = teams )
@@ -33,8 +32,8 @@ export class TeamSearchComponent implements OnInit {
   gotoNewTeam(): void {
     this.router.navigateByUrl('/team/new');
   }
-
+  
   afterDelete(team): void {
-
+    this.loadTeams();
   }
 }
