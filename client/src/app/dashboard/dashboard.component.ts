@@ -1,3 +1,4 @@
+import { TeamService } from '../teams/team.service';
 import { Globals } from '../app.globals';
 import { Team } from '../teams/team';
 import { AppService } from '../app.service';
@@ -16,21 +17,22 @@ import { Component, OnInit } from '@angular/core';
 export class DashboardComponent implements OnInit {
 
   transactions: Array<Transaction>;
-  transactionService: TransactionService;
-  userService: UserService;
-  appService: AppService;
 
-  constructor(transactionService: TransactionService, userService: UserService, appService: AppService) {
+  constructor(private transactionService: TransactionService, private userService: UserService, private appService: AppService, private teamService: TeamService) {
     this.transactionService = transactionService;
     this.userService = userService;
     this.appService = appService;
-    let _currentTeam: Team = JSON.parse(this.appService.getStorage().getItem(Globals.CURRENT_TEAM));
-    this.loadTransactions(_currentTeam);
+    this.loadTransactions(teamService.getCurrentTeam());
   }
 
   ngOnInit() {
     this.appService.getCurrentTeam().subscribe((team: Team) => {
       this.loadTransactions(team);
+    });
+
+    this.transactionService.getTransactionAdded().subscribe((transaction: Transaction) => {
+      console.log('transaction adicionada, reloada essa porra!', transaction);
+      this.transactions.unshift(transaction);
     });
   }
 

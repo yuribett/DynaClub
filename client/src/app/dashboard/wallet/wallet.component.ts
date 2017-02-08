@@ -20,8 +20,9 @@ export class WalletComponent implements OnInit {
   ngOnInit() {
     this.transactionService.getTransactionAdded().subscribe((transaction: Transaction) => {
       console.log('transaction adicionada, reloada essa porra!', transaction);
+      this.myDynas = Math.floor(Math.random() * 11) * 100;
+      this.dynasReceived = Math.floor(Math.random() * 11) * 100;
     });
-
   }
 
 }

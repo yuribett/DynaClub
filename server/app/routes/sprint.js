@@ -1,6 +1,6 @@
-module.exports = function (app) {
+module.exports = app => {
 
-	var api = app.api.sprint;
+	let api = app.api.sprint;
 
 	app.route('/sprint')
 		.get(api.list)

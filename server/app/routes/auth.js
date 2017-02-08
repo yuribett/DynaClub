@@ -1,6 +1,6 @@
-module.exports = function (app) {
+module.exports = app => {
 
-	var api = app.api.auth;
+	let api = app.api.auth;
 
 	app.post('/auth', api.authUser);
 	//app.use('/*', api.verifyToken);

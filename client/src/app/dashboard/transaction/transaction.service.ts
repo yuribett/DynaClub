@@ -31,17 +31,14 @@ export class TransactionService {
   insert(transaction: Transaction): Observable<Transaction> {
     return this.http
       .post(`${Globals.API_URL}/transaction/`, JSON.stringify(transaction), { headers: this.headers })
-      .map(this.extractData);
-  }
-
-  private extractData(res: Response) {
-    let body = res.json();
-    let response = body.data || {};
-    //this.subjectTransactionAdded.next(response);
-    return response;
+      .map(res => {
+        this.subjectTransactionAdded.next(res.json());
+        return res.json()
+      });
   }
 
   getTransactionAdded(): Observable<Transaction> {
+    console.log('Observando novas transactions!');
     return this.subjectTransactionAdded.asObservable();
   }
 

@@ -1,6 +1,6 @@
-module.exports = function (app) {
+module.exports = app => {
 
-	var api = app.api.user;
+	let api = app.api.user;
 
 	app.route('/user')
 		.get(api.list)

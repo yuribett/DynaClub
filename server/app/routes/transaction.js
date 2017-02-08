@@ -1,6 +1,6 @@
-module.exports = function (app) {
+module.exports = app => {
 
-	var api = app.api.transaction;
+	let api = app.api.transaction;
 
 	app.route('/transaction/:user/:team/:sprint')
 		.get(api.listByUser);

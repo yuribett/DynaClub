@@ -1,5 +1,5 @@
-var winston = require('winston');
-var fs = require('fs');
+let winston = require('winston');
+let fs = require('fs');
 
 if (!fs.existsSync('logs')) {
 	fs.mkdirSync('logs');

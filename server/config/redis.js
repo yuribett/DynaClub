@@ -1,11 +1,9 @@
-module.exports = function (port, host) {
+module.exports = (port, host) => {
 
-	var redis = require('redis');
-	var client = redis.createClient(port, host);
+	let redis = require('redis');
+	let client = redis.createClient(port, host);
 
-	client.on('connect', function () {
-		console.log('Connected to Redis');
-	});
+	client.on('connect', () => console.log('Connected to Redis'));
 
 	return client;
 };

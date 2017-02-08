@@ -1,17 +1,17 @@
-var express = require('express');
-var consign = require('consign');
-var bodyParser = require('body-parser');
-var path = require('path');
-var morgan = require('morgan');
-var logger = require('../app/services/logger.js');
-var app = express();
+let express = require('express');
+let consign = require('consign');
+let bodyParser = require('body-parser');
+let path = require('path');
+let morgan = require('morgan');
+let logger = require('../app/services/logger.js');
+let app = express();
 
 app.set('secret', '3mG!pYBa8#5r1J6');
 
 app.use(morgan("common", {
 	stream: {
 		write: function (mensagem) {
-			logger.info(mensagem);
+			console.log(mensagem);
 		}
 	}
 }));
@@ -19,7 +19,7 @@ app.use(morgan("common", {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Expose-Headers", "x-access-token");
 	res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');

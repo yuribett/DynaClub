@@ -1,44 +1,54 @@
-var mongoose = require('mongoose');
+let mongoose = require('mongoose');
+let logger = require('../services/logger.js');
 
-module.exports = function (app) {
+module.exports = app => {
 
-	var api = {};
+    let api = {};
 
-	var model = mongoose.model('Transaction');
+    let model = mongoose.model('Transaction');
 
-	api.listByUser = function (req, res) {
-		let user = req.params.user;
-		let team = req.params.team;
-		let sprint = req.params.sprint;
-		model.find({
-			$or: [
-				{ 'to': user },
-				{ 'from': user }
-			],
-			'team': team,
-			'sprint': sprint
-		})
-			.sort({ date: -1 })
-			.populate('to from sprint, transactionType')
-			.then(function (transactions) {
-				res.json(transactions);
-			}, function (error) {
-				console.log(error);
-				res.sendStatus(500);
-			});
+    api.listByUser = (req, res) => {
+        let user = req.params.user;
+        let team = req.params.team;
+        let sprint = req.params.sprint;
+        model.find({
+                $or: [
+                    { 'to': user },
+                    { 'from': user }
+                ],
+                'team': team,
+                'sprint': sprint
+            })
+            .sort({ date: -1 })
+            .populate('to from sprint transactionType team')
+            .then((transactions) => {
+                res.json(transactions);
+            }, (error) => {
+                logger.error(error);
+                res.sendStatus(500);
+            });
 
-	};
+    };
 
-	api.insert = function (req, res) {
-		model.create(req.body)
-			.then(function (transaction) {
-				res.json(transaction);
-			}, function (error) {
-				console.log('cannot insert transaction');
-				console.log(error);
-				res.sendStatus(500);
-			});
-	};
+    api.insert = (req, res) => {
+        model.create(req.body)
+            .then((transaction) => {
+                model.findOne({
+                        _id: transaction._id,
+                    })
+                    .populate('to from sprint transactionType team')
+                    .then((transaction) => {
+                        res.json(transaction);
+                    }, (error) => {
+                        logger.error(error);
+                        res.sendStatus(500);
+                    });
+            }, (error) => {
+                logger.error('cannot insert transaction');
+                logger.error(error);
+                res.sendStatus(500);
+            });
+    };
 
-	return api;
+    return api;
 };

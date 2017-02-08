@@ -1,6 +1,6 @@
-module.exports = function (app) {
+module.exports = app => {
 
-	var api = app.api.team;
+	let api = app.api.team;
 
 	app.route('/team')
 		.get(api.list)
