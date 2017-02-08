@@ -7,8 +7,9 @@ import { HttpModule, Http } from '@angular/http';
 //Modules
 import { DashboardModule } from './dashboard/dashboard.module';
 import { TeamModule } from './teams/team.module';
-import { DynaCommonModule } from './dyna-common/dyna-common.module'
-import { Ng2Bs3ModalModule } from 'ng2-bs3-modal/ng2-bs3-modal';
+import { DynaCommonModule } from './dyna-common/dyna-common.module';
+import { ModalModule } from 'angular2-modal';
+import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
 
 //Components
 import { AppComponent } from './app.component';
@@ -48,6 +49,8 @@ import { TestComponent } from './test/test.component';
 		FormsModule,
 		HttpModule,
 		routing,
+    	ModalModule.forRoot(),
+    	BootstrapModalModule,
 		DashboardModule,
 		TeamModule,
 		DynaCommonModule
