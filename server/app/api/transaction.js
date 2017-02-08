@@ -12,13 +12,13 @@ module.exports = app => {
         let team = req.params.team;
         let sprint = req.params.sprint;
         model.find({
-                $or: [
-                    { 'to': user },
-                    { 'from': user }
-                ],
-                'team': team,
-                'sprint': sprint
-            })
+            $or: [
+                { 'to': user },
+                { 'from': user }
+            ],
+            'team': team,
+            'sprint': sprint
+        })
             .sort({ date: -1 })
             .populate('to from sprint transactionType team')
             .then((transactions) => {
@@ -34,10 +34,18 @@ module.exports = app => {
         model.create(req.body)
             .then((transaction) => {
                 model.findOne({
-                        _id: transaction._id,
-                    })
+                    _id: transaction._id,
+                })
                     .populate('to from sprint transactionType team')
                     .then((transaction) => {
+                        // Sending transaction through socket.io
+                        app.get('redis').get("user:" + transaction.to, (err, socketId) => {
+                            if (err) {
+                                logger.error('Error in getting socketId from Redis');
+                            } else {
+                                app.get('io').sockets.connected[socketId].emit('transaction', transaction);
+                            }
+                        });
                         res.json(transaction);
                     }, (error) => {
                         logger.error(error);

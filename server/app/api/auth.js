@@ -14,7 +14,7 @@ module.exports = app => {
 			password: req.body.password
 		})
 			.populate('teams')
-			.then( (auth) => {
+			.then((auth) => {
 				if (!auth) {
 					logger.error('Login or password incorrect: ' + req.body.user);
 					res.sendStatus(401);
