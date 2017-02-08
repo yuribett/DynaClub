@@ -1,3 +1,4 @@
+import { AppService } from '../app.service';
 import { Globals } from '../app.globals';
 import { Injectable } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
@@ -10,15 +11,15 @@ export class TeamService {
 
   http: Http;
   headers: Headers;
-  private teamsUrl = `${Globals.API_URL}/team`;  
+  private teamsUrl = `${Globals.API_URL}/team`;
 
-  constructor(http: Http) {
+  constructor(http: Http, private appService: AppService) {
     this.http = http;
     this.headers = new Headers();
     this.headers.append('Content-Type', 'application/json');
   }
 
-  list() : Promise<Team[]> {
+  list(): Promise<Team[]> {
     return this.http
       .get(this.teamsUrl)
       .toPromise()
@@ -34,13 +35,13 @@ export class TeamService {
   }
 
   save(team: Team): Promise<Team> {
-    if (team._id){
+    if (team._id) {
       return this.put(team);
     }
     return this.post(team);
   }
 
-    // Add
+  // Add
   private post(team: Team): Promise<Team> {
     return this.http
       .post(this.teamsUrl, JSON.stringify(team), { headers: this.headers })
@@ -49,7 +50,7 @@ export class TeamService {
       .catch(this.handleError);
   }
 
-    // Update
+  // Update
   private put(team: Team): Promise<Team> {
     let url = `${this.teamsUrl}/${team._id}`;
     return this.http
@@ -59,7 +60,7 @@ export class TeamService {
       .catch(this.handleError);
   }
 
-  
+
   delete(team: Team): Promise<Response> {
     let url = `${this.teamsUrl}/${team._id}`;
     return this.http
@@ -70,6 +71,10 @@ export class TeamService {
 
   private handleError(error: any): Promise<any> {
     return Promise.reject(error.message || error);
+  }
+
+  getCurrentTeam(): Team {
+    return JSON.parse(this.appService.getStorage().getItem(Globals.CURRENT_TEAM));
   }
 
 }
