@@ -33,6 +33,16 @@ module.exports =  app => {
 	api.insert = (req, res) => {
 		model.create(req.body)
 			.then( (transaction) => {
+				
+				// Sending transaction through socket.io
+				app.get('redis').get("user:"+transaction.to, (err, socketId) => {
+					if (err) {
+						logger.error('Error in getting socketId from Redis');
+					} else {
+						app.get('io').sockets.connected[socketId].emit('transaction', transaction);
+					}
+				});
+
 				res.json(transaction);
 			}, (error) => {
 				logger.error('cannot insert transaction');

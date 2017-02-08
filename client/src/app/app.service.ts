@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { User } from './user/user';
 import { Team } from './teams/team';
 import { Globals } from './app.globals';
+import * as io from 'socket.io-client';
 
 @Injectable()
 export class AppService {
@@ -12,6 +13,8 @@ export class AppService {
 	private subjectUser: Subject<User> = new Subject<User>();
 	private currentTeam: Team;
 	private subjectCurrentTeam: Subject<Team> = new Subject<Team>();
+
+	//USER SERVICES
 
 	setUser(user: User): void {
 		this.user = user;
@@ -32,10 +35,10 @@ export class AppService {
 	}
 
 
-
+	// STORAGE SERVICES
 
 	getStorage() {
-		if(localStorage.getItem(Globals.USER_LOCAL_STORAGE) == "1"){
+		if (localStorage.getItem(Globals.USER_LOCAL_STORAGE) == "1") {
 			return localStorage;
 		} else {
 			return sessionStorage;
@@ -43,7 +46,7 @@ export class AppService {
 	}
 
 	setLocalStorage(local: boolean) {
-		if(local){
+		if (local) {
 			localStorage.setItem(Globals.USER_LOCAL_STORAGE, "1");
 		} else {
 			localStorage.setItem(Globals.USER_LOCAL_STORAGE, "0");
@@ -53,6 +56,25 @@ export class AppService {
 	clearStorage() {
 		localStorage.clear();
 		sessionStorage.clear();
+	}
+
+	//IO SERVICES
+
+
+	private socket;
+
+	getIoTransactions() {
+		let observable = new Observable(observer => {
+			//this.socket = io(Globals.API_URL);
+			this.socket = io.connect(Globals.API_URL, {query: 'user='+JSON.parse(this.getStorage().getItem(Globals.LOCAL_USER))._id});
+			this.socket.on('transaction', (data) => {
+				observer.next(data);
+			});
+			return () => {
+				this.socket.disconnect();
+			};
+		})
+		return observable;
 	}
 
 }
