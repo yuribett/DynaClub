@@ -1,12 +1,12 @@
 <div class="jumbotron">
 
-    <div class="buttonsPanel" [@slideOut]="buttonsState">
+    <div class="buttonsPanel" [@slide]="buttonsState">
         <button type="button" class="btn btn-primary btn-lg btn-block mainButtons" (click)="toggleMenu()">Doar</button>
         <br>
         <button type="button" class="btn btn-success btn-lg btn-block mainButtons" (click)="toggleMenu()">Pechinchar</button>
     </div>
 
-    <div class="donatePanel" [@slideIn]="formState">
+    <div class="donatePanel" [@slide]="formState">
         <form (ngSubmit)="donate($event)">
 
             <div class="form-group">

@@ -9,21 +9,21 @@ import { Team } from '../../teams/team';
 import { UserService } from '../../user/user.service';
 import { Globals } from '../../app.globals';
 import { User } from '../../user/user';
-import { slideLeft, slideRight } from '../../animations';
+import { slide } from '../../animations';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
 	selector: 'app-donate',
 	templateUrl: './donate.component.html',
 	styleUrls: ['./donate.component.css'],
-	animations: [slideLeft, slideRight]
+	animations: [slide]
 })
 export class DonateComponent implements OnInit {
 
 	teamUsers: Array<User>;
 	transactionTypes: Array<TransactionType>;
-	buttonsState: String = 'visible';
-	formState: String = 'hidden';
+	buttonsState: String = 'center';
+	formState: String = 'right';
 	transaction: Transaction = new Transaction();
 	currentSprint: Sprint;
 
@@ -46,8 +46,8 @@ export class DonateComponent implements OnInit {
 	}
 
 	toggleMenu() {
-		this.buttonsState = this.buttonsState === 'hidden' ? 'visible' : 'hidden';
-		this.formState = this.formState === 'hidden' ? 'visible' : 'hidden';
+		this.buttonsState = this.buttonsState === 'left' ? 'center' : 'left';
+		this.formState = this.formState === 'right' ? 'center' : 'right';
 	}
 
 	loadUsers(team: Team) {

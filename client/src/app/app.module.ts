@@ -8,7 +8,6 @@ import { HttpModule, Http } from '@angular/http';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { TeamModule } from './teams/team.module';
 import { DynaCommonModule } from './dyna-common/dyna-common.module'
-import { Ng2Bs3ModalModule } from 'ng2-bs3-modal/ng2-bs3-modal';
 
 //Components
 import { AppComponent } from './app.component';
