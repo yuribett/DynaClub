@@ -50,5 +50,18 @@ module.exports = app => {
             });
     };
 
+
+    //calm down litle grasshoper. This dont work...yet!
+    api.valueDonated = (req, res) => {
+        let user = req.params.user;
+        let team = req.params.team;
+        let sprint = req.params.sprint;
+        model.aggregate([
+            { $match: { $or: [{ to: user }, { from: user }], team: team, sprint: sprint } },
+            { $group: { from: user, total: { $sum: "$amount" } } },
+            { $group: { to: user, total: { $sum: "$amount" } } }
+        ]);
+    }
+
     return api;
 };
