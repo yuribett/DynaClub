@@ -39,13 +39,11 @@ module.exports = app => {
                     .populate('to from sprint transactionType team')
                     .then((transaction) => {
                         // Sending transaction through socket.io
-                        app.get('redis').get("user:" + transaction.to, (err, socketId) => {
+                        app.get('redis').get("user:" + transaction.to._id, (err, socketId) => {
                             if (err) {
                                 logger.error('Error in getting socketId from Redis');
                             } else {
-                                console.log('socketId',socketId);
                                 let socket =  app.get('io').sockets.connected[socketId];
-                                console.log('socket', JSON.stringify(socket));
                                 if(typeof socket != "undefined"){
                                     socket.emit('transaction', transaction);
                                 }
