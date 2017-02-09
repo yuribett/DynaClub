@@ -27,6 +27,7 @@ export class TransactionService {
       .get(`${Globals.API_URL}/transaction/` + user._id + '/' + team._id + '/5891f0b5bbcf3e29a0142139')
       .map(res => res.json());
   }
+  
   getWallet(user: User, team: Team) {
     return this.http
       .get(`${Globals.API_URL}/wallet/` + user._id + '/' + team._id + '/5891f0b5bbcf3e29a0142139')
@@ -43,7 +44,6 @@ export class TransactionService {
   }
 
   getTransactionAdded(): Observable<Transaction> {
-    console.log('Observando novas transactions!');
     return this.subjectTransactionAdded.asObservable();
   }
 

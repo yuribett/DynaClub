@@ -12,13 +12,13 @@ module.exports = app => {
         let team = req.params.team;
         let sprint = req.params.sprint;
         model.find({
-                $or: [
-                    { 'to': user },
-                    { 'from': user }
-                ],
-                'team': team,
-                'sprint': sprint
-            })
+            $or: [
+                { 'to': user },
+                { 'from': user }
+            ],
+            'team': team,
+            'sprint': sprint
+        })
             .sort({ date: -1 })
             .populate('to from sprint transactionType team')
             .then((transactions) => {
@@ -34,8 +34,8 @@ module.exports = app => {
         model.create(req.body)
             .then((transaction) => {
                 model.findOne({
-                        _id: transaction._id,
-                    })
+                    _id: transaction._id,
+                })
                     .populate('to from sprint transactionType team')
                     .then((transaction) => {
                         // Sending transaction through socket.io
@@ -68,48 +68,56 @@ module.exports = app => {
         let team = req.params.team;
         let sprint = req.params.sprint;
         model.aggregate([{
-                $match: {
-                    $or: [
-                        { 'to': mongoose.Types.ObjectId(user) },
-                        { 'from': mongoose.Types.ObjectId(user) }
-                    ],
-                    'team': mongoose.Types.ObjectId(team),
-                    'sprint': mongoose.Types.ObjectId(sprint)
-                }
-            },
-            {
-                $project: {
-                    amount: 1,
-                    received: {
-                        $cond: {
-                            if: { '$eq': ['$to', mongoose.Types.ObjectId(user)] },
-                            then: true,
-                            else: false
-                        }
-                    }
-                }
-            },
-            {
-                $group: {
-                    _id: '$received',
-                    total: { $sum: "$amount" }
-                }
-            },
-            {
-                $project: {
-                    _id: 0,
-                    total: 1,
-                    received: {
-                        $cond: {
-                            if: { '$eq': ['$_id', true] },
-                            then: true,
-                            else: false
-                        }
+            $match: {
+                $or: [
+                    { 'to': mongoose.Types.ObjectId(user) },
+                    { 'from': mongoose.Types.ObjectId(user) }
+                ],
+                'team': mongoose.Types.ObjectId(team),
+                'sprint': mongoose.Types.ObjectId(sprint)
+            }
+        },
+        {
+            $project: {
+                amount: 1,
+                received: {
+                    $cond: {
+                        if: { '$eq': ['$to', mongoose.Types.ObjectId(user)] },
+                        then: true,
+                        else: false
                     }
                 }
             }
+        },
+        {
+            $group: {
+                _id: '$received',
+                total: { $sum: "$amount" }
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                total: 1,
+                received: {
+                    $cond: {
+                        if: { '$eq': ['$_id', true] },
+                        then: true,
+                        else: false
+                    }
+                }
+            }
+        }
         ]).then(result => {
-            res.json(result);
+            let wallet = {};
+            result.forEach(function (row) {
+                if (row.received) {
+                    wallet.totalReceived = row.total;
+                } else {
+                    wallet.totalDonated = row.total;
+                }
+            });
+            res.json(wallet);
         }, error => {
             logger.error('cannot load wallet');
             logger.error(error);

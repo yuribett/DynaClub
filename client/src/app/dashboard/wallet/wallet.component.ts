@@ -27,9 +27,9 @@ export class WalletComponent implements OnInit {
   getWallet() {
     this.transactionService.getWallet(this.userService.getStoredUser(), this.teamService.getCurrentTeam()).subscribe(
       wallet => {
-        console.log('recebi essa wallet', wallet);
-        this.myDynas = Math.floor(Math.random() * 11) * 100;
-        this.dynasReceived = Math.floor(Math.random() * 11) * 100;
+         //TODO - subtrair wallet.totalDonated pelo valor padrao da Sprint.
+        this.myDynas = 1000 - wallet.totalDonated;
+        this.dynasReceived = wallet.totalReceived;
       }
     );
   }
