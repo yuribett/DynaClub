@@ -10,8 +10,8 @@ app.set('secret', '3mG!pYBa8#5r1J6');
 
 app.use(morgan("common", {
 	stream: {
-		write: function (mensagem) {
-			console.log(mensagem);
+		write: log => {
+			logger.debug(log);
 		}
 	}
 }));

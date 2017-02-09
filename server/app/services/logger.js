@@ -10,7 +10,7 @@ module.exports = new winston.Logger({
 		new winston.transports.File({
 			level: "debug",
 			filename: "logs/dynaclub.log",
-			maxsize: 10000,
+			maxsize: 1000000,
 			maxFiles: 100
 		})
 	]
