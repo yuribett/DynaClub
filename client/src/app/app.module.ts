@@ -31,7 +31,6 @@ import { routing } from './app.routes';
 import 'rxjs/add/operator/map';
 import { LoggedInGuard } from './auth/logged.in.guard';
 import { HttpService } from './auth/http.service';
-import { TestComponent } from './test/test.component';
 
 @NgModule({
 	declarations: [
@@ -41,8 +40,7 @@ import { TestComponent } from './test/test.component';
 		ProfileComponent,
 		MenuComponent,
 		RankingComponent,
-		SprintComponent,
-		TestComponent
+		SprintComponent
 	],
 	imports: [
 		BrowserModule,

@@ -62,10 +62,10 @@ export class AppService {
 
 	private socket;
 
-	getIoTransactions() {
+	getIoTransactions(): Observable<{}> {
 		let observable = new Observable(observer => {
-			//this.socket = io(Globals.API_URL);
-			this.socket = io.connect(Globals.API_URL, {query: 'user='+JSON.parse(this.getStorage().getItem(Globals.LOCAL_USER))._id});
+			this.socket = io.connect(Globals.SOCKET_IO_URL, 
+				{query: 'user='+JSON.parse(this.getStorage().getItem(Globals.LOCAL_USER))._id});
 			this.socket.on('transaction', (data) => {
 				observer.next(data);
 			});
