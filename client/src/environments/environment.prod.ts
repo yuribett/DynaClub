@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  server: '/'
+  server: window.location.protocol + '//' + window.location.host + '/' //thanks to schleuss
 };
