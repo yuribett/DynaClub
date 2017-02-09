@@ -31,7 +31,6 @@ export class DashboardComponent implements OnInit {
     });
 
     this.transactionService.getTransactionAdded().subscribe((transaction: Transaction) => {
-      console.log('transaction adicionada, reloada essa porra!', transaction);
       this.transactions.unshift(transaction);
     });
   }
