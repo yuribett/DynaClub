@@ -40,14 +40,10 @@ module.exports = app => {
                     .then((transaction) => {
                         // Sending transaction through socket.io
                         app.get('redis').get("user:" + transaction.to._id, (err, socketId) => {
-                            if (err) {
-                                logger.error('Error in getting socketId from Redis');
-                            } else {
-                                let socket = app.get('io').sockets.connected[socketId];
-                                if (typeof socket != "undefined") {
-                                    socket.emit('transaction', transaction);
-                                }
-                            }
+                            emitTransaction(err, socketId, transaction);
+                        });
+                        app.get('redis').get("user:" + transaction.from._id, (err, socketId) => {
+                            emitTransaction(err, socketId, transaction);
                         });
                         res.json(transaction);
                     }, (error) => {
@@ -60,6 +56,17 @@ module.exports = app => {
                 res.sendStatus(500);
             });
     };
+
+    var emitTransaction = function (error, socketId, transaction) {
+        if (error) {
+            logger.error('Error in getting socketId from Redis');
+        } else {
+            let socket = app.get('io').sockets.connected[socketId];
+            if (typeof socket != "undefined") {
+                socket.emit('transaction', transaction);
+            }
+        }
+    }
 
 
     //patience litle grasshoper. This isn't working...yet!

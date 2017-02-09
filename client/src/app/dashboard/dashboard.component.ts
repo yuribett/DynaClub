@@ -30,7 +30,8 @@ export class DashboardComponent implements OnInit {
       this.loadTransactions(team);
     });
 
-    this.transactionService.getTransactionAdded().subscribe((transaction: Transaction) => {
+    this.transactionService.onTransactionsAdded().subscribe((transaction: Transaction) => {
+      console.log('DashboardComponent - Transaction recebida', transaction);
       this.transactions.unshift(transaction);
     });
   }

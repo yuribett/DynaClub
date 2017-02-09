@@ -19,7 +19,8 @@ export class WalletComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.transactionService.getTransactionAdded().subscribe((transaction: Transaction) => {
+    this.transactionService.onTransactionsAdded().subscribe((transaction: Transaction) => {
+      console.log('Transaction recebida', transaction);
       this.getWallet();
     });
   }

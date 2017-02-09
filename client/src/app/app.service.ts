@@ -13,9 +13,22 @@ export class AppService {
 	private subjectUser: Subject<User> = new Subject<User>();
 	private currentTeam: Team;
 	private subjectCurrentTeam: Subject<Team> = new Subject<Team>();
+	private socket;
+
+	constructor() {
+		this.socket = io.connect(Globals.SOCKET_IO_URL, {
+			query: 'user=' + JSON.parse(this.getStorage().getItem(Globals.LOCAL_USER))._id
+		});
+		this.socket.on('disconnect', () => {
+			this.socket.disconnect();
+		});
+	}
+
+	getSocket() {
+		return this.socket;
+	}
 
 	//USER SERVICES
-
 	setUser(user: User): void {
 		this.user = user;
 		this.subjectUser.next(user);
@@ -34,9 +47,7 @@ export class AppService {
 		return this.subjectCurrentTeam.asObservable();
 	}
 
-
 	// STORAGE SERVICES
-
 	getStorage() {
 		if (localStorage.getItem(Globals.USER_LOCAL_STORAGE) == "1") {
 			return localStorage;
@@ -56,24 +67,6 @@ export class AppService {
 	clearStorage() {
 		localStorage.clear();
 		sessionStorage.clear();
-	}
-
-	//IO SERVICES
-
-	private socket;
-
-	getIoTransactions(): Observable<{}> {
-		let observable = new Observable(observer => {
-			this.socket = io.connect(Globals.SOCKET_IO_URL, 
-				{query: 'user='+JSON.parse(this.getStorage().getItem(Globals.LOCAL_USER))._id});
-			this.socket.on('transaction', (data) => {
-				observer.next(data);
-			});
-			return () => {
-				this.socket.disconnect();
-			};
-		})
-		return observable;
 	}
 
 }
