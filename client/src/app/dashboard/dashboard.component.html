@@ -7,6 +7,9 @@
 		<div *ngIf="transactions == null" class="iconContainer">
 			<span class="glyphicon glyphicon-refresh glyphicon-spin"></span>
 		</div>
+		<div class="jumbotron" *ngIf="transactions != null && transactions.length == 0">
+			<span>Você n&atilde;o n&atilde;o recebeu nem doou Dynas ainda!</span>
+		</div>
 		<app-transaction [transaction]="transaction" *ngFor="let transaction of transactions"></app-transaction>
 	</div>
 </div>

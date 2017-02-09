@@ -116,7 +116,10 @@ module.exports = app => {
             }
         }
         ]).then(result => {
-            let wallet = {};
+            let wallet = {
+                totalReceived: 0,
+                totalDonated: 0
+            };
             result.forEach(function (row) {
                 if (row.received) {
                     wallet.totalReceived = row.total;
