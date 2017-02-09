@@ -43,7 +43,12 @@ module.exports = app => {
                             if (err) {
                                 logger.error('Error in getting socketId from Redis');
                             } else {
-                                app.get('io').sockets.connected[socketId].emit('transaction', transaction);
+                                console.log('socketId',socketId);
+                                let socket =  app.get('io').sockets.connected[socketId];
+                                console.log('socket', JSON.stringify(socket));
+                                if(typeof socket != "undefined"){
+                                    socket.emit('transaction', transaction);
+                                }
                             }
                         });
                         res.json(transaction);

@@ -60,7 +60,6 @@ export class AppService {
 
 	//IO SERVICES
 
-
 	private socket;
 
 	getIoTransactions() {
