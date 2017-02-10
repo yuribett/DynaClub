@@ -15,17 +15,23 @@ export class AppService {
 	private subjectCurrentTeam: Subject<Team> = new Subject<Team>();
 	private socket;
 
-	constructor() {
-		this.socket = io.connect(Globals.SOCKET_IO_URL, {
-			query: 'user=' + JSON.parse(this.getStorage().getItem(Globals.LOCAL_USER))._id
-		});
-		this.socket.on('disconnect', () => {
-			this.socket.disconnect();
-		});
+	getSocket() {
+		if (!this.socket) {
+			let user = JSON.parse(this.getStorage().getItem(Globals.LOCAL_USER));
+			if (user) {
+				this.socket = io.connect(Globals.SOCKET_IO_URL, {
+					query: 'user=' + user._id
+				});
+				this.socket.on('disconnect', () => {
+					this.socket.disconnect();
+				});
+			}
+		}
+		return this.socket;
 	}
 
-	getSocket() {
-		return this.socket;
+	ngOnInit() {
+
 	}
 
 	//USER SERVICES
