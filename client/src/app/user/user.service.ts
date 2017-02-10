@@ -24,7 +24,8 @@ export class UserService {
 	findById(id: string): Observable<User> {
 		return this.http
 			.get(`${Globals.API_URL}/user/${id}`)
-			.map(res => res.json());
+			.map(res => res.json())
+			.catch(error => Observable.throw(error._body));
 	}
 
 	/**
@@ -33,7 +34,8 @@ export class UserService {
 	findByTeam(team: Team): Observable<Array<User>> {
 		return this.http
 			.get(`${Globals.API_URL}/userTeam/${team._id}`)
-			.map(res => res.json());
+			.map(res => res.json())
+			.catch(error => Observable.throw(error._body));
 	}
 
 	save(user: User): Observable<User> {
@@ -45,19 +47,23 @@ export class UserService {
 
 			return this.http
 				.put(`${Globals.API_URL}/user/${user._id}`, JSON.stringify(user), { headers: this.headers })
-				.map((res) => res.json());
+				.map((res) => res.json())
+				.catch(error => Observable.throw(error._body));
 		} else {
 
 			console.log('insert', user);
 
 			return this.http
 				.post(`${Globals.API_URL}/user/`, JSON.stringify(user), { headers: this.headers })
-				.map((res) => res.json());
+				.map((res) => res.json())
+				.catch(error => Observable.throw(error._body));
 		}
 	}
 
 	remove(user: User): Observable<Response> {
-		return this.http.delete(`${Globals.API_URL}/user/${user._id}`);
+		return this.http
+			.delete(`${Globals.API_URL}/user/${user._id}`)
+			.catch(error => Observable.throw(error._body));
 	}
 
 	getStoredUser(): User {

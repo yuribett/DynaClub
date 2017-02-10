@@ -33,8 +33,9 @@ export class AuthService {
           this.user.storeUser(res.json());
         }
       },
-        (err) => console.log(err)
-      );
+      (err) => console.log(err)
+      )
+      .catch(error => Observable.throw(error._body));
   }
 
   logout() {

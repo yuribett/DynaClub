@@ -12,13 +12,13 @@ module.exports = app => {
         let team = req.params.team;
         let sprint = req.params.sprint;
         model.find({
-            $or: [
-                { 'to': user },
-                { 'from': user }
-            ],
-            'team': team,
-            'sprint': sprint
-        })
+                $or: [
+                    { 'to': user },
+                    { 'from': user }
+                ],
+                'team': team,
+                'sprint': sprint
+            })
             .sort({ date: -1 })
             .populate('to from sprint transactionType team')
             .then((transactions) => {
@@ -31,11 +31,18 @@ module.exports = app => {
     };
 
     api.insert = (req, res) => {
+
+        //TODO buscar do Redis/Mongo se o usuario tem saldo suficiente pra realizar a transaction
+        //TODO validar se o valor enviado eh positivo
+        if (false) {
+            res.status(400).send("Saldo insuficiente");
+            return false;
+        }
         model.create(req.body)
             .then((transaction) => {
                 model.findOne({
-                    _id: transaction._id,
-                })
+                        _id: transaction._id,
+                    })
                     .populate('to from sprint transactionType team')
                     .then((transaction) => {
                         // Sending transaction through socket.io
@@ -57,7 +64,7 @@ module.exports = app => {
             });
     };
 
-    var emitTransaction = function (error, socketId, transaction) {
+    var emitTransaction = function(error, socketId, transaction) {
         if (error) {
             logger.error('Error in getting socketId from Redis');
         } else {
@@ -69,58 +76,57 @@ module.exports = app => {
     }
 
 
-    //patience litle grasshoper. This isn't working...yet!
     api.wallet = (req, res) => {
         let user = req.params.user;
         let team = req.params.team;
         let sprint = req.params.sprint;
         model.aggregate([{
-            $match: {
-                $or: [
-                    { 'to': mongoose.Types.ObjectId(user) },
-                    { 'from': mongoose.Types.ObjectId(user) }
-                ],
-                'team': mongoose.Types.ObjectId(team),
-                'sprint': mongoose.Types.ObjectId(sprint)
-            }
-        },
-        {
-            $project: {
-                amount: 1,
-                received: {
-                    $cond: {
-                        if: { '$eq': ['$to', mongoose.Types.ObjectId(user)] },
-                        then: true,
-                        else: false
+                $match: {
+                    $or: [
+                        { 'to': mongoose.Types.ObjectId(user) },
+                        { 'from': mongoose.Types.ObjectId(user) }
+                    ],
+                    'team': mongoose.Types.ObjectId(team),
+                    'sprint': mongoose.Types.ObjectId(sprint)
+                }
+            },
+            {
+                $project: {
+                    amount: 1,
+                    received: {
+                        $cond: {
+                            if: { '$eq': ['$to', mongoose.Types.ObjectId(user)] },
+                            then: true,
+                            else: false
+                        }
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: '$received',
+                    total: { $sum: "$amount" }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    total: 1,
+                    received: {
+                        $cond: {
+                            if: { '$eq': ['$_id', true] },
+                            then: true,
+                            else: false
+                        }
                     }
                 }
             }
-        },
-        {
-            $group: {
-                _id: '$received',
-                total: { $sum: "$amount" }
-            }
-        },
-        {
-            $project: {
-                _id: 0,
-                total: 1,
-                received: {
-                    $cond: {
-                        if: { '$eq': ['$_id', true] },
-                        then: true,
-                        else: false
-                    }
-                }
-            }
-        }
         ]).then(result => {
             let wallet = {
                 totalReceived: 0,
                 totalDonated: 0
             };
-            result.forEach(function (row) {
+            result.forEach(function(row) {
                 if (row.received) {
                     wallet.totalReceived = row.total;
                 } else {

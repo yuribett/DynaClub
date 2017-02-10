@@ -31,21 +31,22 @@ export class TransactionService {
 	findByUser(user: User, team: Team) {
 		return this.http
 			.get(`${Globals.API_URL}/transaction/` + user._id + '/' + team._id + '/5891f0b5bbcf3e29a0142139')
-			.map(res => res.json());
+			.map(res => res.json())
+			.catch(error => Observable.throw(error._body));
 	}
 
 	getWallet(user: User, team: Team) {
 		return this.http
 			.get(`${Globals.API_URL}/wallet/` + user._id + '/' + team._id + '/5891f0b5bbcf3e29a0142139')
-			.map(res => res.json());
+			.map(res => res.json())
+			.catch(error => Observable.throw(error._body));
 	}
 
 	insert(transaction: Transaction): Observable<Transaction> {
 		return this.http
 			.post(`${Globals.API_URL}/transaction/`, JSON.stringify(transaction), { headers: this.headers })
-			.map(res => {
-				return res.json()
-			});
+			.map(res => res.json())
+			.catch(error => Observable.throw(error._body));
 	}
 
 	onTransactionsAdded(): Observable<Transaction> {
