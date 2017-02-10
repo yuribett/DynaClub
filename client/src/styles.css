@@ -7054,3 +7054,19 @@ a.list-group-item-danger.active:focus {
 .panel-default > .panel-heading {
   background-color: #464545;
 }
+
+/* FOOTER NAVBAR */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  margin-bottom: 30px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  color: #303030;
+  text-align: center;
+  height: 30px;
+}
