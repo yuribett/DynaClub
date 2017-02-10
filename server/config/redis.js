@@ -10,5 +10,14 @@ module.exports = (port, host) => {
 		logger.info('Connected to Redis');
 	});
 
+	client.delRedisKeys = (keyPattern) => {
+		client.keys(keyPattern, (err, rows) => {
+            rows.forEach(row => {
+                logger.warn(`Deleting Redis KEY ${row}`);
+                client.del(row);
+            });
+        });
+    }
+
 	return client;
 };
