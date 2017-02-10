@@ -27,12 +27,7 @@ export class AppComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		if (this.authService.isLoggedIn()) {
-			this.connection = this.appService.getIoTransactions().subscribe(transaction => {
-				//this.messages.push(transaction);
-				console.log('transaction via websocket', transaction);
-			});
-		}
+		
 	}
 
 }

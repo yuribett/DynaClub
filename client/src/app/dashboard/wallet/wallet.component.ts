@@ -19,7 +19,8 @@ export class WalletComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.transactionService.getTransactionAdded().subscribe((transaction: Transaction) => {
+    this.transactionService.onTransactionsAdded().subscribe((transaction: Transaction) => {
+      console.log('Transaction recebida', transaction);
       this.getWallet();
     });
   }
@@ -27,9 +28,9 @@ export class WalletComponent implements OnInit {
   getWallet() {
     this.transactionService.getWallet(this.userService.getStoredUser(), this.teamService.getCurrentTeam()).subscribe(
       wallet => {
-        console.log('recebi essa wallet', wallet);
-        this.myDynas = Math.floor(Math.random() * 11) * 100;
-        this.dynasReceived = Math.floor(Math.random() * 11) * 100;
+         //TODO - subtrair wallet.totalDonated pelo valor padrao da Sprint.
+        this.myDynas = 1000 - wallet.totalDonated;
+        this.dynasReceived = wallet.totalReceived;
       }
     );
   }
