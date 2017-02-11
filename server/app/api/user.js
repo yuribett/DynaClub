@@ -131,13 +131,13 @@ module.exports = app => {
             });
     };
 
-    function clearRedisKeys() {
-        app.get(redis).delRedisKeys(`${redisKeyFindByTeam}*`);
-        app.get(redis).delRedisKeys(`${redisKeyList}`);
-        app.get(redis).delRedisKeys(`${redisKeyFindById}*`);
+    let clearRedisKeys = () => {
+        app.get('redis').delRedisKeys(`${redisKeyFindByTeam}*`);
+        app.get('redis').delRedisKeys(`${redisKeyList}`);
+        app.get('redis').delRedisKeys(`${redisKeyFindById}*`);
     }
 
-	function runExpressValidator(req) {
+	let runExpressValidator = (req) => {
 		req.assert("name", "user.name is required").notEmpty();
 		req.assert("email", "user.email is required and must be an email").notEmpty().isEmail();
 		req.assert("user", "user.user is required and must have between 3 and 15 characters").notEmpty().len(3, 15);
