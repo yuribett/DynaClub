@@ -79,6 +79,15 @@ module.exports = app => {
     };
 
     api.insert = (req, res) => {
+
+		let errors = runExpressValidator(req);
+
+		if (errors){
+			logger.error('Bad request of user.insert');
+			res.status(400).send(errors);
+			return;
+		}
+
         model.create(req.body)
             .then((user) => {
                 clearRedisKeys();
@@ -91,7 +100,15 @@ module.exports = app => {
     };
 
     api.update = (req, res) => {
-        logger.error('update');
+
+		let errors = runExpressValidator(req);
+
+		if (errors){
+			logger.error('Bad request of user.update');
+			res.status(400).send(errors);
+			return;
+		}
+
         model.findByIdAndUpdate(req.params.id, req.body, { new: true })
             .populate('teams')
             .then((user) => {
@@ -115,10 +132,22 @@ module.exports = app => {
     };
 
     function clearRedisKeys() {
-        redis.delRedisKeyFindByTeams(`${redisKeyFindByTeam}*`);
-        redis.delRedisKeyFindByTeams(`${redisKeyList}`);
-        redis.delRedisKeyFindByTeams(`${redisKeyFindById}*`);
+        app.get(redis).delRedisKeys(`${redisKeyFindByTeam}*`);
+        app.get(redis).delRedisKeys(`${redisKeyList}`);
+        app.get(redis).delRedisKeys(`${redisKeyFindById}*`);
     }
+
+	function runExpressValidator(req) {
+		req.assert("name", "user.name is required").notEmpty();
+		req.assert("email", "user.email is required and must be an email").notEmpty().isEmail();
+		req.assert("user", "user.user is required and must have between 3 and 15 characters").notEmpty().len(3, 15);
+		req.assert("password", "user.password is required and must have between 6 and 20 characters").notEmpty().len(6, 20);
+		req.assert("teams", "user.teams is required").notEmpty();
+		req.assert("active", "user.active is required and must be boolean").notEmpty().isBoolean();
+		req.assert("admin", "user.admin is required and must be boolean").notEmpty().isBoolean();
+
+		return req.validationErrors();
+	}
 
     return api;
 };

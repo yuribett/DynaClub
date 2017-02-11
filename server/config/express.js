@@ -4,6 +4,7 @@ let bodyParser = require('body-parser');
 let path = require('path');
 let morgan = require('morgan');
 let logger = require('../app/services/logger.js');
+let expressValidator = require('express-validator');
 let app = express();
 
 app.set('secret', '3mG!pYBa8#5r1J6');
@@ -18,6 +19,7 @@ app.use(morgan("common", {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(expressValidator());
 
 app.use((req, res, next) => {
 	res.header("Access-Control-Allow-Origin", "*");
@@ -33,9 +35,6 @@ app.use((req, res, next) => {
 	}
 
 });
-
-//TODO project still in dev mode
-//app.use(express.static('../client/dist/'));
 
 consign({ cwd: 'app' })
 	.include('models')
