@@ -9,10 +9,10 @@ let app = express();
 
 app.set('secret', '3mG!pYBa8#5r1J6');
 
-app.use(morgan("common", {
+app.use(morgan("dev", {
 	stream: {
 		write: log => {
-			logger.debug(log);
+			logger.debug(`MORGAN: ${log}`);
 		}
 	}
 }));
