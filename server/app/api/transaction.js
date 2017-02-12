@@ -52,7 +52,15 @@ module.exports = app => {
         }
         model.create(req.body)
             .then((transaction) => {
-				clearRedisKeys();
+				
+				//TODO make this look nicer
+				// TO
+				app.get('redis').delRedisKeys(`${redisKeyListByUser}${transaction.to}:${transaction.team}:${transaction.sprint}`);
+        		app.get('redis').delRedisKeys(`${redisKeyGetWallet}${transaction.to}:${transaction.team}:${transaction.sprint}`);
+				// FROM
+				app.get('redis').delRedisKeys(`${redisKeyListByUser}${transaction.from}:${transaction.team}:${transaction.sprint}`);
+        		app.get('redis').delRedisKeys(`${redisKeyGetWallet}${transaction.from}:${transaction.team}:${transaction.sprint}`);
+
                 model.findOne({
                         _id: transaction._id,
                     })
@@ -165,8 +173,7 @@ module.exports = app => {
     }
 
 	let clearRedisKeys = () => {
-        app.get('redis').delRedisKeys(`${redisKeyListByUser}*`);
-        app.get('redis').delRedisKeys(`${redisKeyGetWallet}*`);
+        
     }
 
     return api;
