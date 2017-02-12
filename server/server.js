@@ -14,7 +14,6 @@ if( process.env.NODE_PORT) {
 // mongodb access configuation
 ///////////////////////////////////////////////////////////////////////
 var MONGO_URL = 'mongodb://mongodb.dynamix.com.br:27017/dynaclub';
-MONGO_URL = 'mongodb://dyna:dyna@ds117839.mlab.com:17839/dynaclub';
 if (process.env.MONGODB_HOST && process.env.MONGODB_PORT ) {
    MONGO_URL = 'mongodb://' + process.env.MONGODB_HOST + ':' + process.env.MONGODB_PORT + '/dynaclub'
 }
