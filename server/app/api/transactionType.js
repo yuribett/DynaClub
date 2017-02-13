@@ -28,7 +28,7 @@ module.exports = app => {
 	};
 
 	api.findById = (req, res) => {
-		let id = req.body._id;
+		let id = req.params.id;
 		app.get('redis').get(`${redisKeyFindById}${id}`, (err, transactionType) => {
             if (!err && transactionType != null) {
                 logger.info(`Redis: GET ${redisKeyFindById}${id}`);
@@ -49,9 +49,7 @@ module.exports = app => {
 	};
 
 	api.insert = (req, res) => {
-
 		let errors = runExpressValidator(req);
-
 		if (errors){
 			logger.error('Bad request of transactionType.insert');
 			res.status(400).send(errors);
@@ -70,9 +68,7 @@ module.exports = app => {
 	};
 
 	api.update = (req, res) => {
-
 		let errors = runExpressValidator(req);
-
 		if (errors){
 			logger.error('Bad request of transactionType.update');
 			res.status(400).send(errors);
@@ -107,7 +103,6 @@ module.exports = app => {
 
 	let runExpressValidator = (req) => {
 		req.assert("description", "transactionType.description is required").notEmpty();
-		
 		return req.validationErrors();
 	}
 
