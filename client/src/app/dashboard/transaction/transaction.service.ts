@@ -43,6 +43,7 @@ export class TransactionService {
 	}
 
 	insert(transaction: Transaction): Observable<Transaction> {
+		console.log(transaction);
 		return this.http
 			.post(`${Globals.API_URL}/transaction/`, JSON.stringify(transaction), { headers: this.headers })
 			.map(res => res.json())

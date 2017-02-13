@@ -28,7 +28,8 @@ module.exports = app => {
 	};
 
 	api.findById = (req, res) => {
-		let id = req.body._id;
+		let id = req.params.id;
+
 		app.get('redis').get(`${redisKeyFindById}${id}`, (err, doc) => {
             if (!err && doc != null) {
                 logger.info(`Redis: GET ${redisKeyFindById}${id}`);
