@@ -43,9 +43,10 @@ export class LoginComponent implements OnInit {
 			if (this.authService.isLoggedIn()) {
 				_self.addAppData();
 				this.router.navigate(['/dashboard']);
-			} else {
-				this.msgError = 'Usu&aacute;rio ou senha incorreto.';
 			}
+		}, err => {
+			this.msgError = 'Dados de login incorretos';
+			console.log(err);
 		});
 
 	}
