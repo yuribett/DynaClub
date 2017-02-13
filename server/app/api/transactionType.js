@@ -49,6 +49,15 @@ module.exports = app => {
 	};
 
 	api.insert = (req, res) => {
+
+		let errors = runExpressValidator(req);
+
+		if (errors){
+			logger.error('Bad request of transactionType.insert');
+			res.status(400).send(errors);
+			return;
+		}
+
 		model.create(req.body)
 			.then( (transactionType) => {
 				clearRedisKeys();
@@ -61,6 +70,15 @@ module.exports = app => {
 	};
 
 	api.update = (req, res) => {
+
+		let errors = runExpressValidator(req);
+
+		if (errors){
+			logger.error('Bad request of transactionType.update');
+			res.status(400).send(errors);
+			return;
+		}
+
 		model.findByIdAndUpdate(req.params.id, req.body)
 			.then( (transactionType) => {
 				clearRedisKeys();
@@ -86,6 +104,12 @@ module.exports = app => {
         app.get('redis').delRedisKeys(`${redisKeyFindById}*`);
         app.get('redis').delRedisKeys(`${redisKeyList}`);
     }
+
+	let runExpressValidator = (req) => {
+		req.assert("description", "transactionType.description is required").notEmpty();
+		
+		return req.validationErrors();
+	}
 
 	return api;
 };
