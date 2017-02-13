@@ -28,7 +28,7 @@ module.exports = app => {
 	};
 
 	api.findById = (req, res) => {
-		let id = req.body._id;
+		let id = req.params.id;
 		app.get('redis').get(`${redisKeyFindById}${id}`, (err, transactionType) => {
             if (!err && transactionType != null) {
                 logger.info(`Redis: GET ${redisKeyFindById}${id}`);
