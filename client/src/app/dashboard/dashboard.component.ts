@@ -22,7 +22,7 @@ export class DashboardComponent implements OnInit {
     this.transactionService = transactionService;
     this.userService = userService;
     this.appService = appService;
-    this.loadTransactions(teamService.getCurrentTeam());
+    this.loadTransactions();
   }
 
   ngOnInit() {
@@ -36,7 +36,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  loadTransactions(team: Team) {
+  loadTransactions(team: Team = this.teamService.getCurrentTeam()) {
     this.transactions = null;
     this.transactionService.findByUser(this.userService.getStoredUser(), team).subscribe(
       p => this.transactions = p,
