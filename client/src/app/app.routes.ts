@@ -6,6 +6,8 @@ import { AdminComponent } from './admin/admin.component';
 import { TeamSearchComponent } from './teams/team-search/team-search.component';
 import { TeamDetailComponent } from './teams/team-detail/team-detail.component';
 import { ProfileComponent } from './settings/profile/profile.component';
+import { ConfigsComponent } from './settings/configs/configs.component';
+import { AboutComponent } from './settings/about/about.component';
 import { LoggedInGuard } from './auth/logged.in.guard';
 import { RankingComponent } from './ranking/ranking.component';
 
@@ -19,6 +21,8 @@ const appRoutes: Routes = [
     { path: 'team/new', component: TeamDetailComponent },
 	{ path: 'ranking', component: RankingComponent, canActivate: [LoggedInGuard] },
 	{ path: 'profile', component: ProfileComponent, canActivate: [LoggedInGuard] },
+	{ path: 'configs', component: ConfigsComponent, canActivate: [LoggedInGuard] },
+	{ path: 'about', component: AboutComponent, canActivate: [LoggedInGuard] },
 	{ path: '**', component: DashboardComponent, canActivate: [LoggedInGuard] }
 
 ];
