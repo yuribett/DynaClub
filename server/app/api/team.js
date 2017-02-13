@@ -29,6 +29,15 @@ module.exports = app => {
 	};
 
 	api.insert = (req, res) => {
+
+		let errors = runExpressValidator(req);
+
+		if (errors){
+			logger.error('Bad request of team.insert');
+			res.status(400).send(errors);
+			return;
+		}
+
 		model.create(req.body)
 			.then( (team) => {
 				res.json(team);
@@ -40,6 +49,15 @@ module.exports = app => {
 	};
 
 	api.update = (req, res) => {
+
+		let errors = runExpressValidator(req);
+
+		if (errors){
+			logger.error('Bad request of team.update');
+			res.status(400).send(errors);
+			return;
+		}
+
 		model.findByIdAndUpdate(req.params.id, req.body)
 			.then( (team) => {
 				res.json(team);
@@ -58,6 +76,13 @@ module.exports = app => {
 				res.sendStatus(500);
 			});
 	};
+
+	let runExpressValidator = (req) => {
+		req.assert("name", "team.name is required").notEmpty();
+		req.assert("active", "team.active is required and must be boolean").notEmpty().isBoolean();
+		
+		return req.validationErrors();
+	}
 
 	return api;
 };

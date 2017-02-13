@@ -50,6 +50,15 @@ module.exports = app => {
 	};
 
 	api.insert = (req, res) => {
+
+		let errors = runExpressValidator(req);
+
+		if (errors){
+			logger.error('Bad request of sprint.insert');
+			res.status(400).send(errors);
+			return;
+		}
+
 		model.create(req.body)
 			.then( (doc) => {
 				clearRedisKeys();
@@ -61,6 +70,15 @@ module.exports = app => {
 	};
 
 	api.update = (req, res) => {
+
+		let errors = runExpressValidator(req);
+
+		if (errors){
+			logger.error('Bad request of sprint.update');
+			res.status(400).send(errors);
+			return;
+		}
+
 		model.findByIdAndUpdate(req.params.id, req.body)
 			.then( (doc) => {
 				clearRedisKeys();
@@ -86,6 +104,14 @@ module.exports = app => {
         app.get('redis').delRedisKeys(`${redisKeyFindById}*`);
         app.get('redis').delRedisKeys(`${redisKeyList}`);
     }
+
+	let runExpressValidator = (req) => {
+		req.assert("dateStart", "sprint.dateStart is required and must be a date").notEmpty().isDate();
+		req.assert("dateFinish", "sprint.dateFinish is required and must be a date").notEmpty().isDate();
+		req.assert("initialAmount", "sprint.initialAmount is required and must be numeric").notEmpty().isNumeric();
+		
+		return req.validationErrors();
+	}
 
 	return api;
 };
