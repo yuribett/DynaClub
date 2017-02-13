@@ -142,7 +142,7 @@ module.exports = app => {
 		req.assert("email", "user.email is required and must be an email").notEmpty().isEmail();
 		req.assert("user", "user.user is required and must have between 3 and 15 characters").notEmpty().len(3, 15);
 		req.assert("password", "user.password is required and must have between 6 and 20 characters").notEmpty().len(6, 20);
-		req.assert("teams", "user.teams is required").notEmpty();
+		req.assert("teams", "user.teams is required").notEmpty().isArray();
 		req.assert("active", "user.active is required and must be boolean").notEmpty().isBoolean();
 		req.assert("admin", "user.admin is required and must be boolean").notEmpty().isBoolean();
 
