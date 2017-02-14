@@ -24,6 +24,15 @@ export class TransactionService {
 		this.headers = new Headers();
 		this.headers.append('Content-Type', 'application/json');
 		this.appService.getSocket().on('transaction', (transaction) => {
+			let Notification: any = window["Notification"];
+			Notification.requestPermission().then(function (result) {
+				var options = {
+					body: `Voc&ecirc; recebeu D$ ${transaction.amount} de ${transaction.from.name}!`,
+					icon: '',
+					requireInteraction: true
+				}
+				new Notification('Voc&ecirc; recebeu uma doa&ccedil;&atilde;o', options);
+			});
 			this.subjectTransactionAdded.next(transaction);
 		});
 	}
