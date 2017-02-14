@@ -5,6 +5,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashboardComponent } from './dashboard.component';
 import { DonateComponent } from './donate/donate.component';
+import { NotificationService } from '../notification.service';
 
 import { FormsModule } from '@angular/forms';
 import { TransactionTypeService } from './transaction/transaction-type/transaction-type.service';
@@ -29,7 +30,8 @@ import { TransactionTypeComponent } from './transaction/transaction-type/transac
     ],
     providers: [
         TransactionService,
-        TransactionTypeService
+        TransactionTypeService,
+        NotificationService
     ]
 })
 export class DashboardModule { }

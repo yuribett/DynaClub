@@ -25,6 +25,7 @@ import { AuthService } from './auth/auth.service';
 import { UserService } from './user/user.service';
 import { AppService } from './app.service';
 import { SprintService } from './sprint/sprint.service';
+import { NotificationService } from './notification.service';
 
 //Others
 import { routing } from './app.routes';
@@ -64,6 +65,7 @@ import { AboutComponent } from './settings/about/about.component';
 		UserService,
 		AppService,
 		SprintService,
+		NotificationService,
 		MenuComponent // TODO wtf? Really... W.T.F!
 	],
 	bootstrap: [AppComponent]

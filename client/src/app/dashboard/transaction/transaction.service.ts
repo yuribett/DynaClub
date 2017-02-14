@@ -10,6 +10,7 @@ import { Response, Http, Headers } from '@angular/http';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
 import * as io from 'socket.io-client';
+import { NotificationService } from '../../notification.service';
 
 
 @Injectable()
@@ -19,20 +20,17 @@ export class TransactionService {
 	headers: Headers;
 	subjectTransactionAdded: Subject<Transaction> = new Subject<Transaction>();
 
-	constructor(http: Http, private userService: UserService, private appService: AppService) {
+	constructor(http: Http, private userService: UserService, private appService: AppService, private notificationService: NotificationService) {
 		this.http = http;
 		this.headers = new Headers();
 		this.headers.append('Content-Type', 'application/json');
 		this.appService.getSocket().on('transaction', (transaction) => {
-			let Notification: any = window["Notification"];
-			Notification.requestPermission().then(function (result) {
-				var options = {
-					body: `Voc&ecirc; recebeu D$ ${transaction.amount} de ${transaction.from.name}!`,
-					icon: '',
-					requireInteraction: true
-				}
-				new Notification('Voc&ecirc; recebeu uma doa&ccedil;&atilde;o', options);
-			});
+			
+			this.notificationService.notify({
+				body: `Voc&ecirc; recebeu D$ ${transaction.amount} de ${transaction.from.name}!`,
+				title: `Voc&ecirc; recebeu uma doa&ccedil;&atilde;o`
+			}).subscribe(error => console.log(error));
+
 			this.subjectTransactionAdded.next(transaction);
 		});
 	}
