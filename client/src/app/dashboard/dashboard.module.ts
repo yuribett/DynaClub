@@ -11,11 +11,25 @@ import { TransactionTypeService } from './transaction/transaction-type/transacti
 import { TransactionTypeComponent } from './transaction/transaction-type/transaction-type.component';
 
 @NgModule({
-  imports: [
-    CommonModule, FormsModule
-  ],
-  exports: [DashboardComponent, TransactionComponent, WalletComponent],
-  declarations: [DashboardComponent, TransactionComponent, WalletComponent, DonateComponent, TransactionTypeComponent],
-  providers: [TransactionService, TransactionTypeService]
+    imports: [
+        CommonModule,
+        FormsModule
+    ],
+    exports: [
+        DashboardComponent,
+        TransactionComponent,
+        WalletComponent
+    ],
+    declarations: [
+        DashboardComponent,
+        TransactionComponent,
+        WalletComponent,
+        DonateComponent,
+        TransactionTypeComponent
+    ],
+    providers: [
+        TransactionService,
+        TransactionTypeService
+    ]
 })
 export class DashboardModule { }
