@@ -7,6 +7,7 @@ module.exports = app => {
 	let model = mongoose.model('Sprint');
 	const redisKeyList = 'sprint:list';
 	const redisKeyFindById = 'sprint:findById:';
+	const redisKeyFindCurrent = 'sprint:findCurrent';
 
 	api.list = (req, res) => {
 		app.get('redis').get(`${redisKeyList}`, (err, doc) => {
@@ -48,6 +49,39 @@ module.exports = app => {
 			}
 		});
 	};
+
+	api.findCurrent = (req, res) => {
+		let currentDate = new Date();
+
+		app.get('redis').get(`${redisKeyFindCurrent}`, (err, doc) => {
+            if (!err && doc != null) {
+                logger.info(`Redis: GET ${redisKeyFindCurrent}`);
+                res.json(JSON.parse(doc));
+            } else {
+				model.findOne({
+					$and: [
+                        { 'dateStart' : {"$lt": currentDate} },
+                        { 'dateFinish' : {"$gte": currentDate} }
+                    ]
+				}).then( (doc) => {
+					app.get('redis').set(`${redisKeyFindCurrent}`, JSON.stringify(doc));
+					app.get('redis').expire(`${redisKeyFindCurrent}`, 18000); //expires in 5 hours
+                    logger.info(`Redis: SET ${redisKeyFindCurrent}`);
+					res.json(doc);
+				}, (error) => {
+					logger.error(error);
+					res.sendStatus(500);
+				});
+			}
+		});
+	};
+
+	/**
+	 * TODO for ranking
+	 */
+	api.findLast = (req, res) => {
+		res.json(null);
+	}
 
 	api.insert = (req, res) => {
 		let errors = runExpressValidator(req);
@@ -99,6 +133,7 @@ module.exports = app => {
 	let clearRedisKeys = () => {
         app.get('redis').delRedisKeys(`${redisKeyFindById}*`);
         app.get('redis').delRedisKeys(`${redisKeyList}`);
+		app.get('redis').delRedisKeys(`${redisKeyFindCurrent}`);
     }
 
 	let runExpressValidator = (req) => {
