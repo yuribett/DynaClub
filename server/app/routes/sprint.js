@@ -6,8 +6,16 @@ module.exports = app => {
 		.get(api.list)
 		.post(api.insert);
 
+	app.route('/api/sprint/find/current')
+		.get(api.findCurrent)
+
+	app.route('/api/sprint/find/last')
+		.get(api.findLast)
+	
 	app.route('/api/sprint/:id')
 		.get(api.findById)
 		.put(api.update)
 		.delete(api.delete);
+	
+	
 };
