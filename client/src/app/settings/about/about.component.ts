@@ -1,15 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 
+const { version: appVersion } = require('../../../../package.json')
+
 @Component({
-  selector: 'app-about',
-  templateUrl: './about.component.html',
-  styleUrls: ['./about.component.css']
+	selector: 'app-about',
+	templateUrl: './about.component.html',
+	styleUrls: ['./about.component.css']
 })
 export class AboutComponent implements OnInit {
 
-  constructor() { }
+	private appVersion
 
-  ngOnInit() {
-  }
+	constructor() {
+		this.appVersion = appVersion;
+	}
+
+	ngOnInit() {
+	}
 
 }
