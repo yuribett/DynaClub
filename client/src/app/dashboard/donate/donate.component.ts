@@ -11,6 +11,7 @@ import { Globals } from '../../app.globals';
 import { User } from '../../user/user';
 import { slide } from '../../animations';
 import { Component, OnInit } from '@angular/core';
+import { TransactionErrors } from '../../errors/transaction.errors';
 
 @Component({
 	selector: 'app-donate',
@@ -67,7 +68,7 @@ export class DonateComponent implements OnInit {
 				this.transaction = new Transaction();
 				this.toggleMenu();
 			},
-			error => console.log(error));
+			error => console.log(TransactionErrors.getError(error)));
 	}
 
 }
