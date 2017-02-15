@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
         preventDuplicates: false,
         preventLastDuplicates: 'visible',
         rtl: false,
-        animate: 'scale',
+        animate: 'fromRight',
         position: ['left', 'bottom']
     };
 

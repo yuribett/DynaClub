@@ -69,8 +69,14 @@ export class DonateComponent implements OnInit {
 				this.transaction = new Transaction();
 				this.toggleMenu();
 			},
-			//error => console.log(TransactionErrors.getError(error)));
-			error => this.toastService.error('Error', error));
+			error => {
+				TransactionErrors.getServerErrors(error).subscribe(
+					msg => {
+						this.toastService.error('Error', msg);
+					},
+					error => console.log(error)
+				);
+			});
 	}
 
 }
