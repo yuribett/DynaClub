@@ -44,7 +44,7 @@ export class TeamValidator {
       if (form == null){ return; }
       let control = form.get('name');
       control.valueChanges
-             .debounceTime(500) //waits for user to stop typing
+             .debounceTime(350) //waits for user to stop typing
              .distinctUntilChanged()
              .subscribe(data => {
                this.addErrorIfTeamExist(control);

@@ -11,6 +11,6 @@ module.exports = app => {
 		.put(api.update)
 		.delete(api.delete);
 
-	app.route('/team/name/:name')
+	app.route('/api/team/name/:name')
 		.get(api.findByName);
 };
