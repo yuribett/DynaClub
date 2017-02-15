@@ -19,13 +19,15 @@ export class SprintService {
     findCurrentSprint(): Observable<Sprint> {
         return this.http
             .get(`${Globals.API_URL}/sprint/5891f0b5bbcf3e29a0142139`)
-            .map(res => res.json());
+            .map(res => res.json())
+			.catch(error => Observable.throw(error._body));
     }
 
     insert(sprint: Sprint): Observable<Sprint> {
         return this.http
             .post(`${Globals.API_URL}/sprint/`, JSON.stringify(sprint), { headers: this.headers })
-            .map((res) => res.json());
+            .map((res) => res.json())
+			.catch(error => Observable.throw(error._body));
     }
 
 }

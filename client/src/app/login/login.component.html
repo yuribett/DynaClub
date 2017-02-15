@@ -1,6 +1,7 @@
 <div class="form-container">
 	<h2>Junte-se ao Club!</h2>
-	{{msgError}}
+	<!-- TODO Set default form error -->
+	<p class="text-danger">{{msgError}}</p>
 	<form (submit)="signin()">
 		<div class="form-group">
 			<input name="user" type="text" id="inputUser" class="form-control" placeholder="Usu&aacute;rio" required autofocus [(ngModel)]="user">

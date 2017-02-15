@@ -2,12 +2,20 @@ module.exports = app => {
 
 	let api = app.api.sprint;
 
-	app.route('/sprint')
+	app.route('/api/sprint')
 		.get(api.list)
 		.post(api.insert);
 
-	app.route('/sprint/:id')
+	app.route('/api/sprint/find/current')
+		.get(api.findCurrent)
+
+	app.route('/api/sprint/find/last')
+		.get(api.findLast)
+	
+	app.route('/api/sprint/:id')
 		.get(api.findById)
 		.put(api.update)
 		.delete(api.delete);
+	
+	
 };

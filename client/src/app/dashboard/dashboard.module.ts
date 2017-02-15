@@ -5,17 +5,33 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashboardComponent } from './dashboard.component';
 import { DonateComponent } from './donate/donate.component';
+import { NotificationService } from '../notification.service';
 
 import { FormsModule } from '@angular/forms';
 import { TransactionTypeService } from './transaction/transaction-type/transaction-type.service';
 import { TransactionTypeComponent } from './transaction/transaction-type/transaction-type.component';
 
 @NgModule({
-  imports: [
-    CommonModule, FormsModule
-  ],
-  exports: [DashboardComponent, TransactionComponent, WalletComponent],
-  declarations: [DashboardComponent, TransactionComponent, WalletComponent, DonateComponent, TransactionTypeComponent],
-  providers: [TransactionService, TransactionTypeService]
+    imports: [
+        CommonModule,
+        FormsModule
+    ],
+    exports: [
+        DashboardComponent,
+        TransactionComponent,
+        WalletComponent
+    ],
+    declarations: [
+        DashboardComponent,
+        TransactionComponent,
+        WalletComponent,
+        DonateComponent,
+        TransactionTypeComponent
+    ],
+    providers: [
+        TransactionService,
+        TransactionTypeService,
+        NotificationService
+    ]
 })
 export class DashboardModule { }

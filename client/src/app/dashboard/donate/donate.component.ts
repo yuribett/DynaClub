@@ -62,10 +62,12 @@ export class DonateComponent implements OnInit {
 		this.transaction.date = new Date();
 		this.transaction.team = JSON.parse(this.appService.getStorage().getItem(Globals.CURRENT_TEAM));
 		this.transaction.sprint = this.currentSprint;
-		this.transactionService.insert(this.transaction).subscribe(transaction => {
-			this.transaction = new Transaction();
-			this.toggleMenu();
-		});
+		this.transactionService.insert(this.transaction).subscribe(
+			transaction => {
+				this.transaction = new Transaction();
+				this.toggleMenu();
+			},
+			error => console.log(error));
 	}
 
 }

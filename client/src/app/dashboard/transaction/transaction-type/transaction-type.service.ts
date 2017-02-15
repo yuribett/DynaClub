@@ -20,13 +20,15 @@ export class TransactionTypeService {
   find(): Observable<Array<TransactionType>> {
     return this.http
       .get(`${Globals.API_URL}/transactionType/`)
-      .map(res => res.json());
+      .map(res => res.json())
+			.catch(error => Observable.throw(error._body));
   }
 
   insert(type: TransactionType): Observable<TransactionType> {
     return this.http
       .post(`${Globals.API_URL}/transactionType/`, JSON.stringify(type), { headers: this.headers })
-      .map((res) => res.json());
+      .map((res) => res.json())
+			.catch(error => Observable.throw(error._body));
   }
 
 }

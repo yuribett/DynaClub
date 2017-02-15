@@ -25,13 +25,15 @@ import { AuthService } from './auth/auth.service';
 import { UserService } from './user/user.service';
 import { AppService } from './app.service';
 import { SprintService } from './sprint/sprint.service';
+import { NotificationService } from './notification.service';
 
 //Others
 import { routing } from './app.routes';
 import 'rxjs/add/operator/map';
 import { LoggedInGuard } from './auth/logged.in.guard';
 import { HttpService } from './auth/http.service';
-import { TestComponent } from './test/test.component';
+import { ConfigsComponent } from './settings/configs/configs.component';
+import { AboutComponent } from './settings/about/about.component';
 
 @NgModule({
 	declarations: [
@@ -42,7 +44,8 @@ import { TestComponent } from './test/test.component';
 		MenuComponent,
 		RankingComponent,
 		SprintComponent,
-		TestComponent
+		ConfigsComponent,
+		AboutComponent
 	],
 	imports: [
 		BrowserModule,
@@ -63,6 +66,7 @@ import { TestComponent } from './test/test.component';
 		UserService,
 		AppService,
 		SprintService,
+		NotificationService,
 		MenuComponent // TODO wtf? Really... W.T.F!
 	],
 	bootstrap: [AppComponent]

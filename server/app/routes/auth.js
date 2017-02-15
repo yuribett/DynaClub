@@ -2,6 +2,6 @@ module.exports = app => {
 
 	let api = app.api.auth;
 
-	app.post('/auth', api.authUser);
-	//app.use('/*', api.verifyToken);
+	app.post('/api/auth', api.authUser);
+	app.use('/api/*', api.verifyToken);
 };
