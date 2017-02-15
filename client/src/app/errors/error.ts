@@ -8,11 +8,11 @@ export class CommonErrors {
 
     static errors: Array<Error>;
 
-    static getErrorByRef(ref): Observable<string> {
+    static getErrorByRef(ref): Observable<Error> {
         return new Observable((observer: any) => {
             try {
                 let error: Error = this.errors.find(error => error.ref == ref);
-                observer.next(this.decodeMsg(error.msg));
+                observer.next(error);
             } catch (error) {
                 observer.error(error);
             }
@@ -20,12 +20,15 @@ export class CommonErrors {
         });
     }
 
-    static getServerErrors(json): Observable<string> {
+    static getServerErrors(json): Observable<Error> {
 
         return new Observable((observer: any) => {
             try {
                 JSON.parse(json).forEach(error => {
-                    observer.next(this.decodeMsg(error.msg));
+                    observer.next({
+                        ref: error.param,
+                        msg: this.decodeMsg(error.msg)
+                    });
                 });
 
             } catch (error) {

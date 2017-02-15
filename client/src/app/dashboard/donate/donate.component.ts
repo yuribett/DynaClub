@@ -71,8 +71,8 @@ export class DonateComponent implements OnInit {
 			},
 			error => {
 				TransactionErrors.getServerErrors(error).subscribe(
-					msg => {
-						this.toastService.error('Error', msg);
+					content => {
+						this.toastService.error('Error', content.msg, content.ref);
 					},
 					error => console.log(error)
 				);

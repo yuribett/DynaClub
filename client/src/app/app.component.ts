@@ -25,8 +25,7 @@ export class AppComponent implements OnInit {
         maxStack: 7,
         showProgressBar: true,
         pauseOnHover: true,
-        preventDuplicates: false,
-        preventLastDuplicates: 'visible',
+        preventDuplicates: true,
         rtl: false,
         animate: 'fromRight',
         position: ['left', 'bottom']
