@@ -1,7 +1,7 @@
 //Angular
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule, Http } from '@angular/http';
 
 //Modules
@@ -19,6 +19,8 @@ import { ProfileComponent } from './settings/profile/profile.component';
 import { MenuComponent } from './menu/menu.component';
 import { RankingComponent } from './ranking/ranking.component';
 import { SprintComponent } from './sprint/sprint.component';
+import { ConfigsComponent } from './settings/configs/configs.component';
+import { AboutComponent } from './settings/about/about.component';
 
 //Services
 import { AuthService } from './auth/auth.service';
@@ -32,8 +34,8 @@ import { routing } from './app.routes';
 import 'rxjs/add/operator/map';
 import { LoggedInGuard } from './auth/logged.in.guard';
 import { HttpService } from './auth/http.service';
-import { ConfigsComponent } from './settings/configs/configs.component';
-import { AboutComponent } from './settings/about/about.component';
+import { SimpleNotificationsModule } from 'angular2-notifications';
+
 
 @NgModule({
 	declarations: [
@@ -53,8 +55,9 @@ import { AboutComponent } from './settings/about/about.component';
 		ReactiveFormsModule,
 		HttpModule,
 		routing,
-    	ModalModule.forRoot(),
-    	BootstrapModalModule,
+		ModalModule.forRoot(),
+		SimpleNotificationsModule.forRoot(),
+		BootstrapModalModule,
 		DashboardModule,
 		TeamModule,
 		DynaCommonModule
