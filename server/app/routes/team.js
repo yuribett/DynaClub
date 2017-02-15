@@ -10,4 +10,7 @@ module.exports = app => {
 		.get(api.findById)
 		.put(api.update)
 		.delete(api.delete);
+
+	app.route('/team/name/:name')
+		.get(api.findByName);
 };

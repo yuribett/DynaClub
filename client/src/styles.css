@@ -7,8 +7,16 @@
     margin-bottom: 20px;
     padding: 20px;
 }
+.h-slim {
+    margin-top: 0;
+}
 .col-left {
   text-align: left
+}
+.alert-field-errors {
+    margin-bottom: 5px !important;
+    padding: 5px 15px !important;
+    font-size: 70%;
 }
 /* FIM ESTILOS CUSTOMIZADOS */
 

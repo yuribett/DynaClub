@@ -3,6 +3,7 @@ import { Globals } from '../app.globals';
 import { Injectable } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 
+import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/toPromise';
 import { Team } from './team';
 
@@ -34,6 +35,19 @@ export class TeamService {
       .then(response => response.json());
   }
 
+  getByName(name: String): Observable<Team> {
+    return this.http
+      .get(`${this.teamsUrl}/name/${name}`)
+      .map(res => res.json())
+  }
+
+  findByName(name: string): Promise<Team> {
+    return this.http
+      .get(`${this.teamsUrl}/name/${name}`)
+      .toPromise()
+      .then(response => response.json());
+  }
+  
   save(team: Team): Promise<Team> {
     if (team._id) {
       return this.put(team);

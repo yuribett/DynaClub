@@ -1,31 +1,29 @@
 <div class="container form-container">
-
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3" style="text-align: center">
+            <h2 class="h-slim">Editar Equipe</h2>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
-            <div>
-                <h2>Editar Equipe</h2>
-                
-                <div class="form-group">
-                    <label for="name">Nome</label>
-                    <input name="name" #inputName type="text" id="name" placeholder="Nome" 
-                            class="form-control" [(ngModel)]="team.name" required>
+            <form novalidate (ngSubmit)="onSubmit(teamForm)" [formGroup]="teamForm">
+                <div class="form-group" [class.has-error]="validator.hasErrorsFor('name')">
+                    <label for="name" class="control-label">
+                        Nome
+                    </label>
+                    <field-errors [errors]="validator.getErrorsFor('name')"></field-errors>
+                    <input name="name" type="text" id="name" placeholder="Nome" 
+                           class="form-control" formControlName="name">
                 </div>
 
-                <div class="form-group">
-                    <label>
-                    <input type="checkbox" id="active" [(ngModel)]="team.active"> Ativo
-                    </label>
+                <div class="form-group" [class.has-error]="validator.hasErrorsFor('active')">
+                    <label><input type="checkbox" id="active" formControlName="active"> Ativo</label>
                 </div>
 
                 <button class="btn btn-default btn-warning pull-left" (click)="goBack()">Voltar</button>
-                <button class="btn btn-default btn-primary pull-right" (click)="save()">Salvar</button>
+                <button class="btn btn-default btn-primary pull-right" type="submit">Salvar</button>
 
-            </div>
-
+            </form>
         </div>
-    
     </div>
-
-
 </div>
-

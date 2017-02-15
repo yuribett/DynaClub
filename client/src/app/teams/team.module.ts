@@ -5,12 +5,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DynaCommonModule } from '../dyna-common/dyna-common.module';
 import { TeamDetailComponent } from './team-detail/team-detail.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
   imports: [
-    FormsModule, CommonModule, DynaCommonModule
+    FormsModule, ReactiveFormsModule, CommonModule, DynaCommonModule
   ],
   exports: [TeamSearchComponent],
   declarations: [TeamSearchComponent, TeamSearchItemComponent, TeamDetailComponent],

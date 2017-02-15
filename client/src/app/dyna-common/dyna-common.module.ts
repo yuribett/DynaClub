@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BooleanYesNoPipe } from './pipes/boolean-yes-no.pipe';
+import { FieldErrorsComponent } from './field-errors/field-errors.component';
 
 @NgModule({
   imports: [
     CommonModule
   ],
-  declarations: [ BooleanYesNoPipe],
-  exports:      [ BooleanYesNoPipe]
+  declarations: [ BooleanYesNoPipe, FieldErrorsComponent],
+  exports:      [ BooleanYesNoPipe, FieldErrorsComponent]
 })
 export class DynaCommonModule { }

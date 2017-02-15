@@ -34,8 +34,8 @@ export class TeamSearchItemComponent implements OnInit {
   }
 
   onEdit(): void {
-    //let link = ['/team/edit', this.team._id];
-    //this.router.navigate(link);
+    let link = ['/team/edit/', this.team._id];
+    this.router.navigate(link);
   }
 
   onDelete(): void {

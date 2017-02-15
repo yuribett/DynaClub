@@ -19,7 +19,18 @@ module.exports = app => {
 
 	api.findById =  (req, res) => {
 		model.findOne({
-			_id: req.body._id,
+			_id: req.params.id,
+		}).then( (team) => {
+			res.json(team);
+		}, (error) => {
+			logger.error(error);
+			res.sendStatus(500);
+		});
+	};
+	
+	api.findByName =  (req, res) => {
+		model.findOne({
+			name: req.params.name,
 		}).then( (team) => {
 			res.json(team);
 		}, (error) => {
