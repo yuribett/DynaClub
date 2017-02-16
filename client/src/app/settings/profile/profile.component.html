@@ -1,28 +1,74 @@
+<div class="container form-container">
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3" style="margin-bottom: 10px;text-align: center">
+      <h2 class="h-slim">Meu profile</h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3" style="margin-bottom: 10px;">
+      <label>Nome: </label>
+      <span>{{user.name}}</span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3" style="margin-bottom: 10px;">
+      <label>Usu&aacute;rio: </label>
+      <span>{{user.user}}</span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3" style="margin-bottom: 10px;">
+      <label>Email: </label>
+      <span>{{user.email}}</span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3" style="margin-bottom: 10px;">
+      <label>Equipe(s): </label>
+      <span *ngFor="let team of user.teams">{{team.name}} </span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3" style="margin-bottom: 10px;">
+      <label>Admin: </label>
+      <span>{{user.admin | booleanYesNo}}</span>
+    </div>
+  </div>
+</div>
+
+
+<!--
 <div class="form-container">
-    <h2>Editar meu profile</h2>
+  <h2>Editar meu profile</h2>
 
-    <form (submit)="saveUser()">
+  <form (submit)="saveUser()">
 
-        <div class="form-group">
-            <label for="name">Nome</label>
-            <input name="name" type="text" id="name" placeholder="Nome" class="form-control" [(ngModel)]="user.name" required>
-        </div>
+    <div class="form-group">
+      <label for="name">Nome</label>
+      <input name="name" type="text" id="name" placeholder="Nome" class="form-control" [(ngModel)]="user.name" required>
+    </div>
 
-        <div class="form-group">
-            <label for="name">Email</label>
-            <input name="email" type="email" id="email" placeholder="Email" class="form-control" [(ngModel)]="user.email" required>
-        </div>
+    <div class="form-group">
+      <label for="name">Email</label>
+      <input name="email" type="email" id="email" placeholder="Email" class="form-control" [(ngModel)]="user.email" required>
+    </div>
 
-        <div class="form-group">
-            <label for="name">Usu&aacute;rio</label>
-            <input name="user" type="text" id="user" placeholder="Usu&aacute;rio" class="form-control" [(ngModel)]="user.user" required>
-        </div>
+    <div class="form-group">
+      <label for="name">Usu&aacute;rio</label>
+      <input name="user" type="text" id="user" placeholder="Usu&aacute;rio" class="form-control" [(ngModel)]="user.user" required>
+    </div>
 
-        <div class="form-group">
-            <label for="name">Senha</label>
-            <input name="password" type="password" id="password" placeholder="Senha" class="form-control" [(ngModel)]="user.password" required>
-        </div>
-        <!--
+    <div class="form-group">
+      <label for="name">Senha</label>
+      <input name="password" type="password" id="password" placeholder="Senha" class="form-control" [(ngModel)]="user.password"
+        required>
+    </div>
+    
   <div>
     <label class="custom-control custom-checkbox">
       <input name="admin" type="checkbox" class="custom-control-input" [(ngModel)]="user.admin">
@@ -43,7 +89,7 @@
       <span class="custom-control-description">Ativo</span>
     </label>
   </div>
-  -->
-        <button type="submit" class="btn btn-lg btn-primary">Atualizar</button>
-    </form>
-</div>
+  
+    <button type="submit" class="btn btn-lg btn-primary">Atualizar</button>
+  </form>
+</div>-->

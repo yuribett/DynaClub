@@ -1,3 +1,4 @@
+import { NotificationsService } from 'angular2-notifications';
 import { Sprint } from '../../sprint/sprint';
 import { SprintService } from '../../sprint/sprint.service';
 import { TransactionService } from '../transaction/transaction.service';
@@ -11,6 +12,7 @@ import { Globals } from '../../app.globals';
 import { User } from '../../user/user';
 import { slide } from '../../animations';
 import { Component, OnInit } from '@angular/core';
+import { TransactionErrors } from '../../errors/transaction.errors';
 
 @Component({
 	selector: 'app-donate',
@@ -28,7 +30,7 @@ export class DonateComponent implements OnInit {
 	currentSprint: Sprint;
 
 	constructor(private userService: UserService, private appService: AppService, private transactionService: TransactionService,
-		private transactionTypeService: TransactionTypeService, private sprintService: SprintService) {
+		private transactionTypeService: TransactionTypeService, private sprintService: SprintService, private toastService: NotificationsService) {
 		let _currentTeam: Team = JSON.parse(this.appService.getStorage().getItem(Globals.CURRENT_TEAM));
 		this.transactionTypeService.find().subscribe(types => {
 			this.transactionTypes = types;
@@ -67,7 +69,14 @@ export class DonateComponent implements OnInit {
 				this.transaction = new Transaction();
 				this.toggleMenu();
 			},
-			error => console.log(error));
+			error => {
+				TransactionErrors.getServerErrors(error).subscribe(
+					content => {
+						this.toastService.error('Error', content.msg, content.ref);
+					},
+					error => console.log(error)
+				);
+			});
 	}
 
 }

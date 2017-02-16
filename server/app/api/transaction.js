@@ -204,11 +204,13 @@ module.exports = app => {
         req.assert("to", "transaction.to is required").notEmpty();
         req.assert("date", "transaction.date is required and must be a date").notEmpty().isDate();
         req.assert("amount", "transaction.amount is required and must be a number greater than zero").notEmpty().isNumeric().gte(1);
-        if(funds) {
+        if (funds) {
             req.assert("amount", "insuficient funds").lte(funds);
         }
         req.assert("team", "transaction.team is required").notEmpty();
         req.assert("sprint", "transaction.sprint is required").notEmpty();
+        req.assert("transactionType", "transaction.transactionType is required").notEmpty();
+        req.assert("message", "transaction.message is required and must have between 3 and 500 characters").notEmpty().len(3, 500);
         return req.validationErrors();
     }
 
