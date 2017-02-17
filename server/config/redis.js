@@ -11,9 +11,7 @@ module.exports = (port, host) => {
 
 	});
 
-	client.flushall( function (err, succeeded) {
-		logger.info('Redis FLUSHALL: '+succeeded);
-	});
+	client.flushall( (err, succeeded) => logger.info('Redis FLUSHALL: '+succeeded));
 
 	client.delRedisKeys = (keyPattern) => {
 		client.keys(keyPattern, (err, rows) => {
