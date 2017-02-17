@@ -1,5 +1,5 @@
-import { TransactionType } from './transaction-type';
-import { Globals } from '../../../app.globals';
+import { TransactionType } from '../models/transaction-type';
+import { Globals } from '../../app.globals';
 import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import { Observable } from 'rxjs';

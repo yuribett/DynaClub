@@ -1,10 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { AppService } from '../app.service';
-import { User } from '../user/user';
-import { UserService } from '../user/user.service';
+import { User } from '../shared/models/user';
+import { UserService } from '../shared/services/user.service';
 import { Globals } from '../app.globals';
-import { Team } from '../teams/team';
+import { Team } from '../shared/models/team';
 
 @Component({
 	selector: 'app-menu',

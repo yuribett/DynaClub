@@ -6,8 +6,8 @@ import { HttpModule, Http } from '@angular/http';
 
 //Modules
 import { DashboardModule } from './dashboard/dashboard.module';
-import { TeamModule } from './teams/team.module';
-import { DynaCommonModule } from './dyna-common/dyna-common.module';
+import { TeamModule } from './admin/teams/team.module';
+import { DynaCommonModule } from './shared/dyna-common.module';
 import { ModalModule } from 'angular2-modal';
 import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
 
@@ -18,15 +18,14 @@ import { AdminComponent } from './admin/admin.component';
 import { ProfileComponent } from './settings/profile/profile.component';
 import { MenuComponent } from './menu/menu.component';
 import { RankingComponent } from './ranking/ranking.component';
-import { SprintComponent } from './sprint/sprint.component';
 import { ConfigsComponent } from './settings/configs/configs.component';
 import { AboutComponent } from './settings/about/about.component';
 
 //Services
 import { AuthService } from './auth/auth.service';
-import { UserService } from './user/user.service';
+import { UserService } from './shared/services/user.service';
 import { AppService } from './app.service';
-import { SprintService } from './sprint/sprint.service';
+import { SprintService } from './shared/services/sprint.service';
 import { NotificationService } from './notification.service';
 
 //Others
@@ -45,7 +44,6 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
 		ProfileComponent,
 		MenuComponent,
 		RankingComponent,
-		SprintComponent,
 		ConfigsComponent,
 		AboutComponent
 	],

@@ -4,10 +4,10 @@ import { AuthLogin } from '../login/login.component';
 import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Router } from '@angular/router';
-import { UserService } from '../user/user.service';
+import { UserService } from '../shared/services/user.service';
 import { Globals } from '../app.globals';
 import { AppService } from '../app.service';
-import { User } from '../user/user';
+import { User } from '../shared/models/user';
 
 @Injectable()
 export class AuthService {

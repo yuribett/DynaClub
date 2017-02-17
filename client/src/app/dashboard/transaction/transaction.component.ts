@@ -1,6 +1,6 @@
-import { UserService } from '../../user/user.service';
+import { UserService } from '../../shared/services/user.service';
 import { Transaction } from './transaction';
-import { User } from '../../user/user';
+import { User } from '../../shared/models/user';
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({

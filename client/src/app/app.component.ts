@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuComponent } from './menu/menu.component';
 import { AuthService } from './auth/auth.service';
-import { UserService } from './user/user.service';
+import { UserService } from './shared/services/user.service';
 import { AppService } from './app.service';
 
 const { version: appVersion } = require('../../package.json')

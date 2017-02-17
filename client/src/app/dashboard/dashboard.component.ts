@@ -1,8 +1,8 @@
-import { TeamService } from '../teams/team.service';
+import { TeamService } from '../shared/services/team.service';
 import { Globals } from '../app.globals';
-import { Team } from '../teams/team';
+import { Team } from '../shared/models/team';
 import { AppService } from '../app.service';
-import { UserService } from '../user/user.service';
+import { UserService } from '../shared/services/user.service';
 import { TransactionService } from './transaction/transaction.service';
 import { Transaction } from './transaction/transaction';
 import { TransactionComponent } from './transaction/transaction.component';

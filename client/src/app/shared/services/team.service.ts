@@ -1,11 +1,11 @@
-import { AppService } from '../app.service';
-import { Globals } from '../app.globals';
+import { AppService } from '../../app.service';
+import { Globals } from '../../app.globals';
 import { Injectable } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/toPromise';
-import { Team } from './team';
+import { Team } from '../models/team';
 
 @Injectable()
 export class TeamService {

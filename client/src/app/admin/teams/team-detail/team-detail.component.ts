@@ -2,11 +2,11 @@ import { Component, OnInit, Input, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
-import { TeamService } from '../team.service';
-import { Team } from '../team';
+import { TeamService } from '../../../shared/services/team.service';
+import { Team } from '../../../shared/models/team';
 import { TeamValidator } from './team.validator'
 
-import { FieldErrorsComponent } from '../../dyna-common/field-errors/field-errors.component'
+import { FieldErrorsComponent } from '../../../shared/components/field-errors/field-errors.component'
 
 @Component({
   selector: 'app-team-detail',

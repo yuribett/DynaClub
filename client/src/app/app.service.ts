@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
-import { User } from './user/user';
-import { Team } from './teams/team';
+import { User } from './shared/models/user';
+import { Team } from './shared/models/team';
 import { Globals } from './app.globals';
 import * as io from 'socket.io-client';
 

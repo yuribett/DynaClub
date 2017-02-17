@@ -1,18 +1,18 @@
 import { NotificationsService } from 'angular2-notifications';
-import { Sprint } from '../../sprint/sprint';
-import { SprintService } from '../../sprint/sprint.service';
+import { Sprint } from '../../shared/models/sprint';
+import { SprintService } from '../../shared/services/sprint.service';
 import { TransactionService } from '../transaction/transaction.service';
-import { TransactionType } from '../transaction/transaction-type/transaction-type';
-import { TransactionTypeService } from '../transaction/transaction-type/transaction-type.service';
+import { TransactionType } from '../../shared/models/transaction-type';
+import { TransactionTypeService } from '../../shared/services/transaction-type.service';
 import { Transaction } from '../transaction/transaction';
 import { AppService } from '../../app.service';
-import { Team } from '../../teams/team';
-import { UserService } from '../../user/user.service';
+import { Team } from '../../shared/models/team';
+import { UserService } from '../../shared/services/user.service';
 import { Globals } from '../../app.globals';
-import { User } from '../../user/user';
+import { User } from '../../shared/models/user';
 import { slide } from '../../animations';
 import { Component, OnInit } from '@angular/core';
-import { TransactionErrors } from '../../errors/transaction.errors';
+import { TransactionErrors } from '../../shared/errors/transaction.errors';
 
 @Component({
 	selector: 'app-donate',

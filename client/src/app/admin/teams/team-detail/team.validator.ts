@@ -1,10 +1,10 @@
 import { ValidatorFn, AbstractControl, FormGroup, FormControl } from '@angular/forms'
 import {Observable} from 'rxjs/Rx';
 
-import { BaseFormValidator } from '../../dyna-common/base.form.validator'
+import { BaseFormValidator } from '../../../shared/base.form.validator'
 
-import { Team } from '../team'
-import { TeamService } from '../team.service'
+import { Team } from '../../../shared/models/team'
+import { TeamService } from '../../../shared/services/team.service'
 
 export class TeamValidator extends BaseFormValidator {
 

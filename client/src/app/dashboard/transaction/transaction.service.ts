@@ -1,9 +1,9 @@
 import { AppService } from '../../app.service';
-import { UserService } from '../../user/user.service';
+import { UserService } from '../../shared/services/user.service';
 import { Transaction } from './transaction';
-import { Team } from '../../teams/team';
+import { Team } from '../../shared/models/team';
 import { Globals } from '../../app.globals';
-import { User } from '../../user/user';
+import { User } from '../../shared/models/user';
 import { TransactionComponent } from './transaction.component';
 import { Injectable } from '@angular/core';
 import { Response, Http, Headers } from '@angular/http';

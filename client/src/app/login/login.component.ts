@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 import { AppComponent } from '../app.component';
-import { UserService } from '../user/user.service';
+import { UserService } from '../shared/services/user.service';
 import { AppService } from '../app.service';
-import { User } from '../user/user';
+import { User } from '../shared/models/user';
 import { Globals } from '../app.globals';
 
 @Component({

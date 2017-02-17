@@ -8,7 +8,7 @@ import { DonateComponent } from './donate/donate.component';
 import { NotificationService } from '../notification.service';
 
 import { FormsModule } from '@angular/forms';
-import { TransactionTypeService } from './transaction/transaction-type/transaction-type.service';
+import { TransactionTypeService } from '../shared/services/transaction-type.service';
 import { TransactionTypeComponent } from './transaction/transaction-type/transaction-type.component';
 
 @NgModule({

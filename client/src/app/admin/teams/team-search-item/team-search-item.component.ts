@@ -1,6 +1,6 @@
 import { ViewContainerRef, Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { TeamService } from '../team.service';
-import { Team } from '../team';
+import { TeamService } from '../../../shared/services/team.service';
+import { Team } from '../../../shared/models/team';
 import { Overlay } from 'angular2-modal';
 import { Modal } from 'angular2-modal/plugins/bootstrap';
 import { Router } from '@angular/router';

@@ -1,10 +1,10 @@
-import { Team } from '../teams/team';
+import { Team } from '../models/team';
 import { Http, Headers, Response } from '@angular/http';
-import { User } from './user';
+import { User } from '../models/user';
 import { Observable } from 'rxjs';
 import { Injectable, Injector } from '@angular/core';
-import { Globals } from '../app.globals';
-import { AppService } from '../app.service';
+import { Globals } from '../../app.globals';
+import { AppService } from '../../app.service';
 
 @Injectable()
 export class UserService {

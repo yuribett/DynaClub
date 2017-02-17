@@ -1,7 +1,7 @@
-import { Team } from '../../teams/team';
+import { Team } from '../../shared/models/team';
 import { AppService } from '../../app.service';
-import { UserService } from '../../user/user.service';
-import { TeamService } from '../../teams/team.service';
+import { UserService } from '../../shared/services/user.service';
+import { TeamService } from '../../shared/services/team.service';
 import { Transaction } from '../transaction/transaction';
 import { TransactionService } from '../transaction/transaction.service';
 import { Component, OnInit } from '@angular/core';

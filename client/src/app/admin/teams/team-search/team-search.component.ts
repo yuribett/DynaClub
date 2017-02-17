@@ -1,6 +1,6 @@
 
-import { TeamService } from '../team.service';
-import { Team } from '../team';
+import { Team } from '../../../shared/models/team'
+import { TeamService } from '../../../shared/services/team.service'
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';

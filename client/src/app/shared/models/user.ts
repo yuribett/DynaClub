@@ -1,4 +1,4 @@
-import { Team } from '../teams/team';
+import { Team } from './team';
 
 export class User {
 	_id: string;

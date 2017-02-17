@@ -1,8 +1,8 @@
-import { Globals } from '../app.globals';
+import { Globals } from '../../app.globals';
 import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import { Observable } from 'rxjs';
-import { Sprint } from './sprint';
+import { Sprint } from '../models/sprint';
 
 @Injectable()
 export class SprintService {

@@ -20,8 +20,11 @@
 				<li [routerLinkActive]="['active']" class="dropdown" *ngIf="user.admin">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin<span class="caret"></span></a>
 					<ul class="dropdown-menu">
-						<li [routerLinkActive]="['active']"><a [routerLink]="['/teams']">Equipes</a></li>
 						<li [routerLinkActive]="['active']"><a [routerLink]="['/admin']">Usu&aacute;rios</a></li>
+						<li [routerLinkActive]="['active']"><a [routerLink]="['/teams']">Equipes</a></li>
+						<li [routerLinkActive]="['active']"><a [routerLink]="['/admin']">Per&iacute;odos</a></li>
+						<li [routerLinkActive]="['active']"><a [routerLink]="['/admin']">Motivos</a></li>
+						<li role="separator" class="divider"></li>
 						<li [routerLinkActive]="['active']"><a [routerLink]="['/adminConfigs']">Configura&ccedil;&otilde;es</a></li>
 					</ul>
 				</li>
