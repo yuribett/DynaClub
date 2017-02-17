@@ -16,9 +16,16 @@ export class SprintService {
         this.headers.append('Content-Type', 'application/json');
     }
 
-    findCurrentSprint(): Observable<Sprint> {
+    findCurrent(): Observable<Sprint> {
         return this.http
-            .get(`${Globals.API_URL}/sprint/5891f0b5bbcf3e29a0142139`)
+            .get(`${Globals.API_URL}/sprint/find/current`)
+            .map(res => res.json())
+			.catch(error => Observable.throw(error._body));
+    }
+
+    findlast(): Observable<Sprint> {
+        return this.http
+            .get(`${Globals.API_URL}/sprint/find/last`)
             .map(res => res.json())
 			.catch(error => Observable.throw(error._body));
     }

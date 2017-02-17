@@ -45,6 +45,7 @@ module.exports = app => {
         let user = req.body.from;
         let team = req.body.team;
         let sprint = req.body.sprint;
+        console.log(user, team, sprint);
         findWallet(user._id, team._id, sprint._id).then(
             wallet => {
                 let errors = runExpressValidator(req, sprint.initialAmount - wallet.totalDonated);

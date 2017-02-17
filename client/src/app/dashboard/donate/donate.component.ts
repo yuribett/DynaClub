@@ -27,16 +27,12 @@ export class DonateComponent implements OnInit {
 	buttonsState: String = 'center';
 	formState: String = 'right';
 	transaction: Transaction = new Transaction();
-	currentSprint: Sprint;
 
 	constructor(private userService: UserService, private appService: AppService, private transactionService: TransactionService,
 		private transactionTypeService: TransactionTypeService, private sprintService: SprintService, private toastService: NotificationsService) {
 		let _currentTeam: Team = JSON.parse(this.appService.getStorage().getItem(Globals.CURRENT_TEAM));
 		this.transactionTypeService.find().subscribe(types => {
 			this.transactionTypes = types;
-		});
-		this.sprintService.findCurrentSprint().subscribe(sprint => {
-			this.currentSprint = sprint;
 		});
 		this.loadUsers(_currentTeam);
 	}
@@ -63,14 +59,13 @@ export class DonateComponent implements OnInit {
 		this.transaction.from = this.userService.getStoredUser();
 		this.transaction.date = new Date();
 		this.transaction.team = JSON.parse(this.appService.getStorage().getItem(Globals.CURRENT_TEAM));
-		this.transaction.sprint = this.currentSprint;
 		this.transactionService.insert(this.transaction).subscribe(
 			transaction => {
 				this.transaction = new Transaction();
 				this.toggleMenu();
 			},
 			error => {
-				TransactionErrors.getServerErrors(error).subscribe(
+				TransactionErrors.parseServerErrors(error).subscribe(
 					content => {
 						this.toastService.error('Error', content.msg, content.ref);
 					},

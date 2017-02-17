@@ -20,7 +20,7 @@ export class CommonErrors {
         });
     }
 
-    static getServerErrors(json): Observable<Error> {
+    static parseServerErrors(json): Observable<Error> {
 
         return new Observable((observer: any) => {
             try {

@@ -39,8 +39,8 @@ module.exports = app => {
                 res.json(JSON.parse(user));
             } else {
                 model.findOne({
-                    _id: id,
-                })
+                        _id: id,
+                    })
                     .populate('teams')
                     .then((user) => {
                         app.get('redis').set(`${redisKeyFindById}${id}`, JSON.stringify(user));
@@ -62,9 +62,10 @@ module.exports = app => {
                 res.json(JSON.parse(users));
             } else {
                 model.find({
-                    teams: { $in: [team] },
-                    active: true
-                })
+                        teams: { $in: [team] },
+                        active: true
+                    })
+                    .sort({ name: 1 })
                     .populate('teams')
                     .then((users) => {
                         app.get('redis').set(`${redisKeyFindByTeam}${team}`, JSON.stringify(users));
@@ -80,13 +81,13 @@ module.exports = app => {
 
     api.insert = (req, res) => {
 
-		let errors = runExpressValidator(req);
+        let errors = runExpressValidator(req);
 
-		if (errors){
-			logger.error('Bad request of user.insert');
-			res.status(400).send(errors);
-			return;
-		}
+        if (errors) {
+            logger.error('Bad request of user.insert');
+            res.status(400).send(errors);
+            return;
+        }
 
         model.create(req.body)
             .then((user) => {
@@ -101,13 +102,13 @@ module.exports = app => {
 
     api.update = (req, res) => {
 
-		let errors = runExpressValidator(req);
+        let errors = runExpressValidator(req);
 
-		if (errors){
-			logger.error('Bad request of user.update');
-			res.status(400).send(errors);
-			return;
-		}
+        if (errors) {
+            logger.error('Bad request of user.update');
+            res.status(400).send(errors);
+            return;
+        }
 
         model.findByIdAndUpdate(req.params.id, req.body, { new: true })
             .populate('teams')
@@ -137,17 +138,17 @@ module.exports = app => {
         app.get('redis').delRedisKeys(`${redisKeyFindById}*`);
     }
 
-	let runExpressValidator = (req) => {
-		req.assert("name", "user.name is required").notEmpty();
-		req.assert("email", "user.email is required and must be an email").notEmpty().isEmail();
-		req.assert("user", "user.user is required and must have between 3 and 15 characters").notEmpty().len(3, 15);
-		req.assert("password", "user.password is required and must have between 6 and 20 characters").notEmpty().len(6, 20);
-		req.assert("teams", "user.teams is required").notEmpty().isArray();
-		req.assert("active", "user.active is required and must be boolean").notEmpty().isBoolean();
-		req.assert("admin", "user.admin is required and must be boolean").notEmpty().isBoolean();
+    let runExpressValidator = (req) => {
+        req.assert("name", "user.name is required").notEmpty();
+        req.assert("email", "user.email is required and must be an email").notEmpty().isEmail();
+        req.assert("user", "user.user is required and must have between 3 and 15 characters").notEmpty().len(3, 15);
+        req.assert("password", "user.password is required and must have between 6 and 20 characters").notEmpty().len(6, 20);
+        req.assert("teams", "user.teams is required").notEmpty().isArray();
+        req.assert("active", "user.active is required and must be boolean").notEmpty().isBoolean();
+        req.assert("admin", "user.admin is required and must be boolean").notEmpty().isBoolean();
 
-		return req.validationErrors();
-	}
+        return req.validationErrors();
+    }
 
     return api;
 };
