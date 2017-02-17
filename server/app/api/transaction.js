@@ -58,7 +58,6 @@ module.exports = app => {
                     req.body.sprint = wallet.sprint;
                     model.create(req.body)
                         .then((transaction) => {
-                            console.log('transaction capirotesca =>',  transaction);
                             //TODO make this look nicer
                             // TO
                             app.get('redis').delRedisKeys(`${redisKeyListByUser}${transaction.to}:${transaction.team}:${transaction.sprint}`);
@@ -109,10 +108,12 @@ module.exports = app => {
 
 
     api.getWallet = (req, res) => {
-        let user = req.params.user;
-        let team = req.params.team;
+        let userID = req.params.user;
+        let teamID = req.params.team;
         sprintApi.findSprintByDate(new Date())
-            .then(sprint => findWallet(user._id, team._id, sprint))
+            .then(sprint => {
+                return findWallet(userID, teamID, sprint) 
+            })
             .then(
                 wallet => {
                     console.log('wallet capirotesca => ', wallet);
@@ -124,20 +125,21 @@ module.exports = app => {
             );
     }
 
-    let findWallet = (user, team, sprint) => {
+    let findWallet = (userID, teamID, sprint) => {
         return new Promise((resolve, reject) => {
-            app.get('redis').get(`${redisKeyGetWallet}${user}:${team}:${sprint._id}`, (err, wallet) => {
+            app.get('redis').get(`${redisKeyGetWallet}${userID}:${teamID}:${sprint._id}`, (err, wallet) => {
                 if (!err && wallet != null) {
-                    logger.info(`Redis: GET ${redisKeyGetWallet}${user}:${team}:${sprint._id}`);
+                    logger.info(`Redis: GET ${redisKeyGetWallet}${userID}:${teamID}:${sprint._id}`);
+                    console.log('redis: ', wallet);
                     resolve(JSON.parse(wallet));
                 } else {
                     model.aggregate([{
                             $match: {
                                 $or: [
-                                    { 'to': mongoose.Types.ObjectId(user) },
-                                    { 'from': mongoose.Types.ObjectId(user) }
+                                    { 'to': mongoose.Types.ObjectId(userID) },
+                                    { 'from': mongoose.Types.ObjectId(userID) }
                                 ],
-                                'team': mongoose.Types.ObjectId(team),
+                                'team': mongoose.Types.ObjectId(teamID),
                                 'sprint': mongoose.Types.ObjectId(sprint._id)
                             }
                         },
@@ -146,7 +148,7 @@ module.exports = app => {
                                 amount: 1,
                                 received: {
                                     $cond: {
-                                        if: { '$eq': ['$to', mongoose.Types.ObjectId(user)] },
+                                        if: { '$eq': ['$to', mongoose.Types.ObjectId(userID)] },
                                         then: true,
                                         else: false
                                     }
@@ -185,9 +187,9 @@ module.exports = app => {
                                 wallet.totalDonated = row.total;
                             }
                         });
-                        app.get('redis').set(`${redisKeyGetWallet}${user}:${team}:${sprint._id}`, JSON.stringify(wallet));
-                        logger.info(`Redis: SET ${redisKeyGetWallet}${user}:${team}:${sprint._id}`);
-
+                        app.get('redis').set(`${redisKeyGetWallet}${userID}:${teamID}:${sprint._id}`, JSON.stringify(wallet));
+                        logger.info(`Redis: SET ${redisKeyGetWallet}${userID}:${teamID}:${sprint._id}`);
+                        console.log('mongo: ', wallet);
                         resolve(wallet);
                     }, error => {
                         logger.error('cannot load wallet');
