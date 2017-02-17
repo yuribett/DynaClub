@@ -5,38 +5,40 @@ module.exports = app => {
 
     let api = {};
     let model = mongoose.model('Transaction');
+    let sprintApi = app.api.sprint;
     const redisKeyListByUser = 'transaction:listByUser:';
     const redisKeyGetWallet = 'transaction:getWallet:';
 
     api.listByUser = (req, res) => {
         let user = req.params.user;
         let team = req.params.team;
-        let sprint = req.params.sprint;
+        sprintApi.findSprintByDate(new Date()).then(sprint => {
 
-        app.get('redis').get(`${redisKeyListByUser}${user}:${team}:${sprint}`, (err, transactions) => {
-            if (!err && transactions != null) {
-                logger.info(`Redis: GET ${redisKeyListByUser}${user}:${team}:${sprint}`);
-                res.json(JSON.parse(transactions));
-            } else {
-                model.find({
-                    $or: [
-                        { 'to': user },
-                        { 'from': user }
-                    ],
-                    'team': team,
-                    'sprint': sprint
-                })
-                    .sort({ date: -1 })
-                    .populate('to from sprint transactionType team')
-                    .then((transactions) => {
-                        app.get('redis').set(`${redisKeyListByUser}${user}:${team}:${sprint}`, JSON.stringify(transactions));
-                        logger.info(`Redis: SET ${redisKeyListByUser}${user}:${team}:${sprint}`);
-                        res.json(transactions);
-                    }, (error) => {
-                        logger.error(error);
-                        res.sendStatus(500);
-                    });
-            }
+            app.get('redis').get(`${redisKeyListByUser}${user}:${team}:${sprint._id}`, (err, transactions) => {
+                if (!err && transactions != null) {
+                    logger.info(`Redis: GET ${redisKeyListByUser}${user}:${team}:${sprint._id}`);
+                    res.json(JSON.parse(transactions));
+                } else {
+                    model.find({
+                            $or: [
+                                { 'to': user },
+                                { 'from': user }
+                            ],
+                            'team': team,
+                            'sprint': sprint._id
+                        })
+                        .sort({ date: -1 })
+                        .populate('to from sprint transactionType team')
+                        .then((transactions) => {
+                            app.get('redis').set(`${redisKeyListByUser}${user}:${team}:${sprint._id}`, JSON.stringify(transactions));
+                            logger.info(`Redis: SET ${redisKeyListByUser}${user}:${team}:${sprint._id}`);
+                            res.json(transactions);
+                        }, (error) => {
+                            logger.error(error);
+                            res.sendStatus(500);
+                        });
+                }
+            });
         });
 
     };
@@ -44,55 +46,54 @@ module.exports = app => {
     api.insert = (req, res) => {
         let user = req.body.from;
         let team = req.body.team;
-        let sprint = req.body.sprint;
-        console.log(user, team, sprint);
-        findWallet(user._id, team._id, sprint._id).then(
-            wallet => {
-                let errors = runExpressValidator(req, sprint.initialAmount - wallet.totalDonated);
+        sprintApi.findSprintByDate(new Date())
+            .then(sprint => findWallet(user._id, team._id, sprint))
+            .then(wallet => {
+                    let errors = runExpressValidator(req, wallet.sprint.initialAmount - wallet.totalDonated);
 
-                if (errors) {
-                    res.status(400).send(errors);
-                    return;
+                    if (errors) {
+                        res.status(400).send(errors);
+                        return;
+                    }
+                    req.body.sprint = wallet.sprint;
+                    model.create(req.body)
+                        .then((transaction) => {
+                            console.log('transaction capirotesca =>',  transaction);
+                            //TODO make this look nicer
+                            // TO
+                            app.get('redis').delRedisKeys(`${redisKeyListByUser}${transaction.to}:${transaction.team}:${transaction.sprint}`);
+                            app.get('redis').delRedisKeys(`${redisKeyGetWallet}${transaction.to}:${transaction.team}:${transaction.sprint}`);
+                            // FROM
+                            app.get('redis').delRedisKeys(`${redisKeyListByUser}${transaction.from}:${transaction.team}:${transaction.sprint}`);
+                            app.get('redis').delRedisKeys(`${redisKeyGetWallet}${transaction.from}:${transaction.team}:${transaction.sprint}`);
+
+                            model.findOne({
+                                    _id: transaction._id,
+                                })
+                                .populate('to from sprint transactionType team')
+                                .then((transaction) => {
+                                    // Sending transaction through socket.io
+                                    app.get('redis').get("user:" + transaction.to._id, (err, socketId) => {
+                                        emitTransaction(err, socketId, transaction);
+                                    });
+                                    app.get('redis').get("user:" + transaction.from._id, (err, socketId) => {
+                                        emitTransaction(err, socketId, transaction);
+                                    });
+                                    res.json(transaction);
+                                }, (error) => {
+                                    logger.error(error);
+                                    res.sendStatus(500);
+                                });
+                        }, (error) => {
+                            logger.error('cannot insert transaction');
+                            logger.error(error);
+                            res.sendStatus(500);
+                        });
+                },
+                error => {
+                    res.sendStatus(500);
                 }
-
-                model.create(req.body)
-                    .then((transaction) => {
-
-                        //TODO make this look nicer
-                        // TO
-                        app.get('redis').delRedisKeys(`${redisKeyListByUser}${transaction.to}:${transaction.team}:${transaction.sprint}`);
-                        app.get('redis').delRedisKeys(`${redisKeyGetWallet}${transaction.to}:${transaction.team}:${transaction.sprint}`);
-                        // FROM
-                        app.get('redis').delRedisKeys(`${redisKeyListByUser}${transaction.from}:${transaction.team}:${transaction.sprint}`);
-                        app.get('redis').delRedisKeys(`${redisKeyGetWallet}${transaction.from}:${transaction.team}:${transaction.sprint}`);
-
-                        model.findOne({
-                            _id: transaction._id,
-                        })
-                            .populate('to from sprint transactionType team')
-                            .then((transaction) => {
-                                // Sending transaction through socket.io
-                                app.get('redis').get("user:" + transaction.to._id, (err, socketId) => {
-                                    emitTransaction(err, socketId, transaction);
-                                });
-                                app.get('redis').get("user:" + transaction.from._id, (err, socketId) => {
-                                    emitTransaction(err, socketId, transaction);
-                                });
-                                res.json(transaction);
-                            }, (error) => {
-                                logger.error(error);
-                                res.sendStatus(500);
-                            });
-                    }, (error) => {
-                        logger.error('cannot insert transaction');
-                        logger.error(error);
-                        res.sendStatus(500);
-                    });
-            },
-            error => {
-                res.sendStatus(500);
-            }
-        );
+            );
     };
 
     let emitTransaction = (error, socketId, transaction) => {
@@ -110,33 +111,34 @@ module.exports = app => {
     api.getWallet = (req, res) => {
         let user = req.params.user;
         let team = req.params.team;
-        let sprint = req.params.sprint;
-        findWallet(user, team, sprint).then(
-            wallet => {
-                res.json(wallet);
-            },
-            error => {
-                res.sendStatus(500);
-            }
-        );
+        sprintApi.findSprintByDate(new Date())
+            .then(sprint => findWallet(user._id, team._id, sprint))
+            .then(
+                wallet => {
+                    console.log('wallet capirotesca => ', wallet);
+                    res.json(wallet);
+                },
+                error => {
+                    res.sendStatus(500);
+                }
+            );
     }
 
     let findWallet = (user, team, sprint) => {
         return new Promise((resolve, reject) => {
-            app.get('redis').get(`${redisKeyGetWallet}${user}:${team}:${sprint}`, (err, wallet) => {
+            app.get('redis').get(`${redisKeyGetWallet}${user}:${team}:${sprint._id}`, (err, wallet) => {
                 if (!err && wallet != null) {
-                    logger.info(`Redis: GET ${redisKeyGetWallet}${user}:${team}:${sprint}`);
+                    logger.info(`Redis: GET ${redisKeyGetWallet}${user}:${team}:${sprint._id}`);
                     resolve(JSON.parse(wallet));
                 } else {
-                    model.aggregate([
-                        {
+                    model.aggregate([{
                             $match: {
                                 $or: [
                                     { 'to': mongoose.Types.ObjectId(user) },
                                     { 'from': mongoose.Types.ObjectId(user) }
                                 ],
                                 'team': mongoose.Types.ObjectId(team),
-                                'sprint': mongoose.Types.ObjectId(sprint)
+                                'sprint': mongoose.Types.ObjectId(sprint._id)
                             }
                         },
                         {
@@ -173,7 +175,8 @@ module.exports = app => {
                     ]).then(result => {
                         let wallet = {
                             totalReceived: 0,
-                            totalDonated: 0
+                            totalDonated: 0,
+                            sprint: sprint
                         };
                         result.forEach((row) => {
                             if (row.received) {
@@ -182,8 +185,8 @@ module.exports = app => {
                                 wallet.totalDonated = row.total;
                             }
                         });
-                        app.get('redis').set(`${redisKeyGetWallet}${user}:${team}:${sprint}`, JSON.stringify(wallet));
-                        logger.info(`Redis: SET ${redisKeyGetWallet}${user}:${team}:${sprint}`);
+                        app.get('redis').set(`${redisKeyGetWallet}${user}:${team}:${sprint._id}`, JSON.stringify(wallet));
+                        logger.info(`Redis: SET ${redisKeyGetWallet}${user}:${team}:${sprint._id}`);
 
                         resolve(wallet);
                     }, error => {
@@ -209,7 +212,6 @@ module.exports = app => {
             req.assert("amount", "insuficient funds").lte(funds);
         }
         req.assert("team", "transaction.team is required").notEmpty();
-        req.assert("sprint", "transaction.sprint is required").notEmpty();
         req.assert("transactionType", "transaction.transactionType is required").notEmpty();
         req.assert("message", "transaction.message is required and must have between 3 and 500 characters").notEmpty().len(3, 500);
         return req.validationErrors();

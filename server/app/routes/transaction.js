@@ -2,10 +2,10 @@ module.exports = app => {
 
     let api = app.api.transaction;
 
-    app.route('/api/transaction/:user/:team/:sprint')
+    app.route('/api/transaction/:user/:team')
         .get(api.listByUser);
 
-    app.route('/api/wallet/:user/:team/:sprint')
+    app.route('/api/wallet/:user/:team')
         .get(api.getWallet);
 
     app.route('/api/transaction')

@@ -51,37 +51,59 @@ module.exports = app => {
         });
     };
 
+    api.findSprintByDate = (currentDate) => {
+        return new Promise((resolve, reject) => {
+            app.get('redis').get(`${redisKeyFindCurrent}`, (err, doc) => {
+                if (!err && doc != null) {
+                    logger.info(`Redis: GET ${redisKeyFindCurrent}`);
+                    resolve(JSON.parse(doc));
+                } else {
+                    model.findOne({
+                        $and: [
+                            { 'dateStart': { "$lte": currentDate } },
+                            { 'dateFinish': { "$gte": currentDate } }
+                        ]
+                    }).then(doc => {
+                        app.get('redis').set(`${redisKeyFindCurrent}`, JSON.stringify(doc));
+                        app.get('redis').expire(`${redisKeyFindCurrent}`, 18000); //expires in 5 hours
+                        logger.info(`Redis: SET ${redisKeyFindCurrent}`);
+                        resolve(doc);
+                    }, error => {
+                        logger.error(error);
+                        reject(error);
+                    });
+                }
+            });
+        });
+    }
+
     api.findCurrent = (req, res) => {
         let currentDate = new Date();
 
-        app.get('redis').get(`${redisKeyFindCurrent}`, (err, doc) => {
-            if (!err && doc != null) {
-                logger.info(`Redis: GET ${redisKeyFindCurrent}`);
-                res.json(JSON.parse(doc));
-            } else {
-                model.findOne({
-                    $and: [
-                        { 'dateStart': { "$lte": currentDate } },
-                        { 'dateFinish': { "$gte": currentDate } }
-                    ]
-                }).then((doc) => {
-                    app.get('redis').set(`${redisKeyFindCurrent}`, JSON.stringify(doc));
-                    app.get('redis').expire(`${redisKeyFindCurrent}`, 18000); //expires in 5 hours
-                    logger.info(`Redis: SET ${redisKeyFindCurrent}`);
-                    res.json(doc);
-                }, (error) => {
-                    logger.error(error);
-                    res.sendStatus(500);
-                });
+        api.findSprintByDate(currentDate).then(
+            sprint => {
+                res.json(doc);
+            },
+            error => {
+                res.sendStatus(500);
             }
-        });
+        );
     };
 
     /**
      * TODO for ranking
      */
     api.findLast = (req, res) => {
-        res.json(null);
+        var lastMonhDate = new Date();
+        lastMonhDate.setMonth(lastMonhDate.getMonth() - 1);
+        api.findSprintByDate(lastMonhDate).then(
+            sprint => {
+                res.json(doc);
+            },
+            error => {
+                res.sendStatus(500);
+            }
+        );
     }
 
     api.insert = (req, res) => {

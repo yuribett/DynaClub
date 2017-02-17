@@ -1,7 +1,7 @@
+import { TransactionType } from '../../shared/models/transaction-type';
 import { Sprint } from '../../shared/models/sprint';
 import { Team } from '../../shared/models/team';
 import { User } from '../../shared/models/user';
-import { TransactionType } from './transaction-type/transaction-type';
 
 export class Transaction {
 

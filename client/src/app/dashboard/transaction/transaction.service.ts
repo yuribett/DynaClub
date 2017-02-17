@@ -25,7 +25,7 @@ export class TransactionService {
 		this.headers = new Headers();
 		this.headers.append('Content-Type', 'application/json');
 		this.appService.getSocket().on('transaction', (transaction) => {
-			
+
 			this.notificationService.notify({
 				body: `Voc&ecirc; recebeu D$ ${transaction.amount} de ${transaction.from.name}!`,
 				title: `Voc&ecirc; recebeu uma doa&ccedil;&atilde;o`
@@ -37,20 +37,19 @@ export class TransactionService {
 
 	findByUser(user: User, team: Team) {
 		return this.http
-			.get(`${Globals.API_URL}/transaction/` + user._id + '/' + team._id + '/5891f0b5bbcf3e29a0142139')
+			.get(`${Globals.API_URL}/transaction/${user._id}/${team._id}`)
 			.map(res => res.json())
 			.catch(error => Observable.throw(error._body));
 	}
 
 	getWallet(user: User, team: Team) {
 		return this.http
-			.get(`${Globals.API_URL}/wallet/` + user._id + '/' + team._id + '/5891f0b5bbcf3e29a0142139')
+			.get(`${Globals.API_URL}/wallet/${user._id}/${team._id}`)
 			.map(res => res.json())
 			.catch(error => Observable.throw(error._body));
 	}
 
 	insert(transaction: Transaction): Observable<Transaction> {
-		console.log(transaction);
 		return this.http
 			.post(`${Globals.API_URL}/transaction/`, JSON.stringify(transaction), { headers: this.headers })
 			.map(res => res.json())
