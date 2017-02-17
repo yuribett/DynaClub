@@ -15,6 +15,7 @@ import { FieldErrorsComponent } from '../../dyna-common/field-errors/field-error
 })
 export class TeamDetailComponent implements OnInit {
   
+  title: String;
   teamForm: FormGroup;
   validator: TeamValidator = new TeamValidator();
   
@@ -64,7 +65,18 @@ export class TeamDetailComponent implements OnInit {
     });
   }
 
+  setTitle(): void {
+    if (this.team._id){
+      this.title = "Editar equipe";
+    } else {
+      this.title = "Inserir equipe";
+    }
+  }
+
   setFormValues(): void {
+    
+    this.setTitle();
+
     this.teamForm.setValue({
       name: this.team.name, 
       active: this.team.active

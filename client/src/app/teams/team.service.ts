@@ -74,7 +74,6 @@ export class TeamService {
       .catch(this.handleError);
   }
 
-
   delete(team: Team): Promise<Response> {
     let url = `${this.teamsUrl}/${team._id}`;
     return this.http

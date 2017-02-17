@@ -5,6 +5,10 @@ var schema = mongoose.Schema({
 	description: {
 		type: String,
 		required: true
+	},
+	active: {
+		type: Boolean,
+		required: true
 	}
 
 });
