@@ -8,6 +8,11 @@ module.exports = (port, host) => {
 	client.on('connect', () => { 
 		console.log('Connected to Redis');
 		logger.info('Connected to Redis');
+
+	});
+
+	client.flushall( function (err, succeeded) {
+		logger.info('Redis FLUSHALL: '+succeeded);
 	});
 
 	client.delRedisKeys = (keyPattern) => {
