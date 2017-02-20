@@ -25,17 +25,13 @@ export class TransactionService {
 		this.headers = new Headers();
 		this.headers.append('Content-Type', 'application/json');
 		this.appService.getSocket().on('transaction', transaction => {
-			console.log('transaction.from', transaction.from);
-			console.log('this.userService.getStoredUser()', this.userService.getStoredUser());
 			if (transaction.from._id != this.userService.getStoredUser()._id) {
-
 				this.notificationService.notify({
 					body: `Voc&ecirc; recebeu D$ ${transaction.amount} de ${transaction.from.name}!`,
 					title: `Voc&ecirc; recebeu uma doa&ccedil;&atilde;o`
 				}).subscribe(error => console.log(error));
-
-				this.subjectTransactionAdded.next(transaction);
 			}
+			this.subjectTransactionAdded.next(transaction);
 		});
 	}
 
