@@ -52,6 +52,7 @@ export class DonateComponent implements OnInit {
 	ngOnInit() {
 		this.appService.getCurrentTeam().subscribe((team: Team) => {
 			this.loadUsers(team);
+			this.transaction = new Transaction();
 		});
 	}
 
