@@ -1,5 +1,7 @@
 <div class="jumbotron">
 
+    <simple-notifications [options]="toastOptions"></simple-notifications>
+
     <div class="buttonsPanel" [@slide]="buttonsState">
         <button type="button" class="btn btn-primary btn-lg btn-block mainButtons" (click)="toggleMenu()">Doar</button>
         <button type="button" style="display: none" class="btn btn-success btn-lg btn-block mainButtons" (click)="toggleMenu()">Pechinchar</button>
@@ -39,7 +41,7 @@
                 </div>
 
                 <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-danger btn-default" (click)="toggleMenu()">Cancelar</button>
+                    <button type="button" class="btn btn-danger btn-default" (click)="cancel()">Cancelar</button>
                 </div>
             </div>
         </form>

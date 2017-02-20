@@ -10,11 +10,13 @@ import { NotificationService } from '../notification.service';
 import { FormsModule } from '@angular/forms';
 import { TransactionTypeService } from '../shared/services/transaction-type.service';
 import { TransactionTypeComponent } from './transaction/transaction-type/transaction-type.component';
+import { SimpleNotificationsModule } from 'angular2-notifications';
 
 @NgModule({
     imports: [
         CommonModule,
-        FormsModule
+        FormsModule,
+		SimpleNotificationsModule.forRoot(),
     ],
     exports: [
         DashboardComponent,

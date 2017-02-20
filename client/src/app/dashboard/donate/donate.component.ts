@@ -27,9 +27,21 @@ export class DonateComponent implements OnInit {
 	buttonsState: String = 'center';
 	formState: String = 'right';
 	transaction: Transaction = new Transaction();
+	public toastOptions = {
+		timeOut: 8000,
+		lastOnBottom: true,
+		clickToClose: true,
+		maxLength: 0,
+		maxStack: 7,
+		showProgressBar: true,
+		pauseOnHover: true,
+		preventDuplicates: true,
+		rtl: false,
+		animate: 'fromLeft',
+		position: ['right', 'top']
+	};
 
-	constructor(private userService: UserService, private appService: AppService, private transactionService: TransactionService,
-		private transactionTypeService: TransactionTypeService, private sprintService: SprintService, private toastService: NotificationsService) {
+	constructor(private userService: UserService, private appService: AppService, private transactionService: TransactionService, private transactionTypeService: TransactionTypeService, private sprintService: SprintService, private toastService: NotificationsService) {
 		let _currentTeam: Team = JSON.parse(this.appService.getStorage().getItem(Globals.CURRENT_TEAM));
 		this.transactionTypeService.find().subscribe(types => {
 			this.transactionTypes = types;
@@ -55,7 +67,14 @@ export class DonateComponent implements OnInit {
 		});
 	}
 
+	cancel() {
+		this.toastService.remove();
+		this.transaction = new Transaction();
+		this.toggleMenu();
+	}
+
 	donate() {
+		this.toastService.remove();
 		this.transaction.from = this.userService.getStoredUser();
 		this.transaction.date = new Date();
 		this.transaction.team = JSON.parse(this.appService.getStorage().getItem(Globals.CURRENT_TEAM));

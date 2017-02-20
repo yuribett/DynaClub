@@ -33,7 +33,6 @@ import { routing } from './app.routes';
 import 'rxjs/add/operator/map';
 import { LoggedInGuard } from './auth/logged.in.guard';
 import { HttpService } from './auth/http.service';
-import { SimpleNotificationsModule } from 'angular2-notifications';
 
 
 @NgModule({
@@ -54,7 +53,6 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
 		HttpModule,
 		routing,
 		ModalModule.forRoot(),
-		SimpleNotificationsModule.forRoot(),
 		BootstrapModalModule,
 		DashboardModule,
 		TeamModule,
