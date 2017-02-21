@@ -66,6 +66,7 @@ export class DonateComponent implements OnInit {
 	}
 
 	toggleMenu() {
+		this.donateForm.reset();
 		this.buttonsState = this.buttonsState === 'left' ? 'center' : 'left';
 		this.formState = this.formState === 'right' ? 'center' : 'right';
 	}

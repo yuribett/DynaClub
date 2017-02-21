@@ -11,10 +11,8 @@
         <form [formGroup]="donateForm" (ngSubmit)="donate($event)">
 
             <div class="form-group">
-                <div class="input-group" [ngClass]="{'has-error':!donateForm.controls['amount'].valid}">
-                    <div class="input-group-addon">D$</div>
-                    <input [(ngModel)]="transaction.amount" [formControl]="donateForm.controls['amount']" type="number" min="1" max="1000" name="inputAmount" class="form-control" placeholder="Quanto?">
-                </div>
+                <input [(ngModel)]="transaction.amount" [formControl]="donateForm.controls['amount']" type="number" min="1" max="1000" name="inputAmount"
+                    class="form-control" placeholder="Quanto?">
             </div>
 
             <div class="form-group" [ngClass]="{'has-error':!donateForm.controls['user'].valid}">
@@ -24,16 +22,16 @@
                 </select>
             </div>
 
-            <div class="form-group" [ngClass]="{'has-error':!donateForm.controls['type'].valid}">
+            <div class="form-group">
                 <select [(ngModel)]="transaction.transactionType" [formControl]="donateForm.controls['type']" class="form-control" name="inputTypes">
                 	<option [ngValue]="transaction.transactionType" [disabled]="true" [selected]="true">Porque?</option>
 					<option [ngValue]="type" *ngFor="let type of transactionTypes">{{type.description}}</option>					
                 </select>
             </div>
 
-            <div class="form-group" [ngClass]="{'has-error':!donateForm.controls['message'].valid}">
-                <textarea required [(ngModel)]="transaction.message" [formControl]="donateForm.controls['message']" class="form-control" name="inputMessage" rows="2" placeholder="Mande uma mensagem...">
-                </textarea>
+            <div class="form-group">
+                <textarea required [(ngModel)]="transaction.message" [formControl]="donateForm.controls['message']" class="form-control"
+                    name="inputMessage" rows="2" placeholder="Mande uma mensagem..."></textarea>
             </div>
 
             <div class="btn-group btn-group-justified" role="group">

@@ -12,10 +12,24 @@
     font-size: 40px;
 }
 
-select:invalid:not(:focus) {
+select.ng-invalid:not(:focus) {
     color: #8f8f8f;
 }
 
 select option:disabled {
     display: none;
+}
+   
+.form-control {
+    border-left: 5px solid transparent;
+}
+
+.ng-touched.ng-valid:not(form), .ng-dirty.ng-valid:not(form)  {
+    border: 1px solid #375a7f;
+    border-left: 6px solid #375a7f;
+}
+
+.ng-touched.ng-invalid:not(form), .ng-dirty.ng-invalid:not(form)  {
+    border: 1px solid #e74c3c;
+    border-left: 6px solid #e74c3c;
 }
