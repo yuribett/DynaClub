@@ -4,29 +4,29 @@ import { User } from '../../shared/models/user';
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-transaction',
-  templateUrl: './transaction.component.html',
-  styleUrls: ['./transaction.component.css']
+	selector: 'app-transaction',
+	templateUrl: './transaction.component.html',
+	styleUrls: ['./transaction.component.css']
 })
 export class TransactionComponent implements OnInit {
 
-  @Input() transaction: Transaction;
-  loggedUser: User;
+	@Input() transaction: Transaction;
+	loggedUser: User;
 
-  constructor(userService: UserService) {
-    this.loggedUser = userService.getStoredUser();
-  }
+	constructor(userService: UserService) {
+		this.loggedUser = userService.getStoredUser();
+	}
 
-  isCredit(): boolean {
-    return this.loggedUser._id == this.transaction.to._id;
-  }
+	isCredit(): boolean {
+		return this.loggedUser._id == this.transaction.to._id;
+	}
 
-  getStyle() {
-    return this.isCredit() ? "credit" : "debit";
-  }
+	getStyle() {
+		return this.isCredit() ? "credit" : "debit";
+	}
 
 
-  ngOnInit() {
-  }
+	ngOnInit() {
+	}
 
 }
