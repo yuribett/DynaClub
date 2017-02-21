@@ -9,10 +9,13 @@ export class NotificationService {
         return new Observable((observer: any) => {
             notification.body = this.decodeMsg(notification.body);
             notification.title = this.decodeMsg(notification.title);
+            notification.icon = notification.icon;
             let Notification: any = window["Notification"];
             Notification.requestPermission().then(
                 result => {
-                    observer.next(new Notification(notification.title, notification));
+                    let notify = new Notification(notification.title, notification)
+                    notify.onclick = notification.onclick
+                    observer.next(notify);
                     observer.complete();
                 },
                 error => {
@@ -22,7 +25,6 @@ export class NotificationService {
             );
         });
     }
-
 
     decodeMsg(string: string) {
         let decoder: HTMLElement = document.createElement("div");
@@ -45,4 +47,5 @@ interface Notification {
     vibrate?: number[]
     requireInteraction?: boolean
     title: string
+    onclick: Function
 }
