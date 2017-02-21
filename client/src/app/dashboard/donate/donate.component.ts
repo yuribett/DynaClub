@@ -1,3 +1,4 @@
+import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { NotificationsService } from 'angular2-notifications';
 import { Sprint } from '../../shared/models/sprint';
 import { SprintService } from '../../shared/services/sprint.service';
@@ -17,7 +18,7 @@ import { TransactionErrors } from '../../shared/errors/transaction.errors';
 @Component({
 	selector: 'app-donate',
 	templateUrl: './donate.component.html',
-	styleUrls: ['./donate.component.css'],
+	styleUrls: ['./donate.component.scss'],
 	animations: [slide]
 })
 export class DonateComponent implements OnInit {
@@ -27,6 +28,7 @@ export class DonateComponent implements OnInit {
 	buttonsState: String = 'center';
 	formState: String = 'right';
 	transaction: Transaction = new Transaction();
+	donateForm: FormGroup;
 	public toastOptions = {
 		timeOut: 8000,
 		lastOnBottom: true,
@@ -41,12 +43,19 @@ export class DonateComponent implements OnInit {
 		position: ['right', 'top']
 	};
 
-	constructor(private userService: UserService, private appService: AppService, private transactionService: TransactionService, private transactionTypeService: TransactionTypeService, private sprintService: SprintService, private toastService: NotificationsService) {
+	constructor(private userService: UserService, private appService: AppService, private transactionService: TransactionService, private transactionTypeService: TransactionTypeService, private sprintService: SprintService, private toastService: NotificationsService, formBuilder: FormBuilder) {
 		let _currentTeam: Team = JSON.parse(this.appService.getStorage().getItem(Globals.CURRENT_TEAM));
 		this.transactionTypeService.find().subscribe(types => {
 			this.transactionTypes = types;
 		});
 		this.loadUsers(_currentTeam);
+
+		this.donateForm = formBuilder.group({
+			'amount': [null, Validators.required],
+			'user': [null, Validators.required],
+			'type': [null, Validators.required],
+			'message': [null, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(500)])]
+		});
 	}
 
 	ngOnInit() {

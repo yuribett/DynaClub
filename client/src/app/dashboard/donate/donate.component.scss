@@ -11,3 +11,11 @@
 .mainButtons {
     font-size: 40px;
 }
+
+select:invalid:not(:focus) {
+    color: #8f8f8f;
+}
+
+select option:disabled {
+    display: none;
+}
