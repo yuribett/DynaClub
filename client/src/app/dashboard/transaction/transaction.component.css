@@ -50,3 +50,17 @@
 .credit:hover {
     border-left: 3px solid #337ab7;
 }
+
+.row {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+.user-name {
+    margin-top: 10px;
+}
+
+.title {
+    font-weight: normal;
+    color: white;
+}
