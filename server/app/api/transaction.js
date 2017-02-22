@@ -55,8 +55,7 @@ module.exports = app => {
     };
 
     let insertTransaction = (req, res, wallet) => {
-
-        let errors = runExpressValidator(req, req.body.sprint - wallet.totalDonated);
+        let errors = runExpressValidator(req, req.body.sprint.initialAmount - wallet.totalDonated);
 
         if (errors) {
             res.status(400).send(errors);

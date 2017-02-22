@@ -11,8 +11,10 @@
         <form [formGroup]="donateForm" (ngSubmit)="donate($event)">
 
             <div class="form-group">
-                <input [(ngModel)]="transaction.amount" [formControl]="donateForm.controls['amount']" type="number" min="1" max="1000" name="inputAmount"
-                    class="form-control" placeholder="Quanto?">
+                <input [(ngModel)]="transaction.amount" [formControl]="donateForm.controls['amount']" type="number" name="inputAmount" class="form-control" placeholder="D$">
+                <p *ngIf="formErrors.amount" class="text-danger">
+                    {{ formErrors.amount }}
+                </p>
             </div>
 
             <div class="form-group" [ngClass]="{'has-error':!donateForm.controls['user'].valid}">
@@ -20,18 +22,26 @@
                 	<option [ngValue]="transaction.to"  [disabled]="true" [selected]="true">Para quem?</option>
 					<option [ngValue]="user" *ngFor="let user of teamUsers">{{user.name}}</option>					
                 </select>
+                <p *ngIf="formErrors.user" class="text-danger">
+                    {{ formErrors.user }}
+                </p>
             </div>
 
             <div class="form-group">
                 <select [(ngModel)]="transaction.transactionType" [formControl]="donateForm.controls['type']" class="form-control" name="inputTypes">
-                	<option [ngValue]="transaction.transactionType" [disabled]="true" [selected]="true">Porque?</option>
+                	<option [ngValue]="transaction.transactionType" [disabled]="true" [selected]="true">Por que?</option>
 					<option [ngValue]="type" *ngFor="let type of transactionTypes">{{type.description}}</option>					
                 </select>
+                <p *ngIf="formErrors.type" class="text-danger">
+                    {{ formErrors.type }}
+                </p>
             </div>
 
             <div class="form-group">
-                <textarea required [(ngModel)]="transaction.message" [formControl]="donateForm.controls['message']" class="form-control"
-                    name="inputMessage" rows="2" placeholder="Mande uma mensagem..."></textarea>
+                <textarea [(ngModel)]="transaction.message" [formControl]="donateForm.controls['message']" class="form-control" name="inputMessage" rows="2" placeholder="Mande uma mensagem..."></textarea>
+                <p *ngIf="formErrors.message" class="text-danger">
+                    {{ formErrors.message }}
+                </p>
             </div>
 
             <div class="btn-group btn-group-justified" role="group">

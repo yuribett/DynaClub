@@ -19,17 +19,23 @@ select.ng-invalid:not(:focus) {
 select option:disabled {
     display: none;
 }
-   
+
 .form-control {
     border-left: 5px solid transparent;
 }
 
-.ng-touched.ng-valid:not(form), .ng-dirty.ng-valid:not(form)  {
+:not(.ng-pristine).ng-valid:not(form) {
     border: 1px solid #375a7f;
     border-left: 6px solid #375a7f;
 }
 
-.ng-touched.ng-invalid:not(form), .ng-dirty.ng-invalid:not(form)  {
+:not(.ng-pristine).ng-invalid:not(form){
     border: 1px solid #e74c3c;
     border-left: 6px solid #e74c3c;
+}
+
+p.text-danger {
+    font-size: 75%;
+    font-weight: bold;
+    transition: ease 0.3s
 }

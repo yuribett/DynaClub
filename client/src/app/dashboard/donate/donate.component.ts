@@ -1,4 +1,4 @@
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { ValidatorFn, Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { NotificationsService } from 'angular2-notifications';
 import { Sprint } from '../../shared/models/sprint';
 import { SprintService } from '../../shared/services/sprint.service';
@@ -42,20 +42,41 @@ export class DonateComponent implements OnInit {
 		animate: 'fromLeft',
 		position: ['right', 'top']
 	};
+	formErrors = {
+		'amount': '',
+		'user': '',
+		'type': '',
+		'message': ''
+	};
 
-	constructor(private userService: UserService, private appService: AppService, private transactionService: TransactionService, private transactionTypeService: TransactionTypeService, private sprintService: SprintService, private toastService: NotificationsService, formBuilder: FormBuilder) {
+	validationMessages = {
+		'amount': {
+			'required': 'Quanto voc&ecirc; quer doar?',
+			'funds': 'Saldo insuficiente.',
+			'min': 'Doe pelo menos uma Dyna. S&oacute; umazinha!.'
+		},
+		'user': {
+			'required': 'Pra quem voc&ecedil; quer doar?.'
+		},
+		'type': {
+			'required': 'Nenhum motivo em especial?.'
+		},
+		'message': {
+			'required': 'Deixe uma mensagem para a pessoa.',
+			'minlength': 'A mensagem deve conter no m&iacute;nimo 3 caracteres.',
+			'maxlength': 'A mensagem deve conter no m&aacute;ximo 500 caracteres.',
+		}
+	};
+
+	constructor(private userService: UserService, private appService: AppService, private transactionService: TransactionService, private transactionTypeService: TransactionTypeService, private sprintService: SprintService, private toastService: NotificationsService,
+		private formBuilder: FormBuilder) {
 		let _currentTeam: Team = JSON.parse(this.appService.getStorage().getItem(Globals.CURRENT_TEAM));
 		this.transactionTypeService.find().subscribe(types => {
 			this.transactionTypes = types;
 		});
 		this.loadUsers(_currentTeam);
 
-		this.donateForm = formBuilder.group({
-			'amount': [null, Validators.required],
-			'user': [null, Validators.required],
-			'type': [null, Validators.required],
-			'message': [null, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(500)])]
-		});
+
 	}
 
 	ngOnInit() {
@@ -63,6 +84,43 @@ export class DonateComponent implements OnInit {
 			this.loadUsers(team);
 			this.transaction = new Transaction();
 		});
+		this.buildForm();
+	}
+
+	decodeMsg(string: string) {
+		let decoder: HTMLElement = document.createElement("div");
+		decoder.innerHTML = string;
+		return decoder.innerHTML;
+	}
+
+	buildForm(): void {
+		this.donateForm = this.formBuilder.group({
+			'amount': [null, Validators.required],
+			'user': [null, Validators.required],
+			'type': [null, Validators.required],
+			'message': [null, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(500)])]
+		});
+
+		this.donateForm.valueChanges
+			.subscribe(data => this.onValueChanged(data));
+
+		this.onValueChanged(); // (re)set validation messages now
+	}
+
+
+	onValueChanged(data?: any) {
+		if (!this.donateForm) { return; }
+		for (const field in this.formErrors) {
+			// clear previous error message (if any)
+			this.formErrors[field] = '';
+			const control = this.donateForm.get(field);
+			if (control && control.dirty && !control.valid) {
+				const messages = this.validationMessages[field];
+				for (const key in control.errors) {
+					this.formErrors[field] += this.decodeMsg(messages[key]) + ' ';
+				}
+			}
+		}
 	}
 
 	toggleMenu() {
