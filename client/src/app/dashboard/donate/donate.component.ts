@@ -1,4 +1,5 @@
-import { ValidatorFn, Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { FormControl, AbstractControl, ValidatorFn, Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { CustomValidators } from 'ng2-validation';
 import { NotificationsService } from 'angular2-notifications';
 import { Sprint } from '../../shared/models/sprint';
 import { SprintService } from '../../shared/services/sprint.service';
@@ -52,8 +53,8 @@ export class DonateComponent implements OnInit {
 	validationMessages = {
 		'amount': {
 			'required': 'Quanto voc&ecirc; quer doar?',
-			'funds': 'Saldo insuficiente.',
-			'min': 'Doe pelo menos uma Dyna. S&oacute; umazinha!.'
+			'max': 'Saldo insuficiente.',
+			'gt': 'Doe pelo menos uma Dyna.'
 		},
 		'user': {
 			'required': 'Pra quem voc&ecedil; quer doar?.'
@@ -87,27 +88,32 @@ export class DonateComponent implements OnInit {
 		this.buildForm();
 	}
 
+	buildForm() {
+		this.donateForm = this.formBuilder.group({
+			'amount': new FormControl('', [Validators.required, CustomValidators.max(1000), CustomValidators.gt(0)]),
+			'user': new FormControl('', Validators.required),
+			'type': new FormControl('', Validators.required),
+			'message': new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(500)])
+		});
+
+		this.donateForm.valueChanges
+			.subscribe(data => this.onValueChanged(data));
+		this.onValueChanged(); // (re)set validation messages now
+	}
+
+	getControlClass(control: string): string {
+		if (this.donateForm.controls[control].pristine) {
+			return "";
+		}
+		return this.donateForm.controls[control].valid ? "has-success" : "has-error";
+	}
+
 	decodeMsg(string: string) {
 		let decoder: HTMLElement = document.createElement("div");
 		decoder.innerHTML = string;
 		return decoder.innerHTML;
 	}
-
-	buildForm(): void {
-		this.donateForm = this.formBuilder.group({
-			'amount': [null, Validators.required],
-			'user': [null, Validators.required],
-			'type': [null, Validators.required],
-			'message': [null, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(500)])]
-		});
-
-		this.donateForm.valueChanges
-			.subscribe(data => this.onValueChanged(data));
-
-		this.onValueChanged(); // (re)set validation messages now
-	}
-
-
+	
 	onValueChanged(data?: any) {
 		if (!this.donateForm) { return; }
 		for (const field in this.formErrors) {
