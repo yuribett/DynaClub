@@ -172,7 +172,7 @@ module.exports = app => {
                                 wallet.totalDonated = row.total;
                             }
                         });
-                        wallet.funds = sprint.initialAmount - wallet.totalReceived;
+                        wallet.funds = sprint.initialAmount - wallet.totalDonated;
                         app.get('redis').set(`${redisKeyGetWallet}${userID}:${teamID}:${sprint._id}`, JSON.stringify(wallet));
                         logger.info(`Redis: SET ${redisKeyGetWallet}${userID}:${teamID}:${sprint._id}`);
                         resolve(wallet);
