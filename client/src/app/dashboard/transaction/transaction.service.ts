@@ -25,24 +25,6 @@ export class TransactionService {
 		this.headers = new Headers();
 		this.headers.append('Content-Type', 'application/json');
 		this.appService.getSocket().on('transaction', transaction => {
-			if (transaction.from._id != this.userService.getStoredUser()._id) {
-
-				let body = `Voc&ecirc; recebeu D$ ${transaction.amount} de ${transaction.from.name}!`;
-
-				this.notificationService.notify({
-					body: this._parseNotificationBody(`Voc&ecirc; recebeu D$ ${transaction.amount} de ${transaction.from.name}!`),
-					title: `Voc&ecirc; recebeu uma doa&ccedil;&atilde;o`,
-					icon: `./assets/images/icon-dollar-150x150.png`,
-					onclick: () => {
-						try {
-							window.focus();
-						}
-						catch (ex) {
-							console.log(ex);
-						}  
-					}
-				}).subscribe(error => console.log(error));
-			}
 			this.subjectTransactionAdded.next(transaction);
 		});
 	}
@@ -72,11 +54,13 @@ export class TransactionService {
 		return this.subjectTransactionAdded.asObservable();
 	}
 
+/*
 	private _parseNotificationBody(body: string) {
 		if(body.length > 38){
 			body = body.substr(0,38) + '...';
 		}
 		return body;
 	}
+*/
 
 }
