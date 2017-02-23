@@ -55,13 +55,4 @@ export class TransactionService {
 		return this.subjectTransactionAdded.asObservable();
 	}
 
-/*
-	private _parseNotificationBody(body: string) {
-		if(body.length > 38){
-			body = body.substr(0,38) + '...';
-		}
-		return body;
-	}
-*/
-
 }
