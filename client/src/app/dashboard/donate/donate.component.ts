@@ -85,6 +85,8 @@ export class DonateComponent implements OnInit {
 	ngOnInit() {
 		this.appService.getCurrentTeam().subscribe((team: Team) => {
 			this.loadUsers(team);
+			this.donateForm.reset();
+			this.getWallet(team);
 			this.transaction = new Transaction();
 		});
 		this.buildForm();
@@ -108,7 +110,6 @@ export class DonateComponent implements OnInit {
 			'message': new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(500)])
 		});
 
-		console.log(this.donateForm.valueChanges);
 		this.donateForm.valueChanges.subscribe(data => this.onValueChanged(data));
 		this.onValueChanged(); // (re)set validation messages now
 	}
