@@ -25,9 +25,10 @@ export class TransactionService {
 		this.http = http;
 		this.headers = new Headers();
 		this.headers.append('Content-Type', 'application/json');
-		this.appService.getSocket().on('transaction', transaction => {
+		//TODO Reactivate after websocket proxy problems are fixed
+		/*this.appService.getSocket().on('transaction', transaction => {
 			this.subjectTransactionAdded.next(transaction);
-		});
+		});*/
 	}
 
 	findByUser(user: User, team: Team) {
@@ -47,8 +48,10 @@ export class TransactionService {
 	insert(transaction: Transaction): Observable<Transaction> {
 		return this.http
 			.post(`${Globals.API_URL}/transaction/`, JSON.stringify(transaction), { headers: this.headers })
-			.map(res => res.json())
-			.catch(error => Observable.throw(error._body));
+			.map(res => {
+				res.json();
+				this.subjectTransactionAdded.next(res.json());
+			}).catch(error => Observable.throw(error._body));
 	}
 
 	onTransactionsAdded(): Observable<Transaction> {

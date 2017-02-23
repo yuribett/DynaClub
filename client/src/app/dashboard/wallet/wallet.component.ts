@@ -18,7 +18,6 @@ export class WalletComponent implements OnInit, OnDestroy {
 	wallet: Wallet = new Wallet();
 	_subTransactionsAdded: Subscription;
 	_subCurrentTeam: Subscription;
-	_subWallet: Subscription;
 
 	constructor(private transactionService: TransactionService, private teamService: TeamService, private userService: UserService, private appService: AppService) {
 		this.getWallet();
@@ -37,12 +36,12 @@ export class WalletComponent implements OnInit, OnDestroy {
 	ngOnDestroy() {
 		this._subTransactionsAdded.unsubscribe();
 		this._subCurrentTeam.unsubscribe();
-		this._subWallet.unsubscribe();
 	}
 
 	getWallet(team: Team = this.teamService.getCurrentTeam()) {
-		this._subWallet = this.transactionService.getWallet(this.userService.getStoredUser(), team).subscribe(
-			wallet => this.wallet = wallet);
+		this.transactionService.getWallet(this.userService.getStoredUser(), team).subscribe(
+			wallet => this.wallet = wallet
+		);
 	}
 
 }

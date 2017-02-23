@@ -15,8 +15,9 @@ import { UserService } from '../../shared/services/user.service';
 import { Globals } from '../../app.globals';
 import { User } from '../../shared/models/user';
 import { slide } from '../../animations';
-import { Input, Component, OnInit } from '@angular/core';
+import { OnDestroy, Input, Component, OnInit } from '@angular/core';
 import { TransactionErrors } from '../../shared/errors/transaction.errors';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
 	selector: 'app-donate',
@@ -24,7 +25,7 @@ import { TransactionErrors } from '../../shared/errors/transaction.errors';
 	styleUrls: ['./donate.component.scss'],
 	animations: [slide]
 })
-export class DonateComponent implements OnInit {
+export class DonateComponent implements OnInit, OnDestroy {
 
 	teamUsers: Array<User>;
 	transactionTypes: Array<TransactionType>;
@@ -33,6 +34,7 @@ export class DonateComponent implements OnInit {
 	transaction: Transaction = new Transaction();
 	donateForm: FormGroup;
 	wallet: Wallet = new Wallet();
+	_subCurrentTeam: Subscription;
 	public toastOptions = {
 		timeOut: 8000,
 		lastOnBottom: true,
@@ -83,7 +85,7 @@ export class DonateComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.appService.getCurrentTeam().subscribe((team: Team) => {
+		this._subCurrentTeam = this.appService.getCurrentTeam().subscribe((team: Team) => {
 			this.loadUsers(team);
 			this.donateForm.reset();
 			this.getWallet(team);
@@ -93,13 +95,18 @@ export class DonateComponent implements OnInit {
 		this.getWallet();
 	}
 
+	ngOnDestroy() {
+		this._subCurrentTeam.unsubscribe();
+	}
+
 	getWallet(team: Team = this.teamService.getCurrentTeam()) {
 		this.transactionService.getWallet(this.userService.getStoredUser(), team).subscribe(
 			wallet => {
 				this.wallet = wallet;
 				this.donateForm.controls['amount'].setValidators([Validators.required, CustomValidators.max(this.wallet.funds), CustomValidators.gt(0)]);
 				this.donateForm.controls['amount'].updateValueAndValidity();
-			});
+			}
+		);
 	}
 
 	buildForm() {
@@ -179,7 +186,8 @@ export class DonateComponent implements OnInit {
 					},
 					error => console.log(error)
 				);
-			});
+			}
+		);
 	}
 
 }
