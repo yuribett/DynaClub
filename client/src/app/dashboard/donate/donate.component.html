@@ -15,7 +15,7 @@
                     <span class="input-group-addon" id="basic-addon1"><i class="fa fa-usd" aria-hidden="true"></i></span>
                     <input [(ngModel)]="transaction.amount" formControlName="amount" type="number" name="inputAmount" class="form-control" placeholder="Quanto?">
                 </div>
-                <p *ngIf="formErrors.amount" class="text-danger">
+                <p [ngClass]="{'visible': formErrors.amount}" class="text-danger">
                     {{ formErrors.amount }}
                 </p>
             </div>
@@ -28,7 +28,7 @@
                         <option [ngValue]="user" *ngFor="let user of teamUsers">{{user.name}}</option>					
                     </select>
                 </div>
-                <p *ngIf="formErrors.user" class="text-danger">
+                <p [ngClass]="{'visible': formErrors.user}" class="text-danger">
                     {{ formErrors.user }}
                 </p>
             </div>
@@ -41,16 +41,16 @@
                         <option [ngValue]="type" *ngFor="let type of transactionTypes">{{type.description}}</option>					
                     </select>
                 </div>
-                <p *ngIf="formErrors.type" class="text-danger">
+                <p [ngClass]="{'visible': formErrors.type}" class="text-danger">
                     {{ formErrors.type }}
                 </p>
             </div>
 
             <div class="form-group {{getControlClass('message')}}">
                 <textarea [(ngModel)]="transaction.message" formControlName="message" class="form-control" name="inputMessage" rows="2" placeholder="Mande uma mensagem..."></textarea>
-                    <p *ngIf="formErrors.message" class="text-danger">
-                        {{ formErrors.message }}
-                    </p>
+                <p [ngClass]="{'visible': formErrors.message}" class="text-danger">
+                    {{ formErrors.message }}
+                </p>
             </div>
 
             <div class="btn-group btn-group-justified" role="group">

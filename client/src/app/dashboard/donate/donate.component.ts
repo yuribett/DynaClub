@@ -88,6 +88,16 @@ export class DonateComponent implements OnInit {
 			this.transaction = new Transaction();
 		});
 		this.buildForm();
+		this.getWallet();
+	}
+
+	getWallet(team: Team = this.teamService.getCurrentTeam()) {
+		this.transactionService.getWallet(this.userService.getStoredUser(), team).subscribe(
+			wallet => {
+				this.wallet = wallet;
+				this.donateForm.controls['amount'].setValidators([Validators.required, CustomValidators.max(this.wallet.funds), CustomValidators.gt(0)]);
+				this.donateForm.controls['amount'].updateValueAndValidity();
+			});
 	}
 
 	buildForm() {
@@ -98,8 +108,8 @@ export class DonateComponent implements OnInit {
 			'message': new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(500)])
 		});
 
-		this.donateForm.valueChanges
-			.subscribe(data => this.onValueChanged(data));
+		console.log(this.donateForm.valueChanges);
+		this.donateForm.valueChanges.subscribe(data => this.onValueChanged(data));
 		this.onValueChanged(); // (re)set validation messages now
 	}
 
@@ -159,6 +169,7 @@ export class DonateComponent implements OnInit {
 			transaction => {
 				this.transaction = new Transaction();
 				this.toggleMenu();
+				this.getWallet();
 			},
 			error => {
 				TransactionErrors.parseServerErrors(error).subscribe(
