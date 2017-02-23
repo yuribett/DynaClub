@@ -1,6 +1,7 @@
 import { TeamService } from '../shared/services/team.service';
 import { Globals } from '../app.globals';
 import { Team } from '../shared/models/team';
+import { Wallet } from '../shared/models/wallet';
 import { AppService } from '../app.service';
 import { UserService } from '../shared/services/user.service';
 import { TransactionService } from './transaction/transaction.service';
@@ -17,6 +18,7 @@ import { Component, OnInit } from '@angular/core';
 export class DashboardComponent implements OnInit {
 
 	transactions: Array<Transaction>;
+	wallet: Wallet = new Wallet();
 
 	constructor(private transactionService: TransactionService, private userService: UserService, private appService: AppService, private teamService: TeamService) {
 		this.transactionService = transactionService;
@@ -31,7 +33,6 @@ export class DashboardComponent implements OnInit {
 		});
 
 		this.transactionService.onTransactionsAdded().subscribe((transaction: Transaction) => {
-			console.log('DashboardComponent - Transaction recebida', transaction);
 			this.transactions.unshift(transaction);
 		});
 	}

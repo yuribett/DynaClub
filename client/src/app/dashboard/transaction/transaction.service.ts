@@ -2,6 +2,7 @@ import { AppService } from '../../app.service';
 import { UserService } from '../../shared/services/user.service';
 import { Transaction } from './transaction';
 import { Team } from '../../shared/models/team';
+import { Wallet } from '../../shared/models/wallet';
 import { Globals } from '../../app.globals';
 import { User } from '../../shared/models/user';
 import { TransactionComponent } from './transaction.component';
@@ -54,7 +55,7 @@ export class TransactionService {
 			.catch(error => Observable.throw(error._body));
 	}
 
-	getWallet(user: User, team: Team) {
+	getWallet(user: User, team: Team): Observable<Wallet> {
 		return this.http
 			.get(`${Globals.API_URL}/wallet/${user._id}/${team._id}`)
 			.map(res => res.json())

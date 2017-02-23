@@ -1,3 +1,4 @@
+import { TeamService } from '../../shared/services/team.service';
 import { FormControl, AbstractControl, ValidatorFn, Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { CustomValidators } from 'ng2-validation';
 import { NotificationsService } from 'angular2-notifications';
@@ -9,11 +10,12 @@ import { TransactionTypeService } from '../../shared/services/transaction-type.s
 import { Transaction } from '../transaction/transaction';
 import { AppService } from '../../app.service';
 import { Team } from '../../shared/models/team';
+import { Wallet } from '../../shared/models/wallet';
 import { UserService } from '../../shared/services/user.service';
 import { Globals } from '../../app.globals';
 import { User } from '../../shared/models/user';
 import { slide } from '../../animations';
-import { Component, OnInit } from '@angular/core';
+import { Input, Component, OnInit } from '@angular/core';
 import { TransactionErrors } from '../../shared/errors/transaction.errors';
 
 @Component({
@@ -30,6 +32,7 @@ export class DonateComponent implements OnInit {
 	formState: String = 'right';
 	transaction: Transaction = new Transaction();
 	donateForm: FormGroup;
+	wallet: Wallet = new Wallet();
 	public toastOptions = {
 		timeOut: 8000,
 		lastOnBottom: true,
@@ -69,15 +72,14 @@ export class DonateComponent implements OnInit {
 		}
 	};
 
-	constructor(private userService: UserService, private appService: AppService, private transactionService: TransactionService, private transactionTypeService: TransactionTypeService, private sprintService: SprintService, private toastService: NotificationsService,
-		private formBuilder: FormBuilder) {
-		let _currentTeam: Team = JSON.parse(this.appService.getStorage().getItem(Globals.CURRENT_TEAM));
+	constructor(private userService: UserService, private appService: AppService, private teamService: TeamService, private transactionService: TransactionService, private transactionTypeService: TransactionTypeService, private sprintService: SprintService,
+		private toastService: NotificationsService, private formBuilder: FormBuilder) {
+
+		let _currentTeam: Team = teamService.getCurrentTeam();
 		this.transactionTypeService.find().subscribe(types => {
 			this.transactionTypes = types;
 		});
 		this.loadUsers(_currentTeam);
-
-
 	}
 
 	ngOnInit() {
@@ -113,7 +115,7 @@ export class DonateComponent implements OnInit {
 		decoder.innerHTML = string;
 		return decoder.innerHTML;
 	}
-	
+
 	onValueChanged(data?: any) {
 		if (!this.donateForm) { return; }
 		for (const field in this.formErrors) {
