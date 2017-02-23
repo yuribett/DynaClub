@@ -1,4 +1,5 @@
 import { Team } from '../../shared/models/team';
+import { Wallet } from '../../shared/models/wallet';
 import { AppService } from '../../app.service';
 import { UserService } from '../../shared/services/user.service';
 import { TeamService } from '../../shared/services/team.service';
@@ -13,8 +14,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class WalletComponent implements OnInit {
 
-	myDynas: Number;
-	dynasReceived: Number;
+	wallet: Wallet = new Wallet();
 
 	constructor(private transactionService: TransactionService, private teamService: TeamService, private userService: UserService, private appService: AppService) {
 		this.getWallet();
@@ -33,11 +33,9 @@ export class WalletComponent implements OnInit {
 	getWallet(team: Team = this.teamService.getCurrentTeam()) {
 		this.transactionService.getWallet(this.userService.getStoredUser(), team).subscribe(
 			wallet => {
-				//TODO - subtrair wallet.totalDonated pelo valor padrao da Sprint.
-				this.myDynas = 1000 - wallet.totalDonated;
-				this.dynasReceived = wallet.totalReceived;
-			}
-		);
+				console.log('segura a wallet', wallet);
+				this.wallet = wallet;
+			});
 	}
 
 }

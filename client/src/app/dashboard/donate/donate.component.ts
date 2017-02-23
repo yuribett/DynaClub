@@ -1,4 +1,6 @@
-import { ValidatorFn, Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { TeamService } from '../../shared/services/team.service';
+import { FormControl, AbstractControl, ValidatorFn, Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { CustomValidators } from 'ng2-validation';
 import { NotificationsService } from 'angular2-notifications';
 import { Sprint } from '../../shared/models/sprint';
 import { SprintService } from '../../shared/services/sprint.service';
@@ -8,11 +10,12 @@ import { TransactionTypeService } from '../../shared/services/transaction-type.s
 import { Transaction } from '../transaction/transaction';
 import { AppService } from '../../app.service';
 import { Team } from '../../shared/models/team';
+import { Wallet } from '../../shared/models/wallet';
 import { UserService } from '../../shared/services/user.service';
 import { Globals } from '../../app.globals';
 import { User } from '../../shared/models/user';
 import { slide } from '../../animations';
-import { Component, OnInit } from '@angular/core';
+import { Input, Component, OnInit } from '@angular/core';
 import { TransactionErrors } from '../../shared/errors/transaction.errors';
 
 @Component({
@@ -29,6 +32,7 @@ export class DonateComponent implements OnInit {
 	formState: String = 'right';
 	transaction: Transaction = new Transaction();
 	donateForm: FormGroup;
+	wallet: Wallet = new Wallet();
 	public toastOptions = {
 		timeOut: 8000,
 		lastOnBottom: true,
@@ -52,8 +56,8 @@ export class DonateComponent implements OnInit {
 	validationMessages = {
 		'amount': {
 			'required': 'Quanto voc&ecirc; quer doar?',
-			'funds': 'Saldo insuficiente.',
-			'min': 'Doe pelo menos uma Dyna. S&oacute; umazinha!.'
+			'max': 'Saldo insuficiente.',
+			'gt': 'Doe pelo menos uma Dyna.'
 		},
 		'user': {
 			'required': 'Pra quem voc&ecedil; quer doar?.'
@@ -68,15 +72,14 @@ export class DonateComponent implements OnInit {
 		}
 	};
 
-	constructor(private userService: UserService, private appService: AppService, private transactionService: TransactionService, private transactionTypeService: TransactionTypeService, private sprintService: SprintService, private toastService: NotificationsService,
-		private formBuilder: FormBuilder) {
-		let _currentTeam: Team = JSON.parse(this.appService.getStorage().getItem(Globals.CURRENT_TEAM));
+	constructor(private userService: UserService, private appService: AppService, private teamService: TeamService, private transactionService: TransactionService, private transactionTypeService: TransactionTypeService, private sprintService: SprintService,
+		private toastService: NotificationsService, private formBuilder: FormBuilder) {
+
+		let _currentTeam: Team = teamService.getCurrentTeam();
 		this.transactionTypeService.find().subscribe(types => {
 			this.transactionTypes = types;
 		});
 		this.loadUsers(_currentTeam);
-
-
 	}
 
 	ngOnInit() {
@@ -87,26 +90,31 @@ export class DonateComponent implements OnInit {
 		this.buildForm();
 	}
 
+	buildForm() {
+		this.donateForm = this.formBuilder.group({
+			'amount': new FormControl('', [Validators.required, CustomValidators.max(1000), CustomValidators.gt(0)]),
+			'user': new FormControl('', Validators.required),
+			'type': new FormControl('', Validators.required),
+			'message': new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(500)])
+		});
+
+		this.donateForm.valueChanges
+			.subscribe(data => this.onValueChanged(data));
+		this.onValueChanged(); // (re)set validation messages now
+	}
+
+	getControlClass(control: string): string {
+		if (this.donateForm.controls[control].pristine) {
+			return "";
+		}
+		return this.donateForm.controls[control].valid ? "has-success" : "has-error";
+	}
+
 	decodeMsg(string: string) {
 		let decoder: HTMLElement = document.createElement("div");
 		decoder.innerHTML = string;
 		return decoder.innerHTML;
 	}
-
-	buildForm(): void {
-		this.donateForm = this.formBuilder.group({
-			'amount': [null, Validators.required],
-			'user': [null, Validators.required],
-			'type': [null, Validators.required],
-			'message': [null, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(500)])]
-		});
-
-		this.donateForm.valueChanges
-			.subscribe(data => this.onValueChanged(data));
-
-		this.onValueChanged(); // (re)set validation messages now
-	}
-
 
 	onValueChanged(data?: any) {
 		if (!this.donateForm) { return; }
