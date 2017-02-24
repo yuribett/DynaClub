@@ -1,0 +1,14 @@
+<td class="col-left">{{sprint.dateStart | date: 'dd/MM/yyyy HH:mm'}}</td>
+<td class="col-left">{{sprint.dateFinish | date: 'dd/MM/yyyy HH:mm'}}</td>
+<td class="col-left">{{sprint.initialAmount}}</td>
+<td>
+    <button (click)="onDelete()"
+            class="btn btn-danger btn-xs pull-right">
+        <i class="fa fa-times"></i>
+    </button>
+    <button (click)="onEdit()"
+            class="btn btn-primary btn-xs pull-right" 
+            style="margin-right: 5px">
+        <i class="fa fa-edit"></i>
+    </button>
+</td>

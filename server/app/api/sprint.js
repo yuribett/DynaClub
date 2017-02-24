@@ -29,6 +29,20 @@ module.exports = app => {
         });
     };
 
+    api.findIntersected = (req, res) => {
+        let date = req.params.date;
+        model.find()
+            .where('dateStart').lte(date)
+            .where('dateFinish').gte(date)
+            .sort({ dateStart: -1 })
+            .then((doc) => {
+                res.json(doc);
+            }, (error) => {
+                logger.error(error);
+                res.sendStatus(500);
+            });
+    };
+
     api.findById = (req, res) => {
         let id = req.params.id;
 

@@ -16,6 +16,9 @@ module.exports = app => {
 		.get(api.findById)
 		.put(api.update)
 		.delete(api.delete);
+
+	app.route('/api/sprint/intersects/:date')
+		.get(api.findIntersected)
 	
 	
 };

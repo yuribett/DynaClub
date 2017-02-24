@@ -7,6 +7,7 @@ import { HttpModule, Http } from '@angular/http';
 //Modules
 import { DashboardModule } from './dashboard/dashboard.module';
 import { TeamModule } from './admin/teams/team.module';
+import { SprintModule } from './admin/sprints/sprint.module';
 import { DynaCommonModule } from './shared/dyna-common.module';
 import { ModalModule } from 'angular2-modal';
 import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
@@ -56,6 +57,7 @@ import { HttpService } from './auth/http.service';
 		BootstrapModalModule,
 		DashboardModule,
 		TeamModule,
+		SprintModule,
 		DynaCommonModule
 	],
 	providers: [

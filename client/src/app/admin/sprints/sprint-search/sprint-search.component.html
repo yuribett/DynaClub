@@ -1,0 +1,38 @@
+<div class="container form-container">
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2" style="text-align: center">
+            <h2 class="h-slim">Períodos</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2" style="margin-bottom: 10px;">
+            <button (click)="gotoNewSprint()" class="btn btn-primary pull-right">
+                <i class="fa fa-plus"></i> Novo
+            </button>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2" style="margin-bottom: 10px;">
+            <table class="table table-striped table-hover table-bordered" style="margin-top: 10px;">
+                <thead>
+                    <tr>
+                        <th>Início</th>
+                        <th>Fim</th>
+                        <th>Crédito inicial</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr sprint-search-item 
+                        *ngFor="let sprint of sprints" 
+                        [sprint]="sprint" 
+                        (afterDelete)="afterDelete($event)"></tr>    
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

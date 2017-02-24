@@ -5,6 +5,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { AdminComponent } from './admin/admin.component';
 import { TeamSearchComponent } from './admin/teams/team-search/team-search.component';
 import { TeamDetailComponent } from './admin/teams/team-detail/team-detail.component';
+import { SprintSearchComponent } from './admin/sprints/sprint-search/sprint-search.component';
+import { SprintDetailComponent } from './admin/sprints/sprint-detail/sprint-detail.component';
 import { ProfileComponent } from './settings/profile/profile.component';
 import { ConfigsComponent } from './settings/configs/configs.component';
 import { AboutComponent } from './settings/about/about.component';
@@ -16,9 +18,15 @@ const appRoutes: Routes = [
 	{ path: 'dashboard', component: DashboardComponent, canActivate: [LoggedInGuard] },
 	{ path: 'login', component: LoginComponent },
 	{ path: 'admin', component: AdminComponent, canActivate: [LoggedInGuard] },
+	
 	{ path: 'teams', component: TeamSearchComponent },
     { path: 'team/edit/:id', component: TeamDetailComponent },
     { path: 'team/new', component: TeamDetailComponent },
+
+	{ path: 'sprints', 		   component: SprintSearchComponent },
+    { path: 'sprint/edit/:id', component: SprintDetailComponent },
+    { path: 'sprint/new', 	   component: SprintDetailComponent },
+
 	{ path: 'ranking', component: RankingComponent, canActivate: [LoggedInGuard] },
 	{ path: 'profile', component: ProfileComponent, canActivate: [LoggedInGuard] },
 	{ path: 'configs', component: ConfigsComponent, canActivate: [LoggedInGuard] },
