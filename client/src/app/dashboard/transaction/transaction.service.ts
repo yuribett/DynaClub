@@ -2,6 +2,7 @@ import { AppService } from '../../app.service';
 import { UserService } from '../../shared/services/user.service';
 import { Transaction } from './transaction';
 import { Team } from '../../shared/models/team';
+import { Wallet } from '../../shared/models/wallet';
 import { Globals } from '../../app.globals';
 import { User } from '../../shared/models/user';
 import { TransactionComponent } from './transaction.component';
@@ -24,15 +25,10 @@ export class TransactionService {
 		this.http = http;
 		this.headers = new Headers();
 		this.headers.append('Content-Type', 'application/json');
-		this.appService.getSocket().on('transaction', transaction => {
-			if (transaction.from._id != this.userService.getStoredUser()._id) {
-				this.notificationService.notify({
-					body: `Voc&ecirc; recebeu D$ ${transaction.amount} de ${transaction.from.name}!`,
-					title: `Voc&ecirc; recebeu uma doa&ccedil;&atilde;o`
-				}).subscribe(error => console.log(error));
-			}
+		//TODO Reactivate after websocket proxy problems are fixed
+		/*this.appService.getSocket().on('transaction', transaction => {
 			this.subjectTransactionAdded.next(transaction);
-		});
+		});*/
 	}
 
 	findByUser(user: User, team: Team) {
@@ -42,7 +38,7 @@ export class TransactionService {
 			.catch(error => Observable.throw(error._body));
 	}
 
-	getWallet(user: User, team: Team) {
+	getWallet(user: User, team: Team): Observable<Wallet> {
 		return this.http
 			.get(`${Globals.API_URL}/wallet/${user._id}/${team._id}`)
 			.map(res => res.json())
@@ -52,8 +48,10 @@ export class TransactionService {
 	insert(transaction: Transaction): Observable<Transaction> {
 		return this.http
 			.post(`${Globals.API_URL}/transaction/`, JSON.stringify(transaction), { headers: this.headers })
-			.map(res => res.json())
-			.catch(error => Observable.throw(error._body));
+			.map(res => {
+				res.json();
+				this.subjectTransactionAdded.next(res.json());
+			}).catch(error => Observable.throw(error._body));
 	}
 
 	onTransactionsAdded(): Observable<Transaction> {

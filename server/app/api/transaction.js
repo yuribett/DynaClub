@@ -55,8 +55,7 @@ module.exports = app => {
     };
 
     let insertTransaction = (req, res, wallet) => {
-
-        let errors = runExpressValidator(req, req.body.sprint - wallet.totalDonated);
+        let errors = runExpressValidator(req, wallet.funds);
 
         if (errors) {
             res.status(400).send(errors);
@@ -163,7 +162,8 @@ module.exports = app => {
                     ]).then(result => {
                         let wallet = {
                             totalReceived: 0,
-                            totalDonated: 0
+                            totalDonated: 0,
+                            funds: 0
                         };
                         result.forEach((row) => {
                             if (row.received) {
@@ -172,6 +172,7 @@ module.exports = app => {
                                 wallet.totalDonated = row.total;
                             }
                         });
+                        wallet.funds = sprint.initialAmount - wallet.totalDonated;
                         app.get('redis').set(`${redisKeyGetWallet}${userID}:${teamID}:${sprint._id}`, JSON.stringify(wallet));
                         logger.info(`Redis: SET ${redisKeyGetWallet}${userID}:${teamID}:${sprint._id}`);
                         resolve(wallet);

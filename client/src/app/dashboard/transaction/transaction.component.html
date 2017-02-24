@@ -11,16 +11,18 @@
 
     <div class="col-md-8 col-sm-8 col-xs-12 messageContainer">
         <div class="row">
-            <div style="display: none;">
-                from {{transaction.from.name}}<br> to {{transaction.to.name}}
+            <div *ngIf="isCredit()" class="row">
+                <h3 class="text-info user-name">{{transaction.from.name}}</h3>
             </div>
-            <div *ngIf="isCredit()">
-                Recebido de {{transaction.from.name}}
+            <div *ngIf="!isCredit()" class="row">
+                <h3 class="text-danger user-name">{{transaction.to.name}}</h3>
             </div>
-            <div *ngIf="!isCredit()">
-                Enviado para {{transaction.to.name}}
+            <div class="row">
+                <label class="title">Por qu&ecirc;? </label> {{transaction.transactionType.description}}
             </div>
-            <br> Mensagem: {{transaction.message}}
+            <div class="row">
+                <label class="title">Mensagem: </label> {{transaction.message}}
+            </div>
         </div>
     </div>
 </div>

@@ -7,7 +7,7 @@ import { DashboardComponent } from './dashboard.component';
 import { DonateComponent } from './donate/donate.component';
 import { NotificationService } from '../notification.service';
 
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { TransactionTypeService } from '../shared/services/transaction-type.service';
 import { TransactionTypeComponent } from './transaction/transaction-type/transaction-type.component';
 import { SimpleNotificationsModule } from 'angular2-notifications';
@@ -16,6 +16,7 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
     imports: [
         CommonModule,
         FormsModule,
+        ReactiveFormsModule,
 		SimpleNotificationsModule.forRoot(),
     ],
     exports: [

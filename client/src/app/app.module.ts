@@ -34,6 +34,8 @@ import { routing } from './app.routes';
 import 'rxjs/add/operator/map';
 import { LoggedInGuard } from './auth/logged.in.guard';
 import { HttpService } from './auth/http.service';
+import { TransactionTypesComponent } from './admin/transaction-types/transaction-types.component';
+import { UsersComponent } from './admin/users/users.component';
 
 
 @NgModule({
@@ -45,7 +47,9 @@ import { HttpService } from './auth/http.service';
 		MenuComponent,
 		RankingComponent,
 		ConfigsComponent,
-		AboutComponent
+		AboutComponent,
+		TransactionTypesComponent,
+		UsersComponent
 	],
 	imports: [
 		BrowserModule,

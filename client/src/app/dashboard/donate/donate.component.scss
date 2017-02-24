@@ -1,0 +1,46 @@
+.jumbotron {
+    overflow: hidden;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+.btn {
+    border-radius: 0px;
+}
+
+.mainButtons {
+    font-size: 40px;
+}
+
+select.ng-invalid:not(:focus) {
+    color: #8f8f8f;
+}
+
+select option:disabled {
+    display: none;
+}
+
+.has-success .form-control {
+    border: 1px solid #00bc8c
+}
+
+.has-error .form-control{
+    border: 1px solid #e74c3c;
+}
+
+.input-group-addon {    
+    min-width: 50px;
+}
+
+p.text-danger {
+    font-size: 70%;
+    font-weight: bold;
+    transition: ease 0.3s;
+    font-style: italic;
+    height: 0px;
+    overflow: hidden;
+}
+
+p.text-danger.visible {
+    height: 20px;
+}
