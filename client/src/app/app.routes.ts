@@ -10,6 +10,8 @@ import { ConfigsComponent } from './settings/configs/configs.component';
 import { AboutComponent } from './settings/about/about.component';
 import { LoggedInGuard } from './auth/logged.in.guard';
 import { RankingComponent } from './ranking/ranking.component';
+import { TransactionTypesComponent } from './admin/transaction-types/transaction-types.component';
+import { UsersComponent } from './admin/users/users.component';
 
 const appRoutes: Routes = [
 
@@ -19,6 +21,8 @@ const appRoutes: Routes = [
 	{ path: 'teams', component: TeamSearchComponent },
     { path: 'team/edit/:id', component: TeamDetailComponent },
     { path: 'team/new', component: TeamDetailComponent },
+	{ path: 'transaction-types', component: TransactionTypesComponent },
+	{ path: 'users', component: UsersComponent },
 	{ path: 'ranking', component: RankingComponent, canActivate: [LoggedInGuard] },
 	{ path: 'profile', component: ProfileComponent, canActivate: [LoggedInGuard] },
 	{ path: 'configs', component: ConfigsComponent, canActivate: [LoggedInGuard] },
