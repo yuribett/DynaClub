@@ -90,14 +90,12 @@ export class SprintDetailComponent implements OnInit {
   setModelValues(formValues: Sprint): void {
      formValues._id = this.sprint._id;
      this.sprint = formValues;
-
-     this.sprint.dateStart = new Date(this.sprint.dateStart);
-     this.sprint.dateStart.setHours(0);
-     this.sprint.dateStart.setMinutes(0);
-
-     this.sprint.dateFinish = new Date(this.sprint.dateFinish);
-     this.sprint.dateFinish.setHours(23);
-     this.sprint.dateFinish.setMinutes(59);
+     
+     const offset =  new Date().getTimezoneOffset() * 60000;
+     const dateStart = new Date(this.sprint.dateStart + "T00:00:00.000Z")
+     this.sprint.dateStart = new Date(dateStart.getTime() + offset);
+     const dateFinish = new Date(this.sprint.dateFinish + "T23:59:59.999Z")
+     this.sprint.dateFinish = new Date(dateFinish.getTime() + offset);
   }
 
   onSubmit({ value, valid }: { value: Sprint, valid: boolean }) {
