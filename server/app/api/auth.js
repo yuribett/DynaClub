@@ -13,6 +13,7 @@ module.exports = app => {
 			user: req.body.user,
 			password: req.body.password
 		})
+			.lean()
 			.populate('teams')
 			.then((auth) => {
 				if (!auth) {
@@ -23,8 +24,7 @@ module.exports = app => {
 					let token = jwt.sign({ auth: auth.user }, app.get('secret'), {
 						expiresIn: 7614000
 					});
-					//setting password to null to response
-					auth.password = null;
+					delete auth.password;
 
 					res.set('x-access-token', token);
 					res.json(auth);

@@ -27,9 +27,16 @@ module.exports = app => {
                                 'team': team,
                                 'sprint': sprint._id
                             })
+                            .lean()
                             .sort({ date: -1 })
                             .populate('to from sprint transactionType team')
                             .then((transactions) => {
+                                
+                                transactions.forEach((transaction, key) => {
+                                    delete transactions[key].to.password;
+                                    delete transactions[key].from.password;
+                                });
+                                
                                 app.get('redis').set(`${redisKeyListByUser}${user}:${team}:${sprint._id}`, JSON.stringify(transactions));
                                 logger.info(`Redis: SET ${redisKeyListByUser}${user}:${team}:${sprint._id}`);
                                 res.json(transactions);
