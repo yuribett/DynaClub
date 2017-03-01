@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
 					let body = `Voc&ecirc; recebeu D$ ${transaction.amount} de ${transaction.from.name}!`;
 
 					this.notificationService.notify({
-						body: this._parseNotificationBody(`Voc&ecirc; recebeu D$ ${transaction.amount} de ${transaction.from.name}!`),
+						body: this._parseNotificationBody(body),
 						title: `Voc&ecirc; recebeu uma doa&ccedil;&atilde;o`,
 						icon: `./assets/images/icon-dollar-150x150.png`,
 						onclick: () => {

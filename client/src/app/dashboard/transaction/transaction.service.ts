@@ -21,14 +21,13 @@ export class TransactionService {
 	headers: Headers;
 	subjectTransactionAdded: Subject<Transaction> = new Subject<Transaction>();
 
-	constructor(http: Http, private userService: UserService, private appService: AppService, private notificationService: NotificationService) {
+	constructor(http: Http, private userService: UserService, private appService: AppService) {
 		this.http = http;
 		this.headers = new Headers();
 		this.headers.append('Content-Type', 'application/json');
-		//TODO Reactivate after websocket proxy problems are fixed
-		/*this.appService.getSocket().on('transaction', transaction => {
+		this.appService.getSocket().on('transaction', transaction => {
 			this.subjectTransactionAdded.next(transaction);
-		});*/
+		});
 	}
 
 	findByUser(user: User, team: Team) {
@@ -48,10 +47,8 @@ export class TransactionService {
 	insert(transaction: Transaction): Observable<Transaction> {
 		return this.http
 			.post(`${Globals.API_URL}/transaction/`, JSON.stringify(transaction), { headers: this.headers })
-			.map(res => {
-				res.json();
-				this.subjectTransactionAdded.next(res.json());
-			}).catch(error => Observable.throw(error._body));
+			.map(res => res.json())
+			.catch(error => Observable.throw(error._body));
 	}
 
 	onTransactionsAdded(): Observable<Transaction> {
