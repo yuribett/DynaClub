@@ -18,6 +18,7 @@ import { slide } from '../../animations';
 import { OnDestroy, Input, Component, OnInit } from '@angular/core';
 import { TransactionErrors } from '../../shared/errors/transaction.errors';
 import { Subscription } from 'rxjs/Subscription';
+declare var $: any;
 
 @Component({
 	selector: 'app-donate',
@@ -169,6 +170,7 @@ export class DonateComponent implements OnInit, OnDestroy {
 	}
 
 	donate() {
+		$('#donateBtn').button('loading');
 		this.toastService.remove();
 		this.transaction.from = this.userService.getStoredUser();
 		this.transaction.date = new Date();
@@ -178,6 +180,7 @@ export class DonateComponent implements OnInit, OnDestroy {
 				this.transaction = new Transaction();
 				this.toggleMenu();
 				this.getWallet();
+				$('#donateBtn').button('reset');
 			},
 			error => {
 				TransactionErrors.parseServerErrors(error).subscribe(
@@ -186,6 +189,7 @@ export class DonateComponent implements OnInit, OnDestroy {
 					},
 					error => console.log(error)
 				);
+				$('#donateBtn').button('reset');
 			}
 		);
 	}
