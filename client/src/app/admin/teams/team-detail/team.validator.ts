@@ -11,7 +11,7 @@ export class TeamValidator extends BaseFormValidator {
   constructor (form: FormGroup = null, 
                private teamService: TeamService = null,
                private team: Team = null){
-      super(form);
+      super(form, 'team');
       this.teamUniqueNameValidator(this.form);
   }
 

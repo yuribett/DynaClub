@@ -11,7 +11,7 @@ export class SprintValidator extends BaseFormValidator {
   constructor (form: FormGroup = null, 
                private sprintService: SprintService = null,
                private sprint: Sprint = null){
-      super(form);
+      super(form, 'sprint');
 
       if (form == null){
         return;
@@ -19,7 +19,19 @@ export class SprintValidator extends BaseFormValidator {
       
       this.sprintIntersectsValidator(form.get('dateStart'));
       this.sprintIntersectsValidator(form.get('dateFinish'));
-      this.initialAmountValidator(form.get('initialAmount'));
+      this.dateFinishGreaterDateStart(form.get('dateStart'), form.get('dateFinish'));
+  }
+
+  dateFinishGreaterDateStart(dateStart: AbstractControl, dateFinish: AbstractControl): void {
+    dateFinish.valueChanges
+             .subscribe(data=> {
+               if (data){
+                  const dateS = dateStart.value;
+                  if (new Date(data).getTime() < new Date(dateS).getTime()){
+                    this.addError(dateFinish, 'gt');
+                  }
+               }
+             }) 
   }
 
   initialAmountValidator(control: AbstractControl): void {

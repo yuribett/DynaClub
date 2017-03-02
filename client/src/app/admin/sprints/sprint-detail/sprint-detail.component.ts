@@ -1,7 +1,8 @@
 import { Component, OnInit, Input, ViewChildren } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+ 
 import { ActivatedRoute, Params, Router } from '@angular/router';
-
+import { CustomValidators } from 'ng2-validation';
 import { SprintService } from '../../../shared/services/sprint.service';
 import { Sprint } from '../../../shared/models/sprint';
 import { SprintValidator } from './sprint.validator'
@@ -62,7 +63,7 @@ export class SprintDetailComponent implements OnInit {
     this.sprintForm = this.fb.group({
       dateStart: [this.sprint.dateStart, [Validators.required]],
       dateFinish: [this.sprint.dateFinish, [Validators.required]],
-      initialAmount: [this.sprint.initialAmount, [Validators.required]]
+      initialAmount: [this.sprint.initialAmount, [Validators.required, CustomValidators.gt(0)]]
     });
   }
 
@@ -90,7 +91,7 @@ export class SprintDetailComponent implements OnInit {
   setModelValues(formValues: Sprint): void {
      formValues._id = this.sprint._id;
      this.sprint = formValues;
-     
+
      const offset =  new Date().getTimezoneOffset() * 60000;
      const dateStart = new Date(this.sprint.dateStart + "T00:00:00.000Z")
      this.sprint.dateStart = new Date(dateStart.getTime() + offset);
