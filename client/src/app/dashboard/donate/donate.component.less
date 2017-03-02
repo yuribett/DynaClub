@@ -1,5 +1,5 @@
-@import "~bootswatch/darkly/variables";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/variables";
+@import "~bootstrap/less/variables.less";
+@import "~bootswatch/darkly/variables.less";
 
 .jumbotron {
     overflow: hidden;
@@ -24,11 +24,11 @@ select option:disabled {
 }
 
 .has-success .form-control {
-    border: 1px solid $btn-success-bg
+    border: 1px solid @btn-success-bg
 }
 
 .has-error .form-control{
-    border: 1px solid $btn-danger-bg
+    border: 1px solid @btn-danger-bg
 }
 
 .input-group-addon {    
