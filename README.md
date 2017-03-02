@@ -13,7 +13,7 @@ The app is used at [Dynamix Software](http://www.dynamix.com.br)
 
 ## Run Server
 
-With Redis and MongoDB running, check connections configurations in `\server\server.js`
+With Redis and MongoDB running, check connections configurations in `/server/server.js`
 
 If it's the first time running, you must install the dependencies:
 ```bash
