@@ -6,6 +6,7 @@ import { HttpModule, Http } from '@angular/http';
 
 //Modules
 import { DashboardModule } from './dashboard/dashboard.module';
+import { RankingModule } from './ranking/ranking.module';
 import { TeamModule } from './admin/teams/team.module';
 import { SprintModule } from './admin/sprints/sprint.module';
 import { DynaCommonModule } from './shared/dyna-common.module';
@@ -18,9 +19,10 @@ import { LoginComponent } from './login/login.component';
 import { AdminComponent } from './admin/admin.component';
 import { ProfileComponent } from './settings/profile/profile.component';
 import { MenuComponent } from './menu/menu.component';
-import { RankingComponent } from './ranking/ranking.component';
 import { ConfigsComponent } from './settings/configs/configs.component';
 import { AboutComponent } from './settings/about/about.component';
+import { TransactionTypesComponent } from './admin/transaction-types/transaction-types.component';
+import { UsersComponent } from './admin/users/users.component';
 
 //Services
 import { AuthService } from './auth/auth.service';
@@ -34,9 +36,6 @@ import { routing } from './app.routes';
 import 'rxjs/add/operator/map';
 import { LoggedInGuard } from './auth/logged.in.guard';
 import { HttpService } from './auth/http.service';
-import { TransactionTypesComponent } from './admin/transaction-types/transaction-types.component';
-import { UsersComponent } from './admin/users/users.component';
-
 
 @NgModule({
 	declarations: [
@@ -45,7 +44,6 @@ import { UsersComponent } from './admin/users/users.component';
 		AdminComponent,
 		ProfileComponent,
 		MenuComponent,
-		RankingComponent,
 		ConfigsComponent,
 		AboutComponent,
 		TransactionTypesComponent,
@@ -60,6 +58,7 @@ import { UsersComponent } from './admin/users/users.component';
 		ModalModule.forRoot(),
 		BootstrapModalModule,
 		DashboardModule,
+		RankingModule,
 		TeamModule,
 		SprintModule,
 		DynaCommonModule
