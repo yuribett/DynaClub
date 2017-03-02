@@ -1,3 +1,4 @@
+import { TeamService } from '../../shared/services/team.service';
 import { AppService } from '../../app.service';
 import { UserService } from '../../shared/services/user.service';
 import { Transaction } from './transaction';
@@ -21,12 +22,16 @@ export class TransactionService {
 	headers: Headers;
 	subjectTransactionAdded: Subject<Transaction> = new Subject<Transaction>();
 
-	constructor(http: Http, private userService: UserService, private appService: AppService) {
+	constructor(http: Http, private userService: UserService, private appService: AppService, private teamService: TeamService) {
 		this.http = http;
 		this.headers = new Headers();
 		this.headers.append('Content-Type', 'application/json');
 		this.appService.getSocket().on('transaction', transaction => {
-			this.subjectTransactionAdded.next(transaction);
+			console.log('Transaction team: ', transaction.team);
+			console.log('Current team: ', this.teamService.getCurrentTeam());
+			if (transaction.team._id === this.teamService.getCurrentTeam()._id) {
+				this.subjectTransactionAdded.next(transaction);
+			}
 		});
 	}
 
