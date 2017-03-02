@@ -18,7 +18,7 @@ With Redis and MongoDB running, check connections configurations in `\server\ser
 If it's the first time running, you must install the dependencies:
 ```bash
 cd server
-npm instal
+npm install
 ```
 
 To start the Server API:
@@ -33,14 +33,14 @@ cd server
 node cluster.js
 ```
 
-For more info about client build, please check server [README.MD](https://github.com/yuribett/DynaClub/blob/master/server/README.md)
+For more info about client build, please check server [README.md](https://github.com/yuribett/DynaClub/blob/master/server/README.md)
 
 ## Run Client
 
 If it's the first time running, you must install the dependencies:
 ```bash
 cd client
-npm instal
+npm install
 ```
 
 To start the Server API:
@@ -49,4 +49,4 @@ cd client
 ng serve
 ```
 
-For more info about client build, please check client [README.MD](https://github.com/yuribett/DynaClub/blob/master/client/README.md)
+For more info about client build, please check client [README.md](https://github.com/yuribett/DynaClub/blob/master/client/README.md)
