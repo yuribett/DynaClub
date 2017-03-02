@@ -7,6 +7,8 @@ import { AppService } from '../app.service';
 import { User } from '../shared/models/user';
 import { Globals } from '../app.globals';
 
+const { version: appVersion } = require('../../../package.json')
+
 @Component({
 	selector: 'app-login',
 	templateUrl: './login.component.html',
@@ -21,7 +23,7 @@ export class LoginComponent implements OnInit {
 	private router: Router;
 	private authService: AuthService;
 	private app: AppComponent;
-
+	private appVersion: string;
 
 	constructor(
 		router: Router,
@@ -32,6 +34,7 @@ export class LoginComponent implements OnInit {
 		this.router = router;
 		this.authService = authService;
 		this.app = app;
+		this.appVersion = appVersion;
 	}
 
 	ngOnInit() {
