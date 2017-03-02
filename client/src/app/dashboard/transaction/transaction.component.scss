@@ -1,0 +1,67 @@
+@import "~bootswatch/darkly/variables";
+@import "~bootstrap-sass/assets/stylesheets/bootstrap/variables";
+
+@mixin credit-debit($color) {
+    h1, span {
+        color: $color;
+        font-weight: bold;
+    }
+    &:hover {
+        border-color: $color
+    }
+    .glyphicon {
+        font-size: 40px;
+        margin-top: 15px; 
+    }
+}
+
+.transaction {        
+    border-left: 3px solid transparent;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 0;
+
+    .title {
+        color: $text-color;
+        font-weight: normal;
+    }
+    
+    &.debit {
+        @include credit-debit($btn-danger-bg);
+    }
+
+    &.credit {
+        @include credit-debit($btn-primary-bg);    
+    }
+
+    .messageContainer {
+        font-family: "Titillium Web", Helvetica, Arial, sans-serif;
+        font-weight: 200;
+        font-size: 90%;
+    }
+
+    .symbol {
+        font-size: 20px;
+    }
+
+    .amount {
+        font-size: 60px;
+    }
+
+    .user-name {
+        margin-top: 10px;
+    }
+
+}
+
+@media only screen and (max-device-width: 780px) { 
+    .transaction {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+.row {
+    margin-right: 0px;
+    margin-left: 0px;
+}
