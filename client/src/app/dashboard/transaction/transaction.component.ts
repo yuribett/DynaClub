@@ -6,7 +6,7 @@ import { Component, OnInit, Input } from '@angular/core';
 @Component({
 	selector: 'app-transaction',
 	templateUrl: './transaction.component.html',
-	styleUrls: ['./transaction.component.css']
+	styleUrls: ['./transaction.component.less']
 })
 export class TransactionComponent implements OnInit {
 

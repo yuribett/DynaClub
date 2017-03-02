@@ -23,7 +23,7 @@ declare var $: any;
 @Component({
 	selector: 'app-donate',
 	templateUrl: './donate.component.html',
-	styleUrls: ['./donate.component.scss'],
+	styleUrls: ['./donate.component.less'],
 	animations: [slide]
 })
 export class DonateComponent implements OnInit, OnDestroy {
