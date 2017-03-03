@@ -3,12 +3,12 @@
     <simple-notifications [options]="toastOptions"></simple-notifications>
 
     <div class="buttonsPanel" [@slide]="buttonsState">
-        <button type="button" class="btn btn-primary btn-lg btn-block mainButtons" (click)="toggleMenu()">Doar</button>
-        <button type="button" style="display: none" class="btn btn-success btn-lg btn-block mainButtons" (click)="toggleMenu()">Pechinchar</button>
+        <button type="button" class="btn btn-primary btn-lg btn-block mainButtons" (click)="showForm()">Doar</button>
+        <button type="button" class="btn btn-success btn-lg btn-block mainButtons" (click)="showForm(false)">Pedir</button>
     </div>
 
     <div class="donatePanel" [@slide]="formState">
-        <form [formGroup]="donateForm" (ngSubmit)="donate($event)">
+        <form [formGroup]="donateForm" (ngSubmit)="submit($event)">
 
             <div class="form-group">
                 <div class="input-group {{getControlClass('amount')}}">
@@ -24,7 +24,7 @@
                 <div class="input-group {{getControlClass('user')}}">
                     <span class="input-group-addon" id="basic-addon1"><i class="fa fa-user" aria-hidden="true"></i></span>
                     <select [(ngModel)]="transaction.to" formControlName="user" class="form-control" name="inputUser">
-                        <option [ngValue]="transaction.to"  [disabled]="true" [selected]="true">Para quem?</option>
+                        <option [ngValue]="transaction.to"  [disabled]="true" [selected]="true">{{ isDonating ? 'Para' : 'De'}} quem?</option>
                         <option [ngValue]="user" *ngFor="let user of teamUsers">{{user.name}}</option>					
                     </select>
                 </div>
