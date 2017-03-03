@@ -1,28 +1,20 @@
 <div class="row">
   <div class="form-group">
 
-    <div class="col-md-4 col-md-offset-2">
-      
-        <select class="form-control" name="team">
-            <option value="">Credenciamento</option>
-            <option value="">DynaClub</option>
-            <option value="">FDSC</option>
-            <option value="">GCS</option>
-            <option value="">Gestao</option>
-            <option value="">MediGestao</option>
-            <option value="">Regulacao</option>
-            <option value="">Unimed do Brasil</option>
-          </select>
-      
+    <div class="col-md-3 col-md-offset-2">
+      <select class="form-control" name="team">
+        <option *ngFor="let team of teams" value="">{{team.name}}</option>
+      </select>
     </div>
 
-    <div class="col-md-4">
-      
-        <select class="form-control" name="sprint" >
-            <option value="">01/03/2017 - 31/03/2017</option>
-            <option value="">01/02/2017 - 28/02/2017</option>
-          </select>
-      
+    <div class="col-md-3">
+      <select class="form-control" name="sprint">
+          <option *ngFor="let sprint of sprints" value="">{{sprint.dateStart | date: 'dd/MM/yyyy'}} - {{sprint.dateFinish | date: 'dd/MM/yyyy'}}</option>
+      </select>
+    </div>
+
+    <div class="col-md-2">
+      <button type="button" class="btn btn-primary btn-block">Selecionar</button>
     </div>
 
   </div>
@@ -36,29 +28,29 @@
       <thead>
         <tr>
           <th>Nome</th>
-          <th>Dynas recebidos</th>
+          <th><span class="pull-right"> Dynas recebidos</span></th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>Yuri Bett</td>
-          <td>D$ 1500</td>
+          <td> <span class="pull-right"> D$ 1500</span></td>
         </tr>
         <tr>
           <td>Yuri Bett</td>
-          <td>D$ 1200</td>
+          <td><span class="pull-right"> D$ 1500</span></td>
         </tr>
         <tr>
           <td>Yuri Bett</td>
-          <td>D$ 1200</td>
+          <td><span class="pull-right"> D$ 1500</span></td>
         </tr>
         <tr>
           <td>Yuri Bett</td>
-          <td>D$ 1200</td>
+          <td><span class="pull-right"> D$ 1500</span></td>
         </tr>
         <tr>
           <td>Yuri Bett</td>
-          <td>D$ 1200</td>
+          <td><span class="pull-right"> D$ 1500</span></td>
         </tr>
       </tbody>
     </table>
