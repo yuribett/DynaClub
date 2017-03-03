@@ -92,11 +92,10 @@ export class SprintDetailComponent implements OnInit {
      formValues._id = this.sprint._id;
      this.sprint = formValues;
 
-     const offset =  new Date().getTimezoneOffset() * 60000;
      const dateStart = new Date(this.sprint.dateStart + "T00:00:00.000Z")
-     this.sprint.dateStart = new Date(dateStart.getTime() + offset);
+     this.sprint.dateStart = new Date(dateStart.getTime() + dateStart.getTimezoneOffset() * 60000);
      const dateFinish = new Date(this.sprint.dateFinish + "T23:59:59.999Z")
-     this.sprint.dateFinish = new Date(dateFinish.getTime() + offset);
+     this.sprint.dateFinish = new Date(dateFinish.getTime() + dateFinish.getTimezoneOffset() * 60000);
   }
 
   onSubmit({ value, valid }: { value: Sprint, valid: boolean }) {
