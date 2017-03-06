@@ -2,14 +2,14 @@
   <div class="form-group">
 
     <div class="col-md-3 col-md-offset-2">
-      <select class="form-control" name="team">
-        <option *ngFor="let team of teams" value="">{{team.name}}</option>
+      <select class="form-control" name="team" >
+        <option *ngFor="let team of teams" value="{{team._id}}" [selected]="teamDefault._id == team._id">{{team.name}}</option>
       </select>
     </div>
 
     <div class="col-md-3">
       <select class="form-control" name="sprint">
-          <option *ngFor="let sprint of sprints" value="">{{sprint.dateStart | date: 'dd/MM/yyyy'}} - {{sprint.dateFinish | date: 'dd/MM/yyyy'}}</option>
+          <option *ngFor="let sprint of sprints" value="sprint._id">{{sprint.dateStart | date: 'dd/MM/yyyy'}} - {{sprint.dateFinish | date: 'dd/MM/yyyy'}}</option>
       </select>
     </div>
 

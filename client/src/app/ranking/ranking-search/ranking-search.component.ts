@@ -15,11 +15,13 @@ export class RankingSearchComponent implements OnInit {
   teams: Team[] = [];
   sprints: Sprint[] = [];
   rankings: Ranking[] = [];
+  teamDefault: Team;
 
   constructor(private teamService: TeamService, private sprintService: SprintService) {
     this._loadTeams();
     this._loadSprints();
     this._loadRanking();
+    this.teamDefault = teamService.getCurrentTeam();
   }
 
   _loadTeams(): void {
@@ -30,14 +32,18 @@ export class RankingSearchComponent implements OnInit {
 
   _loadSprints(): void {
     this.sprintService.all()
-      .then(sprints => this.sprints = sprints)
+      .then(sprints => {
+        sprints.forEach((sprint) => {
+          if(new Date(sprint.dateFinish).getTime() < new Date().getTime()){
+            this.sprints.push(sprint);
+          }
+        })
+      })
       .catch(error => console.log(error));
   }
 
   _loadRanking(): void {
-    this.sprintService.all()
-      .then(sprints => this.sprints = sprints)
-      .catch(error => console.log(error));
+
   }
 
   ngOnInit() {
