@@ -84,9 +84,6 @@ module.exports = app => {
                     app.get('redis').get("user:" + transaction.to._id, (err, socketId) => {
                         emitTransaction(err, socketId, transaction);
                     });
-                    app.get('redis').get("user:" + transaction.from._id, (err, socketId) => {
-                        emitTransaction(err, socketId, transaction);
-                    });
                     res.json(transaction);
                 }, error => {
                     throw error;

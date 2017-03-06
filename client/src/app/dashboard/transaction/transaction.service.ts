@@ -27,8 +27,6 @@ export class TransactionService {
 		this.headers = new Headers();
 		this.headers.append('Content-Type', 'application/json');
 		this.appService.getSocket().on('transaction', transaction => {
-			console.log('Transaction team: ', transaction.team);
-			console.log('Current team: ', this.teamService.getCurrentTeam());
 			if (transaction.team._id === this.teamService.getCurrentTeam()._id) {
 				this.subjectTransactionAdded.next(transaction);
 			}
@@ -52,7 +50,10 @@ export class TransactionService {
 	insert(transaction: Transaction): Observable<Transaction> {
 		return this.http
 			.post(`${Globals.API_URL}/transaction/`, JSON.stringify(transaction), { headers: this.headers })
-			.map(res => res.json())
+			.map(res => {
+				this.subjectTransactionAdded.next(res.json());
+				res.json();
+			})
 			.catch(error => Observable.throw(error._body));
 	}
 
