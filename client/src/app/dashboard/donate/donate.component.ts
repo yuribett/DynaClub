@@ -1,4 +1,5 @@
 import { TeamService } from '../../shared/services/team.service';
+import { TransactionStatus } from '../../shared/enums/transactionStatus';
 import { FormControl, AbstractControl, ValidatorFn, Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { CustomValidators } from 'ng2-validation';
 import { NotificationsService } from 'angular2-notifications';
@@ -174,7 +175,7 @@ export class DonateComponent implements OnInit, OnDestroy {
 
 	showForm(isDonating: boolean = true) {
 		this.isDonating = isDonating;
-		if(!isDonating) {
+		if (!isDonating) {
 			this.updateAmountValidators([Validators.required, CustomValidators.gt(0)]);
 		} else {
 			this.updateAmountValidators([Validators.required, CustomValidators.max(this.wallet.funds), CustomValidators.gt(0)]);
@@ -207,7 +208,15 @@ export class DonateComponent implements OnInit, OnDestroy {
 		this.toastService.remove();
 		this.transaction.from = this.userService.getStoredUser();
 		this.transaction.date = new Date();
-		this.transaction.team = JSON.parse(this.appService.getStorage().getItem(Globals.CURRENT_TEAM));
+		this.transaction.team = this.teamService.getCurrentTeam();;
+		this.transaction.status = TransactionStatus.NORMAL;
+
+		if (!this.isDonating) {
+			this.transaction.status = TransactionStatus.PENDING;
+			this.transaction.from = this.transaction.to;
+			this.transaction.to = this.userService.getStoredUser();
+		}
+
 		this.transactionService.insert(this.transaction).subscribe(
 			transaction => {
 				this.transaction = new Transaction();

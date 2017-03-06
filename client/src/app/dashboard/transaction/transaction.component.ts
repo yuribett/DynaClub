@@ -25,8 +25,8 @@ export class TransactionComponent implements OnInit {
 		return this.isCredit() ? "credit" : "debit";
 	}
 
-
 	ngOnInit() {
+		console.log(this.transaction);
 	}
 
 }

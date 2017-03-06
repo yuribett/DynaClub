@@ -37,9 +37,13 @@ var schema = mongoose.Schema({
 	transactionType: {
 		type: mongoose.Schema.ObjectId,
 		ref: 'TransactionType',
-		required: true
+		required: true	
+	},
+	status: {
+		type: Number,
+		required: true,
+		default: 0
 	}
-
 });
 
 mongoose.model('Transaction', schema);
