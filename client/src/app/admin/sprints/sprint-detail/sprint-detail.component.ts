@@ -7,6 +7,8 @@ import { SprintService } from '../../../shared/services/sprint.service';
 import { Sprint } from '../../../shared/models/sprint';
 import { SprintValidator } from './sprint.validator'
 
+import { DatePipe } from '@angular/common';
+
 import { FieldErrorsComponent } from '../../../shared/components/field-errors/field-errors.component'
 
 @Component({
@@ -79,9 +81,13 @@ export class SprintDetailComponent implements OnInit {
     
     this.setTitle();
 
+    //using DatePipe for formatting with specific mask, 
+    //locale is useless here but mandatory...
+    var datePipe = new DatePipe("pt-BR");
+    
     this.sprintForm.setValue({
-      dateStart: this.sprint.dateStart, 
-      dateFinish: this.sprint.dateFinish,
+      dateStart: datePipe.transform(this.sprint.dateStart, 'yyyy-MM-dd'), 
+      dateFinish: datePipe.transform(this.sprint.dateFinish, 'yyyy-MM-dd'),
       initialAmount: this.sprint.initialAmount
     });
 
