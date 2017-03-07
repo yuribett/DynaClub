@@ -50,7 +50,10 @@ export class TransactionService {
 	insert(transaction: Transaction): Observable<Transaction> {
 		return this.http
 			.post(`${Globals.API_URL}/transaction/`, JSON.stringify(transaction), { headers: this.headers })
-			.map(res => res.json())
+			.map(res => {
+				this.subjectTransactionAdded.next(res.json());
+				res.json();
+			})
 			.catch(error => Observable.throw(error._body));
 	}
 
