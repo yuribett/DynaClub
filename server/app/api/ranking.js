@@ -26,7 +26,7 @@ module.exports = app => {
                         count: { $sum: 1 }
                     }
                 }
-                /*,{
+                ,{
                     $lookup:
                         {
                             from: "users",
@@ -34,7 +34,7 @@ module.exports = app => {
                             foreignField: "_id",
                             as: "name"
                         }
-                }*/
+                }
             ]
         )
             .sort({ totalAmount: -1 })
