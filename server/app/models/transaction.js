@@ -12,6 +12,11 @@ var schema = mongoose.Schema({
 		ref: 'User',
 		required: true
 	},
+	requester: {
+		type: mongoose.Schema.ObjectId,
+		ref: 'User',
+		required: true
+	},
 	date: {
 		type: Date,
 		required: true

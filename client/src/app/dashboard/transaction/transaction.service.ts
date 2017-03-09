@@ -33,7 +33,7 @@ export class TransactionService {
 		});
 	}
 
-	findByUser(user: User, team: Team) {
+	findByUser(user: User, team: Team): Observable<Array<Transaction>> {
 		return this.http
 			.get(`${Globals.API_URL}/transaction/${user._id}/${team._id}`)
 			.map(res => res.json())

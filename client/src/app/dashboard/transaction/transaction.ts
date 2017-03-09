@@ -8,6 +8,7 @@ export class Transaction {
 
     from: User;
     to: User;
+    requester: User;
     date: Date;
     amount: Number;
     message: String;

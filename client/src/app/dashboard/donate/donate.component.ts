@@ -206,12 +206,14 @@ export class DonateComponent implements OnInit, OnDestroy {
 	submit() {
 		$('#donateBtn').button('loading');
 		this.toastService.remove();
-		this.transaction.from = this.userService.getStoredUser();
+		this.transaction.requester = this.userService.getStoredUser();
 		this.transaction.date = new Date();
-		this.transaction.team = this.teamService.getCurrentTeam();;
-		this.transaction.status = TransactionStatus.NORMAL;
+		this.transaction.team = this.teamService.getCurrentTeam();
 
-		if (!this.isDonating) {
+		if (this.isDonating) {
+			this.transaction.status = TransactionStatus.NORMAL;
+			this.transaction.from = this.userService.getStoredUser();
+		} else {
 			this.transaction.status = TransactionStatus.PENDING;
 			this.transaction.from = this.transaction.to;
 			this.transaction.to = this.userService.getStoredUser();

@@ -29,14 +29,17 @@ module.exports = app => {
                             })
                             .lean()
                             .sort({ date: -1 })
-                            .populate('to from sprint transactionType team')
+                            .populate('to from requester sprint transactionType team')
                             .then((transactions) => {
-                                
+
                                 transactions.forEach((transaction, key) => {
                                     delete transactions[key].to.password;
                                     delete transactions[key].from.password;
+                                    if (transactions[key].requester) {
+                                        delete transactions[key].requester.password;
+                                    }
                                 });
-                                
+
                                 app.get('redis').set(`${redisKeyListByUser}${user}:${team}:${sprint._id}`, JSON.stringify(transactions));
                                 logger.info(`Redis: SET ${redisKeyListByUser}${user}:${team}:${sprint._id}`);
                                 res.json(transactions);
@@ -77,11 +80,15 @@ module.exports = app => {
             app.get('redis').delRedisKeys(`${redisKeyListByUser}${transaction.from}:${transaction.team}:${transaction.sprint}`);
             app.get('redis').delRedisKeys(`${redisKeyGetWallet}${transaction.from}:${transaction.team}:${transaction.sprint}`);
 
-            model.findOne({ _id: transaction._id }) 
-                .populate('to from sprint transactionType team')
+            model.findOne({ _id: transaction._id })
+                .populate('to from requester sprint transactionType team')
                 .then(transaction => {
                     // Sending transaction through socket.io
-                    app.get('redis').get("user:" + transaction.to._id, (err, socketId) => {
+
+                    let destinyID = transaction.requester._id == transaction.from._id ?
+                        transaction.to._id : transaction.from._id;
+
+                    app.get('redis').get("user:" + destinyID, (err, socketId) => {
                         emitTransaction(err, socketId, transaction);
                     });
                     res.json(transaction);
@@ -128,6 +135,9 @@ module.exports = app => {
                                     { 'to': mongoose.Types.ObjectId(userID) },
                                     { 'from': mongoose.Types.ObjectId(userID) }
                                 ],
+                                'status': {
+                                    $in: [null, 0, 3] //NORMAL OR ACCEPTED
+                                },
                                 'team': mongoose.Types.ObjectId(teamID),
                                 'sprint': mongoose.Types.ObjectId(sprint._id)
                             }

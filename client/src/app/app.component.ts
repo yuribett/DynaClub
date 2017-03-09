@@ -1,3 +1,4 @@
+import { TransactionStatus } from './shared/enums/transactionStatus';
 import { Component, OnInit } from '@angular/core';
 import { MenuComponent } from './menu/menu.component';
 import { AuthService } from './auth/auth.service';
@@ -31,32 +32,35 @@ export class AppComponent implements OnInit {
 		if (this.authService.isLoggedIn()) {
 			this.appService.getSocket().on('transaction', transaction => {
 				if (transaction.from._id != this.userService.getStoredUser()._id) {
-
-					let body = `Voc&ecirc; recebeu D$ ${transaction.amount} de ${transaction.from.name}!`;
-
-					this.notificationService.notify({
-						body: this._parseNotificationBody(body),
-						title: `Voc&ecirc; recebeu uma doa&ccedil;&atilde;o`,
-						icon: `./assets/images/icon-dollar-150x150.png`,
-						onclick: () => {
-							try {
-								window.focus();
-							}
-							catch (ex) {
-								console.log(ex);
-							}
-						}
-					}).subscribe(error => console.log(error));
+					this.notify(
+						`Voc&ecirc; recebeu uma doa&ccedil;&atilde;o`,
+						`Voc&ecirc; recebeu D$ ${transaction.amount} de ${transaction.from.name}!`);
+				} else {
+					this.notify(
+						`Voc&ecirc; recebeu um pedido`,
+						`${transaction.requester.name} pediu D$ ${transaction.amount}!`);
 				}
 			});
 		}
 	}
 
-	private _parseNotificationBody(body: string) {
+	private notify(title: string, body: string) {
 		if (body.length > 38) {
 			body = body.substr(0, 38) + '...';
 		}
-		return body;
+		this.notificationService.notify({
+			body: body,
+			title: title,
+			icon: `./assets/images/icon-dollar-150x150.png`,
+			onclick: () => {
+				try {
+					window.focus();
+				}
+				catch (ex) {
+					console.log(ex);
+				}
+			}
+		}).subscribe(error => console.log(error));
 	}
 
 }
