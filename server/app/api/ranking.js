@@ -23,22 +23,27 @@ module.exports = app => {
                     {
                         _id: "$to",
                         totalAmount: { $sum: "$amount" },
+                        to: {$first: '$to'},
                         count: { $sum: 1 }
                     }
                 }
+                
+                
                 ,{
                     $lookup:
                         {
                             from: "users",
                             localField: "to",
                             foreignField: "_id",
-                            as: "name"
+                            as: "user"
                         }
                 }
+                
             ]
         )
             .sort({ totalAmount: -1 })
             .then((ranking) => {
+                //FIXME remove password
                 res.json(ranking);
             }, (error) => {
                 console.log(error)
