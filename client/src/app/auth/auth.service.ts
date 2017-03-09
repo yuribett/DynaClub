@@ -8,6 +8,7 @@ import { UserService } from '../shared/services/user.service';
 import { Globals } from '../app.globals';
 import { AppService } from '../app.service';
 import { User } from '../shared/models/user';
+import { URLSearchParams, QueryEncoder } from '@angular/http';
 
 @Injectable()
 export class AuthService {
@@ -28,6 +29,47 @@ export class AuthService {
         if (token) {
           this._loggedIn.next(true);
           this.appService.setLocalStorage(login.stayConnected);
+          this.appService.getStorage().setItem(Globals.LOCAL_TOKEN, token);
+          this.appService.getStorage().setItem(Globals.CURRENT_TEAM, JSON.stringify(res.json().teams[0]));
+          this.user.storeUser(res.json());
+        }
+      },
+      (err) => console.log(err)
+      )
+      .catch(error => Observable.throw(error._body));
+  }
+  /**
+   * oAuth authentication.
+   */
+  oAuth() {
+    var headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    return this.http
+      .get(`${Globals.API_URL}/oauth/jira`, { headers: headers }) //
+      .map((res) => {
+        return res;
+      },
+      (err) => console.log(err)
+      )
+      .catch(error => Observable.throw(error._body));
+  }
+  /**
+   * oAuth authorization callback.
+   */
+  oAuthAutorizeCallback(oauthToken: string, oauthTokenSecret: string, oauthVerifier: string) {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('oauthToken', oauthToken);
+    params.set('oauthTokenSecret', oauthTokenSecret);
+    params.set('oauthVerifier', oauthVerifier);
+    return this.http
+      .get(`${Globals.API_URL}/oauth/jira/callback`, { search: params, headers: headers }) //
+      .map((res) => {
+        let token = res.headers.get('x-access-token');
+        if (token) {
+          this._loggedIn.next(true);
+          this.appService.setLocalStorage(true);
           this.appService.getStorage().setItem(Globals.LOCAL_TOKEN, token);
           this.appService.getStorage().setItem(Globals.CURRENT_TEAM, JSON.stringify(res.json().teams[0]));
           this.user.storeUser(res.json());

@@ -18,3 +18,11 @@
     font-size: 12px;
     color: #aaa;
 }
+
+.btn-jira-signin {
+  background-image: url('../../assets/images/atlassian-jira-logo.png');
+  background-repeat: no-repeat;
+  background-position: 60px;
+  background-color: #205081;
+  border: 2px solid #1a426b;
+}

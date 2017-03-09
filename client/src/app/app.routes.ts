@@ -18,6 +18,7 @@ import { UsersComponent } from './admin/users/users.component';
 const appRoutes: Routes = [
 
 	{ path: 'dashboard', component: DashboardComponent, canActivate: [LoggedInGuard] },
+	{ path: 'login/callback', component: LoginComponent },
 	{ path: 'login', component: LoginComponent },
 	{ path: 'admin', component: AdminComponent, canActivate: [LoggedInGuard] },
 	

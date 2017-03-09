@@ -1,4 +1,5 @@
 let express = require('express');
+let session = require('express-session');
 let consign = require('consign');
 let bodyParser = require('body-parser');
 let path = require('path');
@@ -7,7 +8,9 @@ let logger = require('../app/services/logger.js');
 let expressValidator = require('express-validator');
 let app = express();
 
-app.set('secret', '3mG!pYBa8#5r1J6');
+const secret = '3mG!pYBa8#5r1J6';
+
+app.set('secret', secret);
 
 app.use(morgan("dev", {
     stream: {
@@ -17,8 +20,19 @@ app.use(morgan("dev", {
     }
 }));
 
+app.use(session({
+    secret: secret,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        secure: false,
+        httpOnly: false
+    }
+}));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 app.use(expressValidator({
     customValidators: {
         isArray: function(value) {
@@ -48,7 +62,9 @@ app.use((req, res, next) => {
 
 });
 
-consign({ cwd: 'app' })
+consign({
+        cwd: 'app'
+    })
     .include('models')
     .then('api')
     .then('routes/auth.js')
