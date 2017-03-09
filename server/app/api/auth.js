@@ -90,27 +90,50 @@ module.exports = app => {
 				res.sendStatus(500)
 			})
 	}
+
 	createUserFromOAuth = (jiraData) => {
-		let rd_password = uuid.v4();
-		return teamModel.findOne({'name': 'DynaClub'})
-			.then( default_team => {
-		return model.create({
-				name: jiraData.displayName,
-				email: jiraData.emailAddress,
-				user: jiraData.key,
+
+		return searchForGroups(jiraData)
+			.then( user_teams => {
+
+				let rd_password = uuid.v4();
+
+				return model.create({
+					name: jiraData.displayName,
+					email: jiraData.emailAddress,
+					user: jiraData.key,
 					password: rd_password, // generate unique random password
-					teams: [default_team._id], 
-				active: jiraData.active,
-				admin: false
-			})
-			.then(user => {
-				return model.findOne({
-						_id: user._id
-					})
-					.populate('teams');			
-			})
+					teams: user_teams, 
+					active: jiraData.active,
+					admin: false
+				})
+				.then(user => {
+					return model.findOne({
+							_id: user._id
+						})
+						.populate('teams');			
+				})
 				.catch(error => {
 					console.log("Error " + JSON.stringify(error));
+				});
+		})
+		.catch(error => {
+			console.log("Error " + JSON.stringify(error));
+		});
+	}
+
+	/** realizar de/para dos grupos do jira para os grupos do dynaclub */
+	searchForGroups = (jiraData) => {
+
+        return new Promise((resolve, reject) => {
+
+			teamModel.findOne({'name': 'DynaClub'})
+				.then( default_team => {
+					resolve([default_team._id]);
+				})
+				.catch(error => {
+					console.log("Error " + JSON.stringify(error));
+					reject(error)
 				});
 		});
 	}
