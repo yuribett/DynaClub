@@ -5,7 +5,7 @@ import { User } from '../../shared/models/user';
 import { TransactionStatus } from '../../shared/enums/transactionStatus';
 
 export class Transaction {
-
+    _id: String;
     from: User;
     to: User;
     requester: User;

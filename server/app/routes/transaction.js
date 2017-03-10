@@ -9,6 +9,7 @@ module.exports = app => {
         .get(api.getWallet);
 
     app.route('/api/transaction')
-        .post(api.insert);
+        .post(api.insert)       
+		.put(api.update);
 
 };

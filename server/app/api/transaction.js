@@ -72,14 +72,7 @@ module.exports = app => {
             return;
         }
         model.create(req.body).then(transaction => {
-            //TODO make this look nicer
-            // TO
-            app.get('redis').delRedisKeys(`${redisKeyListByUser}${transaction.to}:${transaction.team}:${transaction.sprint}`);
-            app.get('redis').delRedisKeys(`${redisKeyGetWallet}${transaction.to}:${transaction.team}:${transaction.sprint}`);
-            // FROM
-            app.get('redis').delRedisKeys(`${redisKeyListByUser}${transaction.from}:${transaction.team}:${transaction.sprint}`);
-            app.get('redis').delRedisKeys(`${redisKeyGetWallet}${transaction.from}:${transaction.team}:${transaction.sprint}`);
-
+            clearRedisKeys(transaction);
             model.findOne({ _id: transaction._id })
                 .populate('to from requester sprint transactionType team')
                 .then(transaction => {
@@ -200,8 +193,32 @@ module.exports = app => {
         });
     }
 
-    let clearRedisKeys = () => {
+    api.update = (req, res) => {
+        let errors = runExpressValidator(req);
+        if (errors) {
+            logger.error('Bad request of transaction.update');
+            res.status(400).send(errors);
+            return;
+        }
 
+        model.findByIdAndUpdate(req.body._id, req.body)
+            .then(transaction => {
+                console.log(transaction)
+                clearRedisKeys(transaction);
+                res.json(req.body);
+            }, error => {
+                logger.error(error);
+                res.sendStatus(500);
+            })
+    };
+
+    let clearRedisKeys = (transaction) => {
+        // TO
+        app.get('redis').delRedisKeys(`${redisKeyListByUser}${transaction.to}:${transaction.team}:${transaction.sprint}`);
+        app.get('redis').delRedisKeys(`${redisKeyGetWallet}${transaction.to}:${transaction.team}:${transaction.sprint}`);
+        // FROM
+        app.get('redis').delRedisKeys(`${redisKeyListByUser}${transaction.from}:${transaction.team}:${transaction.sprint}`);
+        app.get('redis').delRedisKeys(`${redisKeyGetWallet}${transaction.from}:${transaction.team}:${transaction.sprint}`);
     }
 
     let runExpressValidator = (req, funds) => {

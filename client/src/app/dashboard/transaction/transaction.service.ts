@@ -20,7 +20,7 @@ export class TransactionService {
 
 	http: Http;
 	headers: Headers;
-	subjectTransactionAdded: Subject<Transaction> = new Subject<Transaction>();
+	subjectTransactionAdded: Subject<Transaction> = new Subject<Transaction>();	
 
 	constructor(http: Http, private userService: UserService, private appService: AppService, private teamService: TeamService) {
 		this.http = http;
@@ -51,6 +51,17 @@ export class TransactionService {
 		return this.http
 			.post(`${Globals.API_URL}/transaction/`, JSON.stringify(transaction), { headers: this.headers })
 			.map(res => {
+				this.subjectTransactionAdded.next(res.json());
+				res.json();
+			})
+			.catch(error => Observable.throw(error._body));
+	}
+
+	update(transaction: Transaction): Observable<Transaction> {
+		return this.http
+			.put(`${Globals.API_URL}/transaction/`, JSON.stringify(transaction), { headers: this.headers })
+			.map(res => {
+				console.log('Transaction atualizada: ', res.json());
 				this.subjectTransactionAdded.next(res.json());
 				res.json();
 			})

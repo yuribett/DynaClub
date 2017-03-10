@@ -1,8 +1,10 @@
+import { TransactionService } from './transaction.service';
 import { TransactionStatus } from '../../shared/enums/transactionStatus';
 import { UserService } from '../../shared/services/user.service';
 import { Transaction } from './transaction';
 import { User } from '../../shared/models/user';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+declare var $: any;
 
 @Component({
 	selector: 'app-transaction',
@@ -12,14 +14,15 @@ import { Component, OnInit, Input } from '@angular/core';
 export class TransactionComponent implements OnInit {
 
 	@Input() transaction: Transaction;
+	@Output() private change = new EventEmitter<Transaction>();
 	loggedUser: User;
 
-	constructor(userService: UserService) {
+	constructor(userService: UserService, private _transactionService: TransactionService) {
 		this.loggedUser = userService.getStoredUser();
 	}
 
 	ngOnInit() {
-		console.log(this.transaction);
+		$('.transaction').tooltip();
 	}
 
 	isCredit(): boolean {
@@ -38,6 +41,18 @@ export class TransactionComponent implements OnInit {
 		}
 	}
 
+	getTitle(): string {
+		switch (this.transaction.status) {
+			case TransactionStatus.PENDING:
+				return "Pendente";
+			case TransactionStatus.DENIED:
+				return "Negada";
+			case TransactionStatus.CANCELED:
+				return "Cancelada";
+			default:
+				return this.isCredit() ? "Recebida" : "Enviada";
+		}
+	}
 	getDisplayName(): string {
 		if (this.transaction.status != null
 			&& this.transaction.status != TransactionStatus.NORMAL) {
@@ -51,18 +66,34 @@ export class TransactionComponent implements OnInit {
 		return this.transaction.requester._id == this.loggedUser._id;
 	}
 
-	edit() {
-		console.log('Edit');
+	canEdit(): boolean {
+		const today: Date = new Date();
+		return this.transaction.status == 1
+			&& this.transaction.sprint.dateStart <= today
+			&& this.transaction.sprint.dateFinish >= today
+	}
+
+	private update(status: TransactionStatus) {
+		this.transaction.status = status;
+		this.change.next(this.transaction);
+		this._transactionService.update(this.transaction).subscribe(
+			transaction => console.log(transaction),
+			error => console.log(error)
+		);
 	}
 
 	accept() {
-		console.log('Accept');
+		this.update(TransactionStatus.ACCEPTED);
 	}
+
 	deny() {
-		console.log('Deny');
+		this.update(TransactionStatus.DENIED);
 	}
 	cancel() {
-		console.log('Cancel');
+		this.update(TransactionStatus.CANCELED);
+	}
+	edit() {
+		console.log('Edit');
 	}
 
 }

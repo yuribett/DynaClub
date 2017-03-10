@@ -35,7 +35,7 @@ export class DashboardComponent implements OnInit {
 		});
 
 		this.transactionService.onTransactionsAdded().subscribe((transaction: Transaction) => {
-			if(transaction.status == TransactionStatus.PENDING) {
+			if (transaction.status == TransactionStatus.PENDING) {
 				this.pendingTransactions.unshift(transaction);
 			} else {
 				this.transactions.unshift(transaction);
@@ -52,6 +52,10 @@ export class DashboardComponent implements OnInit {
 			},
 			err => console.log(err)
 		);
+	}
+
+	onTransactionChange(transactionUpdated: Transaction) {
+		this.pendingTransactions = this.pendingTransactions.filter(transaction => transaction._id != transactionUpdated._id);
 	}
 
 }
