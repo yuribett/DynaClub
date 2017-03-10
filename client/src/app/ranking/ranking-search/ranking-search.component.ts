@@ -4,6 +4,7 @@ import { Team } from '../../shared/models/team';
 import { SprintService } from '../../shared/services/sprint.service';
 import { Sprint } from '../../shared/models/sprint';
 import { Ranking } from '../ranking';
+import { RankingService } from '../ranking.service';
 
 @Component({
   selector: 'app-ranking-search',
@@ -17,10 +18,12 @@ export class RankingSearchComponent implements OnInit {
   rankings: Ranking[] = [];
   teamDefault: Team;
 
-  constructor(private teamService: TeamService, private sprintService: SprintService) {
+  constructor(private teamService: TeamService, private sprintService: SprintService, private rankingService: RankingService) {
     this._loadTeams();
     this._loadSprints();
-    this._loadRanking();
+    this.sprintService.findlast().subscribe((sprint) => {
+      this._loadRanking(sprint, this.teamService.getCurrentTeam());
+    });
     this.teamDefault = teamService.getCurrentTeam();
   }
 
@@ -42,8 +45,10 @@ export class RankingSearchComponent implements OnInit {
       .catch(error => console.log(error));
   }
 
-  _loadRanking(): void {
-
+  _loadRanking(sprint: Sprint, team: Team): void {
+    this.rankingService.getMainRanking(sprint, team)
+      .then((ranking) => this.rankings = ranking)
+      .catch((err) => console.log(err));
   }
 
   ngOnInit() {

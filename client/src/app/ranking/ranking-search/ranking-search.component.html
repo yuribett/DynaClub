@@ -27,30 +27,18 @@
     <table class="table table-striped table-hover table-bordered" style="margin-top: 10px;">
       <thead>
         <tr>
+          <th>&nbsp;</th>
           <th>Nome</th>
+          <th><span class="pull-right"> Qtd de doa&ccedil;&otilde;es</span></th>
           <th><span class="pull-right"> Dynas recebidos</span></th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Yuri Bett</td>
-          <td> <span class="pull-right"> D$ 1500</span></td>
-        </tr>
-        <tr>
-          <td>Yuri Bett</td>
-          <td><span class="pull-right"> D$ 1500</span></td>
-        </tr>
-        <tr>
-          <td>Yuri Bett</td>
-          <td><span class="pull-right"> D$ 1500</span></td>
-        </tr>
-        <tr>
-          <td>Yuri Bett</td>
-          <td><span class="pull-right"> D$ 1500</span></td>
-        </tr>
-        <tr>
-          <td>Yuri Bett</td>
-          <td><span class="pull-right"> D$ 1500</span></td>
+        <tr *ngFor="let ranking of rankings">
+          <td>{{ ranking.position }}</td>
+          <td>{{ ranking.user.name }}</td>
+          <td> <span class="pull-right">{{ ranking.count }}</span></td>
+          <td> <span class="pull-right"> D$ {{ ranking.totalAmount }}</span></td>
         </tr>
       </tbody>
     </table>

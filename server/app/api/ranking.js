@@ -28,7 +28,6 @@ module.exports = app => {
                     }
                 }
                 
-                
                 ,{
                     $lookup:
                         {
@@ -43,10 +42,20 @@ module.exports = app => {
         )
             .sort({ totalAmount: -1 })
             .then((ranking) => {
-                //FIXME remove password
-                res.json(ranking);
+
+                let position = 1;
+                //Removing passwords and fixing arrays
+                let retRanking = ranking;
+                retRanking.map((rankk) => {
+                    rankk.user = rankk.user[0];
+                    delete rankk.user.password;
+                    delete rankk.to;
+                    rankk.position = position++;
+                });
+
+                res.json(retRanking);
             }, (error) => {
-                console.log(error)
+                console.log(error);
                 logger.error(error);
                 res.sendStatus(500);
             });
