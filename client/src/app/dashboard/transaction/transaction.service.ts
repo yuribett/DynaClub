@@ -20,7 +20,8 @@ export class TransactionService {
 
 	http: Http;
 	headers: Headers;
-	subjectTransactionAdded: Subject<Transaction> = new Subject<Transaction>();	
+	subjectTransactionAdded: Subject<Transaction> = new Subject<Transaction>();
+	subjectTransactionEdit: Subject<Transaction> = new Subject<Transaction>();
 
 	constructor(http: Http, private userService: UserService, private appService: AppService, private teamService: TeamService) {
 		this.http = http;
@@ -70,6 +71,14 @@ export class TransactionService {
 
 	onTransactionsAdded(): Observable<Transaction> {
 		return this.subjectTransactionAdded.asObservable();
+	}
+
+	edit(transaction: Transaction) {
+		this.subjectTransactionEdit.next(transaction)
+	}
+	
+	onTransactionsEdit(): Observable<Transaction> {
+		return this.subjectTransactionEdit.asObservable();
 	}
 
 }

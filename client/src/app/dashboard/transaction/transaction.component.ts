@@ -14,7 +14,8 @@ declare var $: any;
 export class TransactionComponent implements OnInit {
 
 	@Input() transaction: Transaction;
-	@Output() private change = new EventEmitter<Transaction>();
+	@Output() private onChange = new EventEmitter<Transaction>();
+	@Output() private onEdit = new EventEmitter<Transaction>();
 	loggedUser: User;
 
 	constructor(userService: UserService, private _transactionService: TransactionService) {
@@ -75,7 +76,7 @@ export class TransactionComponent implements OnInit {
 
 	private update(status: TransactionStatus) {
 		this.transaction.status = status;
-		this.change.next(this.transaction);
+		this.onChange.next(this.transaction);
 		this._transactionService.update(this.transaction).subscribe(
 			transaction => console.log(transaction),
 			error => console.log(error)
@@ -93,7 +94,7 @@ export class TransactionComponent implements OnInit {
 		this.update(TransactionStatus.CANCELED);
 	}
 	edit() {
-		console.log('Edit');
+		this._transactionService.edit(this.transaction);
 	}
 
 }

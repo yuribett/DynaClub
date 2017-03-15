@@ -28,13 +28,13 @@
         <a title="Editar" *ngIf="!isRequester()" (click)="edit()">
             <span class="edit glyphicon glyphicon-pencil" aria-hidden="true"></span>
         </a>
-        <a title="Aceitar" *ngIf="!isRequester()"  (click)="accept()">
+        <a title="Aceitar" *ngIf="!isRequester()" (click)="accept()">
             <span class="accept glyphicon glyphicon-ok" aria-hidden="true"></span>
         </a>
-        <a title="Negar" *ngIf="!isRequester()"  (click)="deny()">
+        <a title="Negar" *ngIf="!isRequester()" (click)="deny()">
             <span class="cancel glyphicon glyphicon-remove" aria-hidden="true"></span>
         </a>
-        <a title="Cancelar" *ngIf="isRequester()"  (click)="cancel()">
+        <a title="Cancelar" *ngIf="isRequester()" (click)="cancel()">
             <span class="cancel glyphicon glyphicon-remove" aria-hidden="true"></span>
         </a>
     </div>

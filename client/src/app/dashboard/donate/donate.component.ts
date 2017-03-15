@@ -19,6 +19,7 @@ import { slide } from '../../animations';
 import { OnDestroy, Input, Component, OnInit } from '@angular/core';
 import { TransactionErrors } from '../../shared/errors/transaction.errors';
 import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs';
 declare var $: any;
 
 @Component({
@@ -113,6 +114,10 @@ export class DonateComponent implements OnInit, OnDestroy {
 		});
 		this.buildForm();
 		this.getWallet();
+		this.transactionService.onTransactionsEdit().subscribe((transaction: Transaction) => {
+			this.transaction = transaction;
+			this.showForm();
+		})
 	}
 
 	ngOnDestroy() {
@@ -219,7 +224,11 @@ export class DonateComponent implements OnInit, OnDestroy {
 			this.transaction.to = this.userService.getStoredUser();
 		}
 
-		this.transactionService.insert(this.transaction).subscribe(
+		let transactionOperation: Observable<Transaction> = this.transaction._id ?
+			this.transactionService.insert(this.transaction) :
+			this.transactionService.update(this.transaction);
+
+		transactionOperation.subscribe(
 			transaction => {
 				this.transaction = new Transaction();
 				this.showButtons();

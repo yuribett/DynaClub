@@ -11,7 +11,7 @@
 			<span>Voc&ecirc; n&atilde;o recebeu nem doou Dynas ainda!</span>
 		</div>
 
-		<app-transaction [transaction]="pendingTransaction" *ngFor="let pendingTransaction of pendingTransactions" (change)="onTransactionChange($event)"></app-transaction>
+		<app-transaction [transaction]="pendingTransaction" *ngFor="let pendingTransaction of pendingTransactions" (onChange)="onTransactionChange($event)"></app-transaction>
 		
 		<br *ngIf="pendingTransactions != null && pendingTransactions.length > 0">
 
