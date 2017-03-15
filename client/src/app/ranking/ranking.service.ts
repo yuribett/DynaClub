@@ -9,17 +9,15 @@ import { Ranking } from './ranking'
 @Injectable()
 export class RankingService {
 
-  sprintUrl = `${Globals.API_URL}/ranking`;
+  rankingUrl: string = `${Globals.API_URL}/ranking`;
 
   constructor(private http: Http) {
         this.http = http;
     }
 
   getMainRanking(sprint: Sprint, team: Team): Promise<Ranking[]>{
-    console.log(sprint);
-    console.log(team);
     return this.http
-                   .get(`${this.sprintUrl}/${team._id}/${sprint._id}`)
+                   .get(`${this.rankingUrl}/${team._id}/${sprint._id}`)
                    .toPromise()
                    .then(response => response.json() as Ranking[])
                    .catch((err) => console.log(err));

@@ -16,39 +16,62 @@ export class RankingSearchComponent implements OnInit {
   teams: Team[] = [];
   sprints: Sprint[] = [];
   rankings: Ranking[] = [];
-  teamDefault: Team;
+  
+  team: Team;
+  sprint: Sprint;
 
   constructor(private teamService: TeamService, private sprintService: SprintService, private rankingService: RankingService) {
-    this._loadTeams();
-    this._loadSprints();
-    this.sprintService.findlast().subscribe((sprint) => {
-      this._loadRanking(sprint, this.teamService.getCurrentTeam());
+    this._setUpBoard();
+  }
+
+  _setUpBoard() {
+    let arrPromises = [this._loadTeams(), this._loadSprints()];
+
+    Promise.all(arrPromises)
+      .then(() => {
+        this.sprintService.findlast().subscribe((sprint) => {
+        });
+      })
+  }
+
+  _loadTeams(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.teamService.list()
+      .then(teams => {
+        this.teams = teams;
+        resolve();
+      })
+      .catch(error => {
+        reject(error);
+      });
     });
-    this.teamDefault = teamService.getCurrentTeam();
+    
   }
 
-  _loadTeams(): void {
-    this.teamService.list()
-      .then(teams => this.teams = teams)
-      .catch(error => console.log(error));
-  }
-
-  _loadSprints(): void {
-    this.sprintService.all()
+  _loadSprints(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.sprintService.all()
       .then(sprints => {
         sprints.forEach((sprint) => {
           if(new Date(sprint.dateFinish).getTime() < new Date().getTime()){
             this.sprints.push(sprint);
           }
-        })
+        });
+        resolve();
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        reject(error);
+      });
+    });
+    
   }
 
-  _loadRanking(sprint: Sprint, team: Team): void {
-    this.rankingService.getMainRanking(sprint, team)
-      .then((ranking) => this.rankings = ranking)
-      .catch((err) => console.log(err));
+  loadRanking(): void {
+    if(this.sprint && this.team){
+      this.rankingService.getMainRanking(this.sprint, this.team)
+        .then((ranking) => this.rankings = ranking)
+        .catch((err) => console.log(err));
+    }
   }
 
   ngOnInit() {

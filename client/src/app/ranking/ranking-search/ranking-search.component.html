@@ -2,14 +2,14 @@
   <div class="form-group">
 
     <div class="col-md-3 col-md-offset-2">
-      <select class="form-control" name="team" >
-        <option *ngFor="let team of teams" value="{{team._id}}" [selected]="teamDefault._id == team._id">{{team.name}}</option>
+      <select class="form-control" name="team" [(ngModel)]="team" (change)="loadRanking()">
+        <option *ngFor="let optTeam of teams" [ngValue]="optTeam">{{optTeam.name}}</option>
       </select>
     </div>
 
     <div class="col-md-3">
-      <select class="form-control" name="sprint">
-          <option *ngFor="let sprint of sprints" value="sprint._id">{{sprint.dateStart | date: 'dd/MM/yyyy'}} - {{sprint.dateFinish | date: 'dd/MM/yyyy'}}</option>
+      <select class="form-control" name="sprint"  [(ngModel)]="sprint" (change)="loadRanking()">
+          <option *ngFor="let sprint of sprints" [ngValue]="sprint">{{sprint.dateStart | date: 'dd/MM/yyyy'}} - {{sprint.dateFinish | date: 'dd/MM/yyyy'}}</option>
       </select>
     </div>
 
@@ -22,9 +22,19 @@
 
 <div class="clearfix"></div>
 
+
+	
+
+
+
 <div class="row">
   <div class="col-md-8 col-md-offset-2" style="margin-bottom: 10px;">
-    <table class="table table-striped table-hover table-bordered" style="margin-top: 10px;">
+
+    <div class="jumbotron" style="margin-top: 10px;" *ngIf="rankings != null && rankings.length == 0">
+      <span>Nenhum ranking dispon&iacute;vel!</span>
+    </div>
+
+    <table class="table table-striped table-hover table-bordered" style="margin-top: 10px;" *ngIf="rankings != null && rankings.length > 0">
       <thead>
         <tr>
           <th>&nbsp;</th>
