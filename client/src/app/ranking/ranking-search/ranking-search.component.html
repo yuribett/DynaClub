@@ -1,31 +1,24 @@
 <div class="row">
   <div class="form-group">
 
-    <div class="col-md-3 col-md-offset-2">
+    <div class="col-md-3 col-md-offset-3">
       <select class="form-control" name="team" [(ngModel)]="team" (change)="loadRanking()">
+        <option [ngValue]="team"  [disabled]="true" [selected]="true">Equipe</option>
         <option *ngFor="let optTeam of teams" [ngValue]="optTeam">{{optTeam.name}}</option>
       </select>
     </div>
 
     <div class="col-md-3">
       <select class="form-control" name="sprint"  [(ngModel)]="sprint" (change)="loadRanking()">
+          <option [ngValue]="sprint"  [disabled]="true" [selected]="true">Per&iacute;odo</option>
           <option *ngFor="let sprint of sprints" [ngValue]="sprint">{{sprint.dateStart | date: 'dd/MM/yyyy'}} - {{sprint.dateFinish | date: 'dd/MM/yyyy'}}</option>
       </select>
-    </div>
-
-    <div class="col-md-2">
-      <button type="button" class="btn btn-primary btn-block">Selecionar</button>
     </div>
 
   </div>
 </div>
 
 <div class="clearfix"></div>
-
-
-	
-
-
 
 <div class="row">
   <div class="col-md-8 col-md-offset-2" style="margin-bottom: 10px;">
