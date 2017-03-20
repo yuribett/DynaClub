@@ -104,15 +104,12 @@ module.exports = app => {
         );
     };
 
-    /**
-     * TODO for ranking
-     */
     api.findLast = (req, res) => {
         var lastMonhDate = new Date();
         lastMonhDate.setMonth(lastMonhDate.getMonth() - 1);
         api.findSprintByDate(lastMonhDate).then(
             sprint => {
-                res.json(doc);
+                res.json(sprint);
             },
             error => {
                 res.sendStatus(500);
