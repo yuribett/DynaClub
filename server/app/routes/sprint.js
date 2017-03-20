@@ -1,10 +1,11 @@
 module.exports = app => {
 
 	let api = app.api.sprint;
+	let auth = app.api.auth;
 
 	app.route('/api/sprint')
 		.get(api.list)
-		.post(api.insert);
+		.post(auth.guardAdmin(api.insert));
 
 	app.route('/api/sprint/find/current')
 		.get(api.findCurrent)
@@ -14,8 +15,8 @@ module.exports = app => {
 	
 	app.route('/api/sprint/:id')
 		.get(api.findById)
-		.put(api.update)
-		.delete(api.delete);
+		.put(auth.guardAdmin(api.update))
+		.delete(auth.guardAdmin(api.delete));
 
 	app.route('/api/sprint/intersects/:date')
 		.get(api.findIntersected)
