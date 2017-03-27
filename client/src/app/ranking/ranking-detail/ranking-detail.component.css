@@ -1,0 +1,44 @@
+.transaction-user {
+     list-style-type:none;
+     margin:25px 0 0 0;
+     padding:0;
+}
+
+.transaction-user li {
+     float:left;
+     margin:0 5px 0 0;
+    width:100px;
+    height:40px;
+    position:relative;
+}
+
+.transaction-user label, .transaction-user input {
+    display:block;
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+}
+
+.transaction-user input[type="radio"] {
+    opacity:0.01;
+    z-index:100;
+}
+
+.transaction-user input[type="radio"]:checked + label,
+.Checked + label {
+    background:#375a7f;
+}
+
+.transaction-user label {
+     padding:5px;
+     border:0px solid #CCC; 
+     background-color: #222;
+     cursor:pointer;
+    z-index:90;
+}
+
+.transaction-user label:hover {
+     background:#464545;
+}

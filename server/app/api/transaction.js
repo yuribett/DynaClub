@@ -12,43 +12,53 @@ module.exports = app => {
     api.listByUser = (req, res) => {
         let user = req.params.user;
         let team = req.params.team;
-        sprintApi.findSprintByDate(new Date())
-            .then(sprint => {
-                app.get('redis').get(`${redisKeyListByUser}${user}:${team}:${sprint._id}`, (err, transactions) => {
-                    if (!err && transactions != null) {
-                        logger.info(`Redis: GET ${redisKeyListByUser}${user}:${team}:${sprint._id}`);
-                        res.json(JSON.parse(transactions));
-                    } else {
-                        model.find({
-                                $or: [
-                                    { 'to': user },
-                                    { 'from': user }
-                                ],
-                                'team': team,
-                                'sprint': sprint._id
-                            })
-                            .lean()
-                            .sort({ date: -1 })
-                            .populate('to from sprint transactionType team')
-                            .then((transactions) => {
-                                
-                                transactions.forEach((transaction, key) => {
-                                    delete transactions[key].to.password;
-                                    delete transactions[key].from.password;
-                                });
-                                
-                                app.get('redis').set(`${redisKeyListByUser}${user}:${team}:${sprint._id}`, JSON.stringify(transactions));
-                                logger.info(`Redis: SET ${redisKeyListByUser}${user}:${team}:${sprint._id}`);
-                                res.json(transactions);
-                            }, (error) => {
-                                logger.error(error);
-                                res.sendStatus(500)
-                            });
-                    }
+        let sprint = req.params.sprint;
+
+        if (sprint == "undefined") {
+            sprintApi.findSprintByDate(new Date())
+                .then(sprint => {
+                    find(res, user, team, sprint._id);
                 });
-            });
+        } else {
+            find(res, user, team, sprint);
+        }
 
     };
+
+    let find = (res, user, team, sprint) => {
+        app.get('redis').get(`${redisKeyListByUser}${user}:${team}:${sprint}`, (err, transactions) => {
+            if (!err && transactions != null) {
+                logger.info(`Redis: GET ${redisKeyListByUser}${user}:${team}:${sprint}`);
+                res.json(JSON.parse(transactions));
+            } else {
+                model.find({
+                    $or: [
+                        { 'to': user },
+                        { 'from': user }
+                    ],
+                    'team': team,
+                    'sprint': sprint
+                })
+                    .lean()
+                    .sort({ date: -1 })
+                    .populate('to from sprint transactionType team')
+                    .then((transactions) => {
+
+                        transactions.forEach((transaction, key) => {
+                            delete transactions[key].to.password;
+                            delete transactions[key].from.password;
+                        });
+
+                        app.get('redis').set(`${redisKeyListByUser}${user}:${team}:${sprint}`, JSON.stringify(transactions));
+                        logger.info(`Redis: SET ${redisKeyListByUser}${user}:${team}:${sprint}`);
+                        res.json(transactions);
+                    }, (error) => {
+                        logger.error(error);
+                        res.sendStatus(500)
+                    });
+            }
+        });
+    }
 
     api.insert = (req, res) => {
         let user = req.body.from;
@@ -77,7 +87,7 @@ module.exports = app => {
             app.get('redis').delRedisKeys(`${redisKeyListByUser}${transaction.from}:${transaction.team}:${transaction.sprint}`);
             app.get('redis').delRedisKeys(`${redisKeyGetWallet}${transaction.from}:${transaction.team}:${transaction.sprint}`);
 
-            model.findOne({ _id: transaction._id }) 
+            model.findOne({ _id: transaction._id })
                 .populate('to from sprint transactionType team')
                 .then(transaction => {
                     // Sending transaction through socket.io
@@ -123,46 +133,46 @@ module.exports = app => {
                     resolve(JSON.parse(wallet));
                 } else {
                     model.aggregate([{
-                            $match: {
-                                $or: [
-                                    { 'to': mongoose.Types.ObjectId(userID) },
-                                    { 'from': mongoose.Types.ObjectId(userID) }
-                                ],
-                                'team': mongoose.Types.ObjectId(teamID),
-                                'sprint': mongoose.Types.ObjectId(sprint._id)
-                            }
-                        },
-                        {
-                            $project: {
-                                amount: 1,
-                                received: {
-                                    $cond: {
-                                        if: { '$eq': ['$to', mongoose.Types.ObjectId(userID)] },
-                                        then: true,
-                                        else: false
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            $group: {
-                                _id: '$received',
-                                total: { $sum: "$amount" }
-                            }
-                        },
-                        {
-                            $project: {
-                                _id: 0,
-                                total: 1,
-                                received: {
-                                    $cond: {
-                                        if: { '$eq': ['$_id', true] },
-                                        then: true,
-                                        else: false
-                                    }
+                        $match: {
+                            $or: [
+                                { 'to': mongoose.Types.ObjectId(userID) },
+                                { 'from': mongoose.Types.ObjectId(userID) }
+                            ],
+                            'team': mongoose.Types.ObjectId(teamID),
+                            'sprint': mongoose.Types.ObjectId(sprint._id)
+                        }
+                    },
+                    {
+                        $project: {
+                            amount: 1,
+                            received: {
+                                $cond: {
+                                    if: { '$eq': ['$to', mongoose.Types.ObjectId(userID)] },
+                                    then: true,
+                                    else: false
                                 }
                             }
                         }
+                    },
+                    {
+                        $group: {
+                            _id: '$received',
+                            total: { $sum: "$amount" }
+                        }
+                    },
+                    {
+                        $project: {
+                            _id: 0,
+                            total: 1,
+                            received: {
+                                $cond: {
+                                    if: { '$eq': ['$_id', true] },
+                                    then: true,
+                                    else: false
+                                }
+                            }
+                        }
+                    }
                     ]).then(result => {
                         let wallet = {
                             totalReceived: 0,
