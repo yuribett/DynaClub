@@ -65,8 +65,8 @@ module.exports = app => {
     };
 
     let insertTransaction = (req, res, wallet) => {
+        req.body.date = new Date();
         let errors = runExpressValidator(req, wallet.funds);
-
         if (errors) {
             res.status(400).send(errors);
             return;
@@ -203,7 +203,6 @@ module.exports = app => {
 
         model.findByIdAndUpdate(req.body._id, req.body)
             .then(transaction => {
-                console.log(transaction)
                 clearRedisKeys(transaction);
                 res.json(req.body);
             }, error => {
@@ -222,11 +221,12 @@ module.exports = app => {
     }
 
     let runExpressValidator = (req, funds) => {
+        const status = req.body.status;
         req.assert("from", "transaction.from is required").notEmpty();
         req.assert("to", "transaction.to is required").notEmpty();
         req.assert("date", "transaction.date is required and must be a date").notEmpty().isDate();
         req.assert("amount", "transaction.amount is required and must be a number greater than zero").notEmpty().isNumeric().gte(1);
-        if (funds) {
+        if (funds && (status == 0 || status == 3)) {
             req.assert("amount", "insuficient funds").lte(funds);
         }
         req.assert("team", "transaction.team is required").notEmpty();

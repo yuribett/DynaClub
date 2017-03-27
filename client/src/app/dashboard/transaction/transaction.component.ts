@@ -1,10 +1,11 @@
+import { TeamService } from '../../shared/services/team.service';
 import { TransactionService } from './transaction.service';
 import { TransactionStatus } from '../../shared/enums/transactionStatus';
 import { UserService } from '../../shared/services/user.service';
 import { Transaction } from './transaction';
 import { User } from '../../shared/models/user';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-declare var $: any;
+import { NotificationsService } from 'angular2-notifications';
 
 @Component({
 	selector: 'app-transaction',
@@ -17,13 +18,26 @@ export class TransactionComponent implements OnInit {
 	@Output() private onChange = new EventEmitter<Transaction>();
 	@Output() private onEdit = new EventEmitter<Transaction>();
 	loggedUser: User;
+	toastOptions = {
+		timeOut: 8000,
+		lastOnBottom: true,
+		clickToClose: true,
+		maxLength: 0,
+		maxStack: 7,
+		showProgressBar: true,
+		pauseOnHover: true,
+		preventDuplicates: true,
+		rtl: false,
+		animate: 'fromLeft',
+		position: ['right', 'top']
+	};
 
-	constructor(userService: UserService, private _transactionService: TransactionService) {
-		this.loggedUser = userService.getStoredUser();
+	constructor(_userService: UserService, private _transactionService: TransactionService, private _teamService: TeamService, private _toastService: NotificationsService) {
+		this.loggedUser = _userService.getStoredUser();
 	}
 
 	ngOnInit() {
-		$('.transaction').tooltip();
+
 	}
 
 	isCredit(): boolean {
@@ -55,26 +69,33 @@ export class TransactionComponent implements OnInit {
 		}
 	}
 	getDisplayName(): string {
-		if (this.transaction.status != null
-			&& this.transaction.status != TransactionStatus.NORMAL) {
-			return this.isCredit() ? `Pedido a ${this.transaction.from.name}` : `Pedido por ${this.transaction.to.name}`;
+		if (this.transaction.status == TransactionStatus.PENDING) {
+			return this.isCredit() ? `(Pedido a)${this.transaction.from.name}` : `(Pedido por)${this.transaction.to.name}`;
 		} else {
 			return this.isCredit() ? this.transaction.from.name : this.transaction.to.name;
 		}
 	}
 
 	isRequester(): boolean {
-		return this.transaction.requester._id == this.loggedUser._id;
+		return this.transaction.requester != null && this.transaction.requester._id == this.loggedUser._id;
 	}
 
 	canEdit(): boolean {
 		const today: Date = new Date();
-		return this.transaction.status == 1
+		return this.transaction.status == 1;/*
 			&& this.transaction.sprint.dateStart <= today
-			&& this.transaction.sprint.dateFinish >= today
+			&& this.transaction.sprint.dateFinish >= today;*/
 	}
 
-	private update(status: TransactionStatus) {
+	private async update(status: TransactionStatus) {
+		if (status == TransactionStatus.ACCEPTED) {
+			let wallet = await this._transactionService.getWallet(this.loggedUser, this._teamService.getCurrentTeam());
+			if (wallet.funds < this.transaction.amount) {
+				this._toastService.error('Error', 'Saldo insuficiente!');
+				return;
+			}
+		}
+		console.log('Passou a treta toda!');
 		this.transaction.status = status;
 		this.onChange.next(this.transaction);
 		this._transactionService.update(this.transaction).subscribe(

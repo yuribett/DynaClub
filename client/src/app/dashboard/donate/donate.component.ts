@@ -124,13 +124,9 @@ export class DonateComponent implements OnInit, OnDestroy {
 		this._subCurrentTeam.unsubscribe();
 	}
 
-	getWallet(team: Team = this.teamService.getCurrentTeam()) {
-		this.transactionService.getWallet(this.userService.getStoredUser(), team).subscribe(
-			wallet => {
-				this.wallet = wallet;
-				this.updateAmountValidators([Validators.required, CustomValidators.max(this.wallet.funds), CustomValidators.gt(0)]);
-			}
-		);
+	async getWallet(team: Team = this.teamService.getCurrentTeam()) {
+		this.wallet = await this.transactionService.getWallet(this.userService.getStoredUser(), team);
+		this.updateAmountValidators([Validators.required, CustomValidators.max(this.wallet.funds), CustomValidators.gt(0)]);
 	}
 
 	updateAmountValidators(validators: ValidatorFn[]) {
@@ -212,7 +208,6 @@ export class DonateComponent implements OnInit, OnDestroy {
 		$('#donateBtn').button('loading');
 		this.toastService.remove();
 		this.transaction.requester = this.userService.getStoredUser();
-		this.transaction.date = new Date();
 		this.transaction.team = this.teamService.getCurrentTeam();
 
 		if (this.isDonating) {
@@ -224,7 +219,7 @@ export class DonateComponent implements OnInit, OnDestroy {
 			this.transaction.to = this.userService.getStoredUser();
 		}
 
-		let transactionOperation: Observable<Transaction> = this.transaction._id ?
+		let transactionOperation: Observable<Transaction> = !this.transaction._id ?
 			this.transactionService.insert(this.transaction) :
 			this.transactionService.update(this.transaction);
 

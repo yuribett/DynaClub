@@ -41,11 +41,12 @@ export class TransactionService {
 			.catch(error => Observable.throw(error._body));
 	}
 
-	getWallet(user: User, team: Team): Observable<Wallet> {
+	getWallet(user: User, team: Team): Promise<Wallet> {
 		return this.http
 			.get(`${Globals.API_URL}/wallet/${user._id}/${team._id}`)
 			.map(res => res.json())
-			.catch(error => Observable.throw(error._body));
+			.toPromise()
+			.catch(error => Promise.reject(error._body));
 	}
 
 	insert(transaction: Transaction): Observable<Transaction> {
