@@ -45,7 +45,6 @@ export class SprintValidator extends BaseFormValidator {
 
   addErrorIfSprintExist(control: AbstractControl): void {
     if (control.value && control.value != '') {
-      console.log(control.value);
       this.sprintService
           .getIntersected(control.value)
           .subscribe(data => {
