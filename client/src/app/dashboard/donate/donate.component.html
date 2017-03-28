@@ -37,7 +37,7 @@
                 <div class="input-group {{getControlClass('type')}}">
                     <span class="input-group-addon" id="basic-addon1"><i class="fa fa-bookmark" aria-hidden="true"></i></span>
                     <select [(ngModel)]="transaction.transactionType" formControlName="type" class="form-control" name="inputTypes">
-                        <option [ngValue]="transaction.transactionType" [disabled]="true" [selected]="true">Por que?</option>
+                        <option [ngValue]="transaction.transactionType" [disabled]="true" [selected]="true">Por qu&ecirc;?</option>
                         <option [ngValue]="type" *ngFor="let type of transactionTypes">{{type.description}}</option>					
                     </select>
                 </div>

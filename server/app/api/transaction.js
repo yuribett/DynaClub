@@ -76,9 +76,9 @@ module.exports = app => {
             model.findOne({ _id: transaction._id })
                 .populate('to from requester sprint transactionType team')
                 .then(transaction => {
+                    
                     // Sending transaction through socket.io
-
-                    let destinyID = transaction.requester._id == transaction.from._id ?
+                    let destinyID = JSON.stringify(transaction.requester._id) == JSON.stringify(transaction.from._id) ?
                         transaction.to._id : transaction.from._id;
 
                     app.get('redis').get("user:" + destinyID, (err, socketId) => {

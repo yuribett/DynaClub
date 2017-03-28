@@ -54,8 +54,12 @@ export class DashboardComponent implements OnInit {
 		);
 	}
 
-	onTransactionChange(transactionUpdated: Transaction) {
+	onPendingTransactionChange(transactionUpdated: Transaction) {
 		this.pendingTransactions = this.pendingTransactions.filter(transaction => transaction._id != transactionUpdated._id);
+	}
+
+	onTransactionChange(transactionUpdated: Transaction) {
+		this.transactions = this.transactions.filter(transaction => transaction._id != transactionUpdated._id);
 	}
 
 }

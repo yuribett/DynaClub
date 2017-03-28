@@ -1,5 +1,5 @@
 <div class="row transaction {{getStyle()}}" title="{{getTitle()}}">
-    
+
     <simple-notifications [options]="toastOptions"></simple-notifications>
 
     <div class="col-md-3 col-sm-3 col-xs-6">
@@ -8,7 +8,7 @@
             <span class="amount">{{transaction.amount}}</span>
         </div>
         <div class="row">
-            <span class="date">{{transaction.date | date: 'dd/MM/yyyy'}}</span>
+            <span id="date">{{transaction.date | date: 'dd/MM/yyyy'}}</span>
         </div>
     </div>
 
@@ -34,23 +34,21 @@
 
     <div class="col-md-1 col-sm-1 col-xs-6 actionIcons">
 
-        <div *ngIf="canEdit()">
-            <a title="Editar" *ngIf="false" (click)="edit()">
-                <span class="edit glyphicon glyphicon-pencil" aria-hidden="true"></span>
-            </a>
-            <a title="Aceitar" *ngIf="!isRequester()" (click)="accept()">
-                <span class="accept glyphicon glyphicon-ok" aria-hidden="true"></span>
-            </a>
-            <a title="Negar" *ngIf="!isRequester()" (click)="deny()">
-                <span class="cancel glyphicon glyphicon-remove" aria-hidden="true"></span>
-            </a>
-        </div>
+        <a title="Editar" *ngIf="canEdit" (click)="edit()">
+            <span class="edit glyphicon glyphicon-pencil" aria-hidden="true"></span>
+        </a>
 
-        <div *ngIf="transaction.status == 0 || canEdit()">
-            <a title="Cancelar" *ngIf="isRequester()" (click)="cancel()">
-                <span class="cancel glyphicon glyphicon-remove" aria-hidden="true"></span>
-            </a>
-        </div>
+        <a title="Aceitar" *ngIf="canAccept" (click)="accept()">
+            <span class="accept glyphicon glyphicon-ok" aria-hidden="true"></span>
+        </a>
+
+        <a title="Negar" *ngIf="canDeny" (click)="deny()">
+            <span class="cancel glyphicon glyphicon-remove" aria-hidden="true"></span>
+        </a>
+
+        <a title="Cancelar" *ngIf="canCancel" (click)="cancel()">
+            <span class="cancel glyphicon glyphicon-remove" aria-hidden="true"></span>
+        </a>
 
     </div>
 </div>
