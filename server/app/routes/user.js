@@ -1,6 +1,7 @@
 module.exports = app => {
 
 	let api = app.api.user;
+	let auth = app.api.auth;
 
 	app.route('/api/user')
 		.get(api.list)
@@ -8,8 +9,8 @@ module.exports = app => {
 
 	app.route('/api/user/:id')
 		.get(api.findById)
-		.put(api.update)
-		.delete(api.delete);
+		.put(auth.guardOwner(api.update, 'id'))
+		.delete(auth.guardOwner(api.delete, 'id'));
 
 	app.route('/api/userTeam/:team')
 		.get(api.findByTeam);
