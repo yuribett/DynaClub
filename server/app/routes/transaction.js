@@ -10,6 +10,7 @@ module.exports = app => {
         .get(auth.guardOwner(api.getWallet));
 
     app.route('/api/transaction')
-        .post(api.insert);
+        .post(api.insert)       
+		.put(api.update);
 
 };
