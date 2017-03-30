@@ -8,7 +8,7 @@
     </div>
 
     <div class="donatePanel" [@slide]="formState">
-        <form [formGroup]="donateForm" (ngSubmit)="submit($event)">
+        <form [formGroup]="donateForm" (ngSubmit)="submit()">
 
             <div class="form-group">
                 <div class="input-group {{getControlClass('amount')}}">

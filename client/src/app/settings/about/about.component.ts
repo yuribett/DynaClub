@@ -9,7 +9,7 @@ const { version: appVersion } = require('../../../../package.json')
 })
 export class AboutComponent implements OnInit {
 
-	private appVersion: string;
+	public appVersion: string;
 
 	constructor() {
 		this.appVersion = appVersion;

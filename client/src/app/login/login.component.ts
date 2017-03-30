@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
 	private router: Router;
 	private authService: AuthService;
 	private app: AppComponent;
-	private appVersion: string;
+	public appVersion: string;
 
 	constructor(
 		router: Router,
