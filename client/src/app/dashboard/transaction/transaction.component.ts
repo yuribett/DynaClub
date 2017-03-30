@@ -53,7 +53,7 @@ export class TransactionComponent implements OnInit {
 			this.canAccept = !isRequester;
 			this.canDeny = !isRequester;
 			this.canCancel = isRequester;
-		} else if (this.transaction.status == 0 && timeDiff < fiveMinutes) {
+		} else if (this.transaction.status == 0 && !this.isCredit() && timeDiff < fiveMinutes) {
 			this.canCancel = true;
 			setTimeout(() => {
 				this.canCancel = false;
