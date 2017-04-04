@@ -12,46 +12,56 @@ module.exports = app => {
     api.listByUser = (req, res) => {
         let user = req.params.user;
         let team = req.params.team;
-        sprintApi.findSprintByDate(new Date())
-            .then(sprint => {
-                app.get('redis').get(`${redisKeyListByUser}${user}:${team}:${sprint._id}`, (err, transactions) => {
-                    if (!err && transactions != null) {
-                        logger.info(`Redis: GET ${redisKeyListByUser}${user}:${team}:${sprint._id}`);
-                        res.json(JSON.parse(transactions));
-                    } else {
-                        model.find({
-                                $or: [
-                                    { 'to': user },
-                                    { 'from': user }
-                                ],
-                                'team': team,
-                                'sprint': sprint._id
-                            })
-                            .lean()
-                            .sort({ date: -1 })
-                            .populate('to from requester sprint transactionType team')
-                            .then((transactions) => {
+        let sprint = req.params.sprint;
 
-                                transactions.forEach((transaction, key) => {
-                                    delete transactions[key].to.password;
-                                    delete transactions[key].from.password;
-                                    if (transactions[key].requester) {
-                                        delete transactions[key].requester.password;
-                                    }
-                                });
-
-                                app.get('redis').set(`${redisKeyListByUser}${user}:${team}:${sprint._id}`, JSON.stringify(transactions));
-                                logger.info(`Redis: SET ${redisKeyListByUser}${user}:${team}:${sprint._id}`);
-                                res.json(transactions);
-                            }, (error) => {
-                                logger.error(error);
-                                res.sendStatus(500)
-                            });
-                    }
+        if (sprint == "undefined") {
+            sprintApi.findSprintByDate(new Date())
+                .then(sprint => {
+                    find(res, user, team, sprint._id);
                 });
-            });
+        } else {
+            find(res, user, team, sprint);
+        }
 
     };
+
+    let find = (res, user, team, sprint) => {
+        app.get('redis').get(`${redisKeyListByUser}${user}:${team}:${sprint}`, (err, transactions) => {
+            if (!err && transactions != null) {
+                logger.info(`Redis: GET ${redisKeyListByUser}${user}:${team}:${sprint}`);
+                res.json(JSON.parse(transactions));
+            } else {
+                model.find({
+                    $or: [
+                        { 'to': user },
+                        { 'from': user }
+                    ],
+                    'team': team,
+                    'sprint': sprint._id
+                })
+                    .lean()
+                    .sort({ date: -1 })
+                    .populate('to from requester sprint transactionType team')
+                    .then((transactions) => {
+
+                        transactions.forEach((transaction, key) => {
+                            delete transactions[key].to.password;
+                            delete transactions[key].from.password;
+                            if (transactions[key].requester) {
+                                delete transactions[key].requester.password;
+                            }
+                        });
+
+                        app.get('redis').set(`${redisKeyListByUser}${user}:${team}:${sprint._id}`, JSON.stringify(transactions));
+                        logger.info(`Redis: SET ${redisKeyListByUser}${user}:${team}:${sprint._id}`);
+                        res.json(transactions);
+                    }, (error) => {
+                        logger.error(error);
+                        res.sendStatus(500)
+                    });
+            }
+        });
+    }
 
     api.insert = (req, res) => {
         let user = req.body.from;
@@ -146,26 +156,27 @@ module.exports = app => {
                                     }
                                 }
                             }
-                        },
-                        {
-                            $group: {
-                                _id: '$received',
-                                total: { $sum: "$amount" }
-                            }
-                        },
-                        {
-                            $project: {
-                                _id: 0,
-                                total: 1,
-                                received: {
-                                    $cond: {
-                                        if: { '$eq': ['$_id', true] },
-                                        then: true,
-                                        else: false
-                                    }
+                        }
+                    ,
+                    {
+                        $group: {
+                            _id: '$received',
+                            total: { $sum: "$amount" }
+                        }
+                    },
+                    {
+                        $project: {
+                            _id: 0,
+                            total: 1,
+                            received: {
+                                $cond: {
+                                    if: { '$eq': ['$_id', true] },
+                                    then: true,
+                                    else: false
                                 }
                             }
                         }
+                    }
                     ]).then(result => {
                         let wallet = {
                             totalReceived: 0,

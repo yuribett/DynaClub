@@ -12,6 +12,7 @@ import { ConfigsComponent } from './settings/configs/configs.component';
 import { AboutComponent } from './settings/about/about.component';
 import { LoggedInGuard } from './auth/logged.in.guard';
 import { RankingComponent } from './ranking/ranking.component';
+import { RankingDetailComponent } from './ranking/ranking-detail/ranking-detail.component';
 import { TransactionTypesComponent } from './admin/transaction-types/transaction-types.component';
 import { UsersComponent } from './admin/users/users.component';
 
@@ -21,17 +22,20 @@ const appRoutes: Routes = [
 	{ path: 'login', component: LoginComponent },
 	{ path: 'admin', component: AdminComponent, canActivate: [LoggedInGuard] },
 	
-	{ path: 'teams', component: TeamSearchComponent },
-    { path: 'team/edit/:id', component: TeamDetailComponent },
-    { path: 'team/new', component: TeamDetailComponent },
+	{ path: 'teams', component: TeamSearchComponent, canActivate: [LoggedInGuard] },
+    { path: 'team/edit/:id', component: TeamDetailComponent, canActivate: [LoggedInGuard] },
+    { path: 'team/new', component: TeamDetailComponent, canActivate: [LoggedInGuard] },
 
-	{ path: 'sprints', 		   component: SprintSearchComponent },
-    { path: 'sprint/edit/:id', component: SprintDetailComponent },
-    { path: 'sprint/new', 	   component: SprintDetailComponent },
+	{ path: 'sprints', 		   component: SprintSearchComponent, canActivate: [LoggedInGuard] },
+    { path: 'sprint/edit/:id', component: SprintDetailComponent, canActivate: [LoggedInGuard] },
+    { path: 'sprint/new', 	   component: SprintDetailComponent, canActivate: [LoggedInGuard] },
 	
-	{ path: 'transaction-types', component: TransactionTypesComponent },
-	{ path: 'users', component: UsersComponent },
+	{ path: 'transaction-types', component: TransactionTypesComponent, canActivate: [LoggedInGuard] },
+	{ path: 'users', component: UsersComponent, canActivate: [LoggedInGuard] },
+	
 	{ path: 'ranking', component: RankingComponent, canActivate: [LoggedInGuard] },
+	{ path: 'user/transactions/:id/:sprint/:team', component: RankingDetailComponent, canActivate: [LoggedInGuard] },
+
 	{ path: 'profile', component: ProfileComponent, canActivate: [LoggedInGuard] },
 	{ path: 'configs', component: ConfigsComponent, canActivate: [LoggedInGuard] },
 	{ path: 'about', component: AboutComponent, canActivate: [LoggedInGuard] },

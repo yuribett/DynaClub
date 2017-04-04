@@ -6,6 +6,7 @@ import { Team } from '../../shared/models/team';
 import { Wallet } from '../../shared/models/wallet';
 import { Globals } from '../../app.globals';
 import { User } from '../../shared/models/user';
+import { Sprint } from '../../shared/models/sprint';
 import { TransactionComponent } from './transaction.component';
 import { Injectable } from '@angular/core';
 import { Response, Http, Headers } from '@angular/http';
@@ -35,8 +36,9 @@ export class TransactionService {
 	}
 
 	findByUser(user: User, team: Team): Observable<Array<Transaction>> {
+		const sprint = new Sprint();
 		return this.http
-			.get(`${Globals.API_URL}/transaction/${user._id}/${team._id}`)
+			.get(`${Globals.API_URL}/transaction/${user._id}/${team._id}/${sprint._id}`)
 			.map(res => res.json())
 			.catch(error => Observable.throw(error._body));
 	}
@@ -80,6 +82,13 @@ export class TransactionService {
 	
 	onTransactionsEdit(): Observable<Transaction> {
 		return this.subjectTransactionEdit.asObservable();
+	}
+
+	findByUserTeamSprintIDs(userID: string, sprintID: string, teamID: string): Observable<Transaction[]> {
+		return this.http
+			.get(`${Globals.API_URL}/transaction/${userID}/${teamID}/${sprintID}`)
+			.map(res => res.json())
+			.catch(error => Observable.throw(error._body));
 	}
 
 }
