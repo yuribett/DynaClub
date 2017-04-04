@@ -1,13 +1,14 @@
 module.exports = app => {
 
 	let api = app.api.transactionType;
+	let auth = app.api.auth;
 
 	app.route('/api/transactionType')
 		.get(api.list)
-		.post(api.insert);
+		.post(auth.guardAdmin(api.insert));
 
 	app.route('/api/transactionType/:id')
 		.get(api.findById)
-		.put(api.update)
-		.delete(api.delete);
+		.put(auth.guardAdmin(api.update))
+		.delete(auth.guardAdmin(api.delete));
 };

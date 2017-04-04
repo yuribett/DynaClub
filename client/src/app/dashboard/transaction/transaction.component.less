@@ -1,0 +1,103 @@
+@import "~bootstrap/less/variables.less";
+@import "~bootswatch/darkly/variables.less";
+
+.credit-debit(@color) {
+    h1, span {
+        color: @color;
+        font-weight: bold;
+    }
+    h3 {
+        color: @color;
+    }
+    &:hover {
+        border-color: @color
+    }
+    .statusIcons .glyphicon {
+        font-size: 40px;
+        margin-top: 15px; 
+    }
+}
+
+.actionIcon(@color) {    
+    color: @color;
+}
+
+.transaction {            
+    border-left: 3px solid transparent;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 0;
+
+    .title {
+        font-weight: normal;
+    }
+    
+    &.debit {
+        .credit-debit(@btn-danger-bg);
+    }
+
+    &.credit {
+        .credit-debit(lighten(@btn-primary-bg, 10%));    
+    }
+    &.canceled {
+        .credit-debit(lighten(@gray, 10%));    
+    }
+    &.pending {
+        .credit-debit(darken(@btn-success-bg, 10%));    
+    }
+
+    .messageContainer {
+        font-family: "Titillium Web", Helvetica, Arial, sans-serif;
+        font-weight: 200;
+        font-size: 90%;
+    }
+
+    .symbol {
+        font-size: 20px;
+    }
+
+    #date {
+        font-size: 14px;
+        font-weight: 100;
+        color: #fff;
+    }
+
+    .amount {
+        font-size: 60px;
+    }
+
+    .user-name {
+        margin-top: 10px;
+    }
+
+    .actionIcons {
+        margin-top: 15px; 
+        a {
+            cursor: pointer;
+        }
+        span {
+            .actionIcon(lighten(@gray, 10%));
+        } 
+        .edit:hover {
+            .actionIcon(lighten(@btn-primary-bg, 10%));
+        }
+        .accept:hover {
+            .actionIcon(lighten(@btn-success-bg, 10%));
+        }
+        .cancel:hover {
+            .actionIcon(@btn-danger-bg);
+        }
+    }
+}
+
+@media only screen and (max-device-width: 780px) { 
+    .transaction {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+.row {
+    margin-right: 0px;
+    margin-left: 0px;
+}

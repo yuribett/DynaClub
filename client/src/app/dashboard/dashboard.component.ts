@@ -1,3 +1,4 @@
+import { TransactionStatus } from '../shared/enums/transactionStatus';
 import { TeamService } from '../shared/services/team.service';
 import { Globals } from '../app.globals';
 import { Team } from '../shared/models/team';
@@ -18,6 +19,7 @@ import { Component, OnInit } from '@angular/core';
 export class DashboardComponent implements OnInit {
 
 	transactions: Array<Transaction>;
+	pendingTransactions: Array<Transaction>;
 	wallet: Wallet = new Wallet();
 
 	constructor(private transactionService: TransactionService, private userService: UserService, private appService: AppService, private teamService: TeamService) {
@@ -33,16 +35,31 @@ export class DashboardComponent implements OnInit {
 		});
 
 		this.transactionService.onTransactionsAdded().subscribe((transaction: Transaction) => {
-			this.transactions.unshift(transaction);
+			if (transaction.status == TransactionStatus.PENDING) {
+				this.pendingTransactions.unshift(transaction);
+			} else {
+				this.transactions.unshift(transaction);
+			}
 		});
 	}
 
 	loadTransactions(team: Team = this.teamService.getCurrentTeam()) {
 		this.transactions = null;
 		this.transactionService.findByUser(this.userService.getStoredUser(), team).subscribe(
-			p => this.transactions = p,
+			transactions => {
+				this.transactions = transactions.filter(transaction => transaction.status != TransactionStatus.PENDING);
+				this.pendingTransactions = transactions.filter(transaction => transaction.status == TransactionStatus.PENDING);
+			},
 			err => console.log(err)
 		);
+	}
+
+	onPendingTransactionChange(transactionUpdated: Transaction) {
+		this.pendingTransactions = this.pendingTransactions.filter(transaction => transaction._id != transactionUpdated._id);
+	}
+
+	onTransactionChange(transactionUpdated: Transaction) {
+		this.transactions = this.transactions.filter(transaction => transaction._id != transactionUpdated._id);
 	}
 
 }

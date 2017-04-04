@@ -7,9 +7,11 @@ export class BaseFormValidator {
     formErrors = {};
     messages: Messages = new Messages();
     form: FormGroup;
+    modelKey: string;
 
-    constructor(form: FormGroup) {
+    constructor(form: FormGroup, modelKey: string) {
         this.form = form;
+        this.modelKey = modelKey;
     }
 
     addError(control: AbstractControl, errorKey: String) {
@@ -38,11 +40,9 @@ export class BaseFormValidator {
             this.formErrors[field] = [];
             const control = form.get(field);
             for (const key in control.errors) {
-                console.log(key);
-                this.formErrors[field].push(this.messages.get(key));
+                this.formErrors[field].push(this.messages.getModelAttrMessage(this.modelKey, field, key));
             }
         }
-        console.log(this.formErrors);
     }
 
     getErrorsFor(field: string): string[] {

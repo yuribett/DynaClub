@@ -1,10 +1,13 @@
 import { Component, OnInit, Input, ViewChildren } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+ 
 import { ActivatedRoute, Params, Router } from '@angular/router';
-
+import { CustomValidators } from 'ng2-validation';
 import { SprintService } from '../../../shared/services/sprint.service';
 import { Sprint } from '../../../shared/models/sprint';
 import { SprintValidator } from './sprint.validator'
+
+import { DatePipe } from '@angular/common';
 
 import { FieldErrorsComponent } from '../../../shared/components/field-errors/field-errors.component'
 
@@ -62,7 +65,7 @@ export class SprintDetailComponent implements OnInit {
     this.sprintForm = this.fb.group({
       dateStart: [this.sprint.dateStart, [Validators.required]],
       dateFinish: [this.sprint.dateFinish, [Validators.required]],
-      initialAmount: [this.sprint.initialAmount, [Validators.required]]
+      initialAmount: [this.sprint.initialAmount, [Validators.required, CustomValidators.gt(0)]]
     });
   }
 
@@ -78,9 +81,13 @@ export class SprintDetailComponent implements OnInit {
     
     this.setTitle();
 
+    //using DatePipe for formatting with specific mask, 
+    //locale is useless here but mandatory...
+    var datePipe = new DatePipe("pt-BR");
+    
     this.sprintForm.setValue({
-      dateStart: this.sprint.dateStart, 
-      dateFinish: this.sprint.dateFinish,
+      dateStart: datePipe.transform(this.sprint.dateStart, 'yyyy-MM-dd'), 
+      dateFinish: datePipe.transform(this.sprint.dateFinish, 'yyyy-MM-dd'),
       initialAmount: this.sprint.initialAmount
     });
 
@@ -91,13 +98,10 @@ export class SprintDetailComponent implements OnInit {
      formValues._id = this.sprint._id;
      this.sprint = formValues;
 
-     this.sprint.dateStart = new Date(this.sprint.dateStart);
-     this.sprint.dateStart.setHours(0);
-     this.sprint.dateStart.setMinutes(0);
-
-     this.sprint.dateFinish = new Date(this.sprint.dateFinish);
-     this.sprint.dateFinish.setHours(23);
-     this.sprint.dateFinish.setMinutes(59);
+     const dateStart = new Date(this.sprint.dateStart + "T00:00:00.000Z")
+     this.sprint.dateStart = new Date(dateStart.getTime() + dateStart.getTimezoneOffset() * 60000);
+     const dateFinish = new Date(this.sprint.dateFinish + "T23:59:59.999Z")
+     this.sprint.dateFinish = new Date(dateFinish.getTime() + dateFinish.getTimezoneOffset() * 60000);
   }
 
   onSubmit({ value, valid }: { value: Sprint, valid: boolean }) {

@@ -10,6 +10,11 @@
 		<div class="jumbotron" *ngIf="transactions != null && transactions.length == 0">
 			<span>Voc&ecirc; n&atilde;o recebeu nem doou Dynas ainda!</span>
 		</div>
-		<app-transaction [transaction]="transaction" *ngFor="let transaction of transactions"></app-transaction>
+
+		<app-transaction [transaction]="pendingTransaction" *ngFor="let pendingTransaction of pendingTransactions" (onChange)="onPendingTransactionChange($event)"></app-transaction>
+		
+		<br *ngIf="pendingTransactions != null && pendingTransactions.length > 0">
+
+		<app-transaction [transaction]="transaction" *ngFor="let transaction of transactions" (onChange)="onTransactionChange($event)"></app-transaction>
 	</div>
 </div>

@@ -1,4 +1,5 @@
 import { TeamService } from '../../shared/services/team.service';
+import { TransactionStatus } from '../../shared/enums/transactionStatus';
 import { FormControl, AbstractControl, ValidatorFn, Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { CustomValidators } from 'ng2-validation';
 import { NotificationsService } from 'angular2-notifications';
@@ -18,11 +19,13 @@ import { slide } from '../../animations';
 import { OnDestroy, Input, Component, OnInit } from '@angular/core';
 import { TransactionErrors } from '../../shared/errors/transaction.errors';
 import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs';
+declare var $: any;
 
 @Component({
 	selector: 'app-donate',
 	templateUrl: './donate.component.html',
-	styleUrls: ['./donate.component.scss'],
+	styleUrls: ['./donate.component.less'],
 	animations: [slide]
 })
 export class DonateComponent implements OnInit, OnDestroy {
@@ -35,7 +38,8 @@ export class DonateComponent implements OnInit, OnDestroy {
 	donateForm: FormGroup;
 	wallet: Wallet = new Wallet();
 	_subCurrentTeam: Subscription;
-	public toastOptions = {
+	isDonating: boolean = true;
+	toastOptions = {
 		timeOut: 8000,
 		lastOnBottom: true,
 		clickToClose: true,
@@ -54,15 +58,32 @@ export class DonateComponent implements OnInit, OnDestroy {
 		'type': '',
 		'message': ''
 	};
-
-	validationMessages = {
+	donateMessages = {
 		'amount': {
 			'required': 'Quanto voc&ecirc; quer doar?',
 			'max': 'Saldo insuficiente.',
-			'gt': 'Doe pelo menos uma Dyna.'
+			'gt': 'Doe pelo menos uma Dyna.',
+			'lt': 'Ocorreu algum problema para carregar o seu saldo. Atualizar a tela pode resolver!'
 		},
 		'user': {
 			'required': 'Pra quem voc&ecedil; quer doar?.'
+		},
+		'type': {
+			'required': 'Nenhum motivo em especial?.'
+		},
+		'message': {
+			'required': 'Deixe uma mensagem para a pessoa.',
+			'minlength': 'A mensagem deve conter no m&iacute;nimo 3 caracteres.',
+			'maxlength': 'A mensagem deve conter no m&aacute;ximo 500 caracteres.',
+		}
+	};
+	requestMessages = {
+		'amount': {
+			'required': 'Quanto voc&ecirc; quer pedir?',
+			'gt': 'Pe&ccedil;a pelo menos uma Dyna.'
+		},
+		'user': {
+			'required': 'Pra quem voc&ecedil; quer pedir?.'
 		},
 		'type': {
 			'required': 'Nenhum motivo em especial?.'
@@ -93,25 +114,29 @@ export class DonateComponent implements OnInit, OnDestroy {
 		});
 		this.buildForm();
 		this.getWallet();
+		this.transactionService.onTransactionsEdit().subscribe((transaction: Transaction) => {
+			this.transaction = transaction;
+			this.showForm();
+		})
 	}
 
 	ngOnDestroy() {
 		this._subCurrentTeam.unsubscribe();
 	}
 
-	getWallet(team: Team = this.teamService.getCurrentTeam()) {
-		this.transactionService.getWallet(this.userService.getStoredUser(), team).subscribe(
-			wallet => {
-				this.wallet = wallet;
-				this.donateForm.controls['amount'].setValidators([Validators.required, CustomValidators.max(this.wallet.funds), CustomValidators.gt(0)]);
-				this.donateForm.controls['amount'].updateValueAndValidity();
-			}
-		);
+	async getWallet(team: Team = this.teamService.getCurrentTeam()) {
+		this.wallet = await this.transactionService.getWallet(this.userService.getStoredUser(), team);
+		this.updateAmountValidators([Validators.required, CustomValidators.max(this.wallet.funds), CustomValidators.gt(0)]);
+	}
+
+	updateAmountValidators(validators: ValidatorFn[]) {
+		this.donateForm.controls['amount'].setValidators(validators);
+		this.donateForm.controls['amount'].updateValueAndValidity();
 	}
 
 	buildForm() {
 		this.donateForm = this.formBuilder.group({
-			'amount': new FormControl('', [Validators.required, CustomValidators.max(1000), CustomValidators.gt(0)]),
+			'amount': new FormControl('', [Validators.required, CustomValidators.lt(1), CustomValidators.gt(0)]),
 			'user': new FormControl('', Validators.required),
 			'type': new FormControl('', Validators.required),
 			'message': new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(500)])
@@ -141,7 +166,7 @@ export class DonateComponent implements OnInit, OnDestroy {
 			this.formErrors[field] = '';
 			const control = this.donateForm.get(field);
 			if (control && control.dirty && !control.valid) {
-				const messages = this.validationMessages[field];
+				const messages = this.isDonating ? this.donateMessages[field] : this.requestMessages[field];
 				for (const key in control.errors) {
 					this.formErrors[field] += this.decodeMsg(messages[key]) + ' ';
 				}
@@ -149,10 +174,21 @@ export class DonateComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	toggleMenu() {
+	showForm(isDonating: boolean = true) {
+		this.isDonating = isDonating;
+		if (!isDonating) {
+			this.updateAmountValidators([Validators.required, CustomValidators.gt(0)]);
+		} else {
+			this.updateAmountValidators([Validators.required, CustomValidators.max(this.wallet.funds), CustomValidators.gt(0)]);
+		}
+		this.buttonsState = 'left';
+		this.formState = 'center';
+	}
+
+	showButtons() {
 		this.donateForm.reset();
-		this.buttonsState = this.buttonsState === 'left' ? 'center' : 'left';
-		this.formState = this.formState === 'right' ? 'center' : 'right';
+		this.buttonsState = 'center';
+		this.formState = 'right';
 	}
 
 	loadUsers(team: Team) {
@@ -165,19 +201,34 @@ export class DonateComponent implements OnInit, OnDestroy {
 	cancel() {
 		this.toastService.remove();
 		this.transaction = new Transaction();
-		this.toggleMenu();
+		this.showButtons();
 	}
 
-	donate() {
+	submit() {
+		$('#donateBtn').button('loading');
 		this.toastService.remove();
-		this.transaction.from = this.userService.getStoredUser();
-		this.transaction.date = new Date();
-		this.transaction.team = JSON.parse(this.appService.getStorage().getItem(Globals.CURRENT_TEAM));
-		this.transactionService.insert(this.transaction).subscribe(
+		this.transaction.requester = this.userService.getStoredUser();
+		this.transaction.team = this.teamService.getCurrentTeam();
+
+		if (this.isDonating) {
+			this.transaction.status = TransactionStatus.NORMAL;
+			this.transaction.from = this.userService.getStoredUser();
+		} else {
+			this.transaction.status = TransactionStatus.PENDING;
+			this.transaction.from = this.transaction.to;
+			this.transaction.to = this.userService.getStoredUser();
+		}
+
+		let transactionOperation: Observable<Transaction> = !this.transaction._id ?
+			this.transactionService.insert(this.transaction) :
+			this.transactionService.update(this.transaction);
+
+		transactionOperation.subscribe(
 			transaction => {
 				this.transaction = new Transaction();
-				this.toggleMenu();
+				this.showButtons();
 				this.getWallet();
+				$('#donateBtn').button('reset');
 			},
 			error => {
 				TransactionErrors.parseServerErrors(error).subscribe(
@@ -186,6 +237,7 @@ export class DonateComponent implements OnInit, OnDestroy {
 					},
 					error => console.log(error)
 				);
+				$('#donateBtn').button('reset');
 			}
 		);
 	}

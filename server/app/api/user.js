@@ -43,6 +43,7 @@ module.exports = app => {
                     })
                     .populate('teams')
                     .then((user) => {
+                        delete user.password;
                         app.get('redis').set(`${redisKeyFindById}${id}`, JSON.stringify(user));
                         logger.info(`Redis: SET ${redisKeyFindById}${id}`);
                         res.json(user);
@@ -65,9 +66,13 @@ module.exports = app => {
                         teams: { $in: [team] },
                         active: true
                     })
+                    .lean()
                     .sort({ name: 1 })
                     .populate('teams')
                     .then((users) => {
+                        users.forEach((user, key) => {
+                            delete users[key].password;
+                        });
                         app.get('redis').set(`${redisKeyFindByTeam}${team}`, JSON.stringify(users));
                         logger.info(`Redis: SET ${redisKeyFindByTeam}${team}`);
                         res.json(users);

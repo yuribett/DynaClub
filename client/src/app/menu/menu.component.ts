@@ -18,7 +18,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 	currentTeam: Team;
 	_subCurrentTeam: Subscription;
 
-	constructor(private auth: AuthService, private appService: AppService, private userService: UserService) {
+	constructor(public auth: AuthService, private appService: AppService, private userService: UserService) {
 		var _self = this;
 		if (this.auth.isLoggedIn()) {
 			this.user = userService.getStoredUser();
