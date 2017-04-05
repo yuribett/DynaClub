@@ -26,6 +26,10 @@ module.exports = app => {
 					});
 					delete auth.password;
 
+					
+					let mailer = app.services.sender;
+					mailer.mailer();
+
 					res.set('x-access-token', token);
 					res.json(auth);
 					res.end();

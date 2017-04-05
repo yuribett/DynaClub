@@ -9,6 +9,9 @@ let app = express();
 
 app.set('secret', '3mG!pYBa8#5r1J6');
 
+app.set('view engine', 'ejs');
+app.set('views','./app/services/mailer/templates');
+
 app.use(morgan("dev", {
     stream: {
         write: log => {

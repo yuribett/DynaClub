@@ -5,13 +5,27 @@ module.exports = () => {
     const nodemailer = require('nodemailer');
 
     // create reusable transporter object using the default SMTP transport
+    /*
     let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: '',
-            pass: ''
+            user: 'dynaclub.mailer@gmail.om',
+            pass: '3mG!pYBa8#5r1J6'
         }
     });
+    */
+
+    let transporter = nodemailer.createTransport({
+        auth: {
+            user: '',
+            pass: ''
+        },
+        host: '',
+        port: 25,
+        secure: false
+    });
+
+
 
     // setup email data with unicode symbols
     /*
