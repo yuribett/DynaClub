@@ -18,6 +18,9 @@ module.exports = app => {
                 model.find()
                     .populate('teams')
                     .then((users) => {
+                        users.forEach((user, key) => {
+                            delete users[key].password;
+                        });
                         app.get('redis').set(`${redisKeyList}`, JSON.stringify(users));
                         logger.info(`Redis: SET ${redisKeyList}`);
                         res.json(users);
