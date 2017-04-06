@@ -10,7 +10,7 @@ let app = express();
 app.set('secret', '3mG!pYBa8#5r1J6');
 
 app.set('view engine', 'ejs');
-app.set('views','./app/services/mailer/templates');
+app.set('views','./app/mailer/templates');
 
 app.use(morgan("dev", {
     stream: {
@@ -51,7 +51,7 @@ app.use((req, res, next) => {
 
 });
 
-consign({ cwd: 'app' })
+consign({ cwd: 'app', extensions: [ '.js', '.json' ] })
     .include('models')
     .then('api')
     .then('routes/auth.js')

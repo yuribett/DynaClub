@@ -1,12 +1,18 @@
 'use strict';
 
 function sendEmail() {
+    console.log('... mailer')
 
     //let cron = require('node-cron');
 
     //var task = cron.schedule('* * * * *', function () {
         let transporter = require('../../../config/mailer')();
-        let template = require('./templates/test')();
+
+        let ejs = require('ejs')
+        , fs = require('fs')
+        , str = fs.readFileSync('./templates/shame-one-week.ejs', 'utf8'); 
+
+        let template = ejs.render(str, {});
 
         // setup email data with unicode symbols
         let mailOptions = {
