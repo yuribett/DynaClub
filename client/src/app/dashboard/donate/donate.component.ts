@@ -117,7 +117,10 @@ export class DonateComponent implements OnInit, OnDestroy {
 		this.transactionService.onTransactionsEdit().subscribe((transaction: Transaction) => {
 			this.transaction = transaction;
 			this.showForm();
-		})
+		});
+		this.transactionService.onTransactionsUpdated().subscribe((transactionUpdated: Transaction) => {
+			this.getWallet();
+		});
 	}
 
 	ngOnDestroy() {
@@ -189,6 +192,7 @@ export class DonateComponent implements OnInit, OnDestroy {
 		this.donateForm.reset();
 		this.buttonsState = 'center';
 		this.formState = 'right';
+		$('#donateBtn').button('reset');
 	}
 
 	loadUsers(team: Team) {

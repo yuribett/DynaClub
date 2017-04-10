@@ -14,7 +14,7 @@ export class AppService {
 	private currentTeam: Team;
 	private subjectCurrentTeam: Subject<Team> = new Subject<Team>();
 	private socket;
-
+ 
 	getSocket() {
 		if (!this.socket) {
 			let user = JSON.parse(this.getStorage().getItem(Globals.LOCAL_USER));

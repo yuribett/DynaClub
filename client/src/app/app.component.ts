@@ -30,7 +30,7 @@ export class AppComponent implements OnInit {
 
 	ngOnInit() {
 		if (this.authService.isLoggedIn()) {
-			this.appService.getSocket().on('transaction', transaction => {
+			this.appService.getSocket().on('transaction.added', transaction => {
 				if (transaction.from._id != this.userService.getStoredUser()._id) {
 					this.notify(
 						`Voc&ecirc; recebeu uma doa&ccedil;&atilde;o`,
@@ -40,6 +40,13 @@ export class AppComponent implements OnInit {
 						`Voc&ecirc; recebeu um pedido`,
 						`${transaction.requester.name} pediu D$ ${transaction.amount}!`);
 				}
+			});
+
+			this.appService.getSocket().on('transaction.updated', transaction => {
+				const status = transaction.status == TransactionStatus.ACCEPTED ? 'aceitou' : 'negou';
+				this.notify(
+					`Doa&ccedil;&atilde;o atualizada`,
+					`${transaction.from.name}! ${status} seu pedido!`);
 			});
 		}
 	}
