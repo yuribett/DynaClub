@@ -33,8 +33,16 @@ export class DashboardComponent implements OnInit {
 			this.loadTransactions(team);
 		});
 
-		this.transactionService.onTransactionsAdded().subscribe((transaction: Transaction) => {
-			this.transactions.unshift(transaction);
+		this.transactionService.onTransactionsAdded().subscribe((transactionAdded: Transaction) => {
+			this.transactions.unshift(transactionAdded);
+		});
+
+		this.transactionService.onTransactionsUpdated().subscribe((transactionUpdated: Transaction) => {
+			this.transactions.forEach((transaction, i) => {
+				if (transaction._id == transactionUpdated._id) {
+					this.transactions[i] = transactionUpdated;
+				}
+			});
 		});
 	}
 
@@ -47,7 +55,6 @@ export class DashboardComponent implements OnInit {
 	}
 
 	loadTransactions(team: Team = this.teamService.getCurrentTeam()) {
-		console.log('loadTransactions');
 		this.transactions = null;
 		this.transactionService.findByUser(this.userService.getStoredUser(), team).subscribe(
 			transactions => this.transactions = transactions,

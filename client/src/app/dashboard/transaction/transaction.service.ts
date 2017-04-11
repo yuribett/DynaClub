@@ -18,28 +18,32 @@ import { NotificationService } from '../../notification.service';
 @Injectable()
 export class TransactionService {
 
-	http: Http;
 	headers: Headers;
 	subjectTransactionAdded: Subject<Transaction> = new Subject<Transaction>();
 	subjectTransactionUpdated: Subject<Transaction> = new Subject<Transaction>();
 	subjectTransactionEdit: Subject<Transaction> = new Subject<Transaction>();
 
-	constructor(http: Http, private userService: UserService, private appService: AppService, private teamService: TeamService) {
-		this.http = http;
+	constructor(private http: Http, private userService: UserService, private appService: AppService, private teamService: TeamService) {
 		this.headers = new Headers();
 		this.headers.append('Content-Type', 'application/json');
-		this.appService.getSocket().on('transaction.added', transaction => {
-			if (transaction.team._id === this.teamService.getCurrentTeam()._id) {
-				this.subjectTransactionAdded.next(transaction);
-			}
-		});
-		this.appService.getSocket().on('transaction.updated', transaction => {
-			if (transaction.team._id === this.teamService.getCurrentTeam()._id) {
-				this.subjectTransactionUpdated.next(transaction);
-			}
-		});
+		this.appService.getSocket().on('transaction.added', transaction => this.socketAdd(transaction));
+		this.appService.getSocket().on('transaction.requested', transaction => this.socketAdd(transaction));
+		this.appService.getSocket().on('transaction.denied', transaction => this.socketUpdate(transaction));
+		this.appService.getSocket().on('transaction.accepted', transaction => this.socketUpdate(transaction));
+		this.appService.getSocket().on('transaction.canceled', transaction => this.socketUpdate(transaction));
+		this.appService.getSocket().on('transaction.request.canceled', transaction => this.socketUpdate(transaction));
 	}
- 
+	socketAdd(transaction) {
+		if (transaction.team._id === this.teamService.getCurrentTeam()._id) {
+			this.subjectTransactionAdded.next(transaction);
+		}
+	}
+	socketUpdate(transaction) {
+		if (transaction.team._id === this.teamService.getCurrentTeam()._id) {
+			this.subjectTransactionUpdated.next(transaction);
+		}
+	}
+
 	findByUser(user: User, team: Team): Observable<Array<Transaction>> {
 		return this.http
 			.get(`${Globals.API_URL}/transaction/${user._id}/${team._id}`)
@@ -69,20 +73,16 @@ export class TransactionService {
 		return this.http
 			.put(`${Globals.API_URL}/transaction/`, JSON.stringify(transaction), { headers: this.headers })
 			.map(res => {
-				this.subjectTransactionUpdated.next(res.json());
+				this.subjectTransactionEdit.next(res.json());
 				return res.json();
 			})
 			.catch(error => Observable.throw(error._body));
 	}
 
-	edit(transaction: Transaction) {
-		this.subjectTransactionEdit.next(transaction)
-	}
-	
 	onTransactionsAdded(): Observable<Transaction> {
 		return this.subjectTransactionAdded.asObservable();
 	}
-	
+
 	onTransactionsUpdated(): Observable<Transaction> {
 		return this.subjectTransactionUpdated.asObservable();
 	}

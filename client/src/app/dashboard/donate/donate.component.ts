@@ -115,8 +115,7 @@ export class DonateComponent implements OnInit, OnDestroy {
 		this.buildForm();
 		this.getWallet();
 		this.transactionService.onTransactionsEdit().subscribe((transaction: Transaction) => {
-			this.transaction = transaction;
-			this.showForm();
+			this.getWallet();
 		});
 		this.transactionService.onTransactionsUpdated().subscribe((transactionUpdated: Transaction) => {
 			this.getWallet();

@@ -72,18 +72,12 @@ module.exports = app => {
             return;
         }
         model.create(req.body).then(transaction => {
-            clearRedisKeys(transaction);
             model.findOne({ _id: transaction._id })
                 .populate('to from requester sprint transactionType team')
                 .then(transaction => {
-
+                    clearRedisKeys(transaction);
                     // Sending transaction through socket.io
-                    let destinyID = JSON.stringify(transaction.requester._id) == JSON.stringify(transaction.from._id) ?
-                        transaction.to._id : transaction.from._id;
-
-                    app.get('redis').get("user:" + destinyID, (err, socketId) => {
-                        emitTransaction(err, socketId, 'transaction.added', transaction);
-                    });
+                    emitTransaction(transaction);
                     res.json(transaction);
                 }, error => {
                     throw error;
@@ -95,17 +89,57 @@ module.exports = app => {
         });
     }
 
-    let emitTransaction = (error, socketId, type, transaction) => {
-        if (error) {
-            logger.error('Error in getting socketId from Redis');
-        } else {
-            let socket = app.get('io').sockets.connected[socketId];
-            if (typeof socket != "undefined") {
-                socket.emit(type, transaction);
-            }
-        }
-    }
+    const TransactionStatus = {
+        NORMAL: 0,
+        PENDING: 1,
+        DENIED: 2,
+        ACCEPTED: 3,
+        CANCELED: 4
+    };
 
+    let emitTransaction = (transaction) => {
+
+        let type;
+        let destinyID;
+        switch (transaction.status) {
+            case TransactionStatus.NORMAL:
+                type = "transaction.added";
+                destinyID = transaction.to._id
+                break;
+            case TransactionStatus.PENDING:
+                type = "transaction.requested";
+                destinyID = transaction.from._id
+                break;
+            case TransactionStatus.DENIED:
+                type = "transaction.denied";
+                destinyID = transaction.requester._id
+                break;
+            case TransactionStatus.ACCEPTED:
+                type = "transaction.accepted";
+                destinyID = transaction.requester._id
+                break;
+            case TransactionStatus.CANCELED:
+                if (JSON.stringify(transaction.requester._id) == JSON.stringify(transaction.from._id)) {
+                    type = "transaction.canceled";
+                    destinyID = transaction.to._id;
+                } else {
+                    type = "transaction.request.canceled";
+                    destinyID = transaction.from._id;
+                }
+                break;
+        }
+
+        app.get('redis').get("user:" + destinyID, (err, socketId) => {
+            if (err) {
+                logger.error('Error in getting socketId from Redis');
+            } else {
+                let socket = app.get('io').sockets.connected[socketId];
+                if (typeof socket != "undefined") {
+                    socket.emit(type, transaction);
+                }
+            }
+        });
+    }
 
     api.getWallet = (req, res) => {
         let userID = req.params.user;
@@ -201,18 +235,12 @@ module.exports = app => {
             return;
         }
 
-        clearRedisKeys(req.body);
         model.findByIdAndUpdate(req.body._id, req.body, { new: true })
             .populate('to from requester sprint transactionType team')
             .then(transaction => {
-                if (transaction.status != 4) {
-                    // Sending transaction through socket.io
-                    let destinyID = JSON.stringify(transaction.requester._id);
-                    app.get('redis').get("user:" + destinyID, (err, socketId) => {
-                        emitTransaction(err, socketId, 'transaction.updated', transaction);
-                    });
-                }
-
+                clearRedisKeys(transaction);
+                // Sending transaction through socket.io
+                emitTransaction(transaction);
                 res.json(transaction);
             }, error => {
                 logger.error(error);
@@ -221,16 +249,13 @@ module.exports = app => {
     };
 
     let clearRedisKeys = (transaction) => {
-        console.log('transaction.to', transaction.to);
-        console.log('transaction.from', transaction.from);
-        console.log('transaction.requester', transaction.requester);
         // TO
-        app.get('redis').delRedisKeys(`${redisKeyListByUser}${transaction.to}:${transaction.team}:${transaction.sprint}`);
-        app.get('redis').delRedisKeys(`${redisKeyGetWallet}${transaction.to}:${transaction.team}:${transaction.sprint}`);
+        app.get('redis').delRedisKeys(`${redisKeyListByUser}${transaction.to._id}:${transaction.team._id}:${transaction.sprint._id}`);
+        app.get('redis').delRedisKeys(`${redisKeyGetWallet}${transaction.to._id}:${transaction.team._id}:${transaction.sprint._id}`);
 
         // FROM
-        app.get('redis').delRedisKeys(`${redisKeyListByUser}${transaction.from}:${transaction.team}:${transaction.sprint}`);
-        app.get('redis').delRedisKeys(`${redisKeyGetWallet}${transaction.from}:${transaction.team}:${transaction.sprint}`);
+        app.get('redis').delRedisKeys(`${redisKeyListByUser}${transaction.from._id}:${transaction.team._id}:${transaction.sprint._id}`);
+        app.get('redis').delRedisKeys(`${redisKeyGetWallet}${transaction.from._id}:${transaction.team._id}:${transaction.sprint._id}`);
     }
 
     let runExpressValidator = (req, funds) => {

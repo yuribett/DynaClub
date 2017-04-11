@@ -30,35 +30,52 @@ export class AppComponent implements OnInit {
 
 	ngOnInit() {
 		if (this.authService.isLoggedIn()) {
+
 			this.appService.getSocket().on('transaction.added', transaction => {
-				if (transaction.from._id != this.userService.getStoredUser()._id) {
-					this.notify(
-						`Voc&ecirc; recebeu uma doa&ccedil;&atilde;o`,
-						`Voc&ecirc; recebeu D$ ${transaction.amount} de ${transaction.from.name}!`);
-				} else {
-					this.notify(
-						`Voc&ecirc; recebeu um pedido`,
-						`${transaction.requester.name} pediu D$ ${transaction.amount}!`);
-				}
+				this.notify(
+					`Voc&ecirc; recebeu uma doa&ccedil;&atilde;o`,
+					`Voc&ecirc; recebeu D$ ${transaction.amount} de ${transaction.from.name}!`);
 			});
 
-			this.appService.getSocket().on('transaction.updated', transaction => {
-				const status = transaction.status == TransactionStatus.ACCEPTED ? 'aceitou' : 'negou';
+			this.appService.getSocket().on('transaction.requested', transaction => {
+				this.notify(
+					`Voc&ecirc; recebeu um pedido`,
+					`${transaction.requester.name} pediu D$ ${transaction.amount}!`);
+			});
+
+			this.appService.getSocket().on('transaction.denied', transaction => {
 				this.notify(
 					`Doa&ccedil;&atilde;o atualizada`,
-					`${transaction.from.name}! ${status} seu pedido!`);
+					`${transaction.from.name} negou seu pedido!`);
 			});
+
+			this.appService.getSocket().on('transaction.accepted', transaction => {
+				this.notify(
+					`Doa&ccedil;&atilde;o atualizada`,
+					`${transaction.from.name} aceitou seu pedido!`);
+			});
+
+			this.appService.getSocket().on('transaction.canceled', transaction => {
+				this.notify(
+					`Doa&ccedil;&atilde;o atualizada`,
+					`${transaction.requester.name} cancelou a Doa&ccedil;&atilde;o!`);
+			});
+
+			this.appService.getSocket().on('transaction.request.canceled', transaction => {
+				this.notify(
+					`Doa&ccedil;&atilde;o atualizada`,
+					`${transaction.requester.name} cancelou o pedido!`);
+			});
+
 		}
 	}
 
 	private notify(title: string, body: string) {
-		if (body.length > 38) {
-			body = body.substr(0, 38) + '...';
-		}
 		this.notificationService.notify({
 			body: body,
 			title: title,
 			icon: `./assets/images/icon-dollar-150x150.png`,
+			wrapBody: true,
 			onclick: () => {
 				try {
 					window.focus();

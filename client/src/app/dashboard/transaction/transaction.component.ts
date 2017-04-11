@@ -134,7 +134,6 @@ export class TransactionComponent implements OnInit {
 		this.update(TransactionStatus.CANCELED);
 	}
 	edit() {
-		this._transactionService.edit(this.transaction);
 	}
 
 }

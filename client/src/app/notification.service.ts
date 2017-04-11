@@ -8,6 +8,9 @@ export class NotificationService {
 
         return new Observable((observer: any) => {
             notification.body = this.decodeMsg(notification.body);
+            if (notification.wrapBody && notification.body.length > 38) {
+                notification.body = notification.body.substr(0, 38) + '...';
+            }
             notification.title = this.decodeMsg(notification.title);
             notification.icon = notification.icon;
             let Notification: any = window["Notification"];
@@ -48,4 +51,5 @@ interface Notification {
     requireInteraction?: boolean
     title: string
     onclick: Function
+    wrapBody?: boolean
 }
