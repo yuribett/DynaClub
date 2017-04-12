@@ -39,6 +39,10 @@ export class WalletComponent implements OnInit, OnDestroy {
 		this.transactionService.onTransactionsUpdated().subscribe((transactionUpdated: Transaction) => {
 			this.getWallet();
 		});
+
+		this.transactionService.onTransactionsEdit().subscribe((transactionEdited: Transaction) => {
+			this.getWallet();
+		});
 	}
 
 	ngOnDestroy() {
