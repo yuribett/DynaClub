@@ -14,12 +14,11 @@ import { Component, OnInit } from '@angular/core';
 @Component({
 	selector: 'app-dashboard',
 	templateUrl: './dashboard.component.html',
-	styleUrls: ['./dashboard.component.css']
+	styleUrls: ['./dashboard.component.less']
 })
 export class DashboardComponent implements OnInit {
 
 	transactions: Array<Transaction>;
-	pendingTransactions: Array<Transaction>;
 	wallet: Wallet = new Wallet();
 
 	constructor(private transactionService: TransactionService, private userService: UserService, private appService: AppService, private teamService: TeamService) {
@@ -34,32 +33,33 @@ export class DashboardComponent implements OnInit {
 			this.loadTransactions(team);
 		});
 
-		this.transactionService.onTransactionsAdded().subscribe((transaction: Transaction) => {
-			if (transaction.status == TransactionStatus.PENDING) {
-				this.pendingTransactions.unshift(transaction);
-			} else {
-				this.transactions.unshift(transaction);
-			}
+		this.transactionService.onTransactionsAdded().subscribe((transactionAdded: Transaction) => {
+			this.transactions.unshift(transactionAdded);
 		});
+
+		this.transactionService.onTransactionsUpdated().subscribe((transactionUpdated: Transaction) => {
+			this.transactions.forEach((transaction, i) => {
+				if (transaction._id == transactionUpdated._id) {
+					this.transactions[i] = transactionUpdated;
+				}
+			});
+		});
+	}
+
+	hasTransactions(): boolean {
+		return this.transactions != null && this.transactions.length > 0;
+	}
+
+	hasPendingTransactions(): boolean {
+		return this.hasTransactions() && this.transactions.filter(transaction => transaction.status == TransactionStatus.PENDING).length > 0;
 	}
 
 	loadTransactions(team: Team = this.teamService.getCurrentTeam()) {
 		this.transactions = null;
 		this.transactionService.findByUser(this.userService.getStoredUser(), team).subscribe(
-			transactions => {
-				this.transactions = transactions.filter(transaction => transaction.status != TransactionStatus.PENDING);
-				this.pendingTransactions = transactions.filter(transaction => transaction.status == TransactionStatus.PENDING);
-			},
+			transactions => this.transactions = transactions,
 			err => console.log(err)
 		);
-	}
-
-	onPendingTransactionChange(transactionUpdated: Transaction) {
-		this.pendingTransactions = this.pendingTransactions.filter(transaction => transaction._id != transactionUpdated._id);
-	}
-
-	onTransactionChange(transactionUpdated: Transaction) {
-		this.transactions = this.transactions.filter(transaction => transaction._id != transactionUpdated._id);
 	}
 
 }

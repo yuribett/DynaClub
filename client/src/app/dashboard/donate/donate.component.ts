@@ -63,7 +63,7 @@ export class DonateComponent implements OnInit, OnDestroy {
 			'required': 'Quanto voc&ecirc; quer doar?',
 			'max': 'Saldo insuficiente.',
 			'gt': 'Doe pelo menos uma Dyna.',
-			'lt': 'Ocorreu algum problema para carregar o seu saldo. Atualizar a tela pode resolver!'
+			'lt': 'Valor limite para pedidos &eacute; D$1000.'
 		},
 		'user': {
 			'required': 'Pra quem voc&ecedil; quer doar?.'
@@ -80,6 +80,7 @@ export class DonateComponent implements OnInit, OnDestroy {
 	requestMessages = {
 		'amount': {
 			'required': 'Quanto voc&ecirc; quer pedir?',
+			'max': 'No m&aacute;ximo D$1000.',
 			'gt': 'Pe&ccedil;a pelo menos uma Dyna.'
 		},
 		'user': {
@@ -109,28 +110,29 @@ export class DonateComponent implements OnInit, OnDestroy {
 		this._subCurrentTeam = this.appService.getCurrentTeam().subscribe((team: Team) => {
 			this.loadUsers(team);
 			this.donateForm.reset();
-			this.getWallet(team);
+			this.updateAmountValidators(team);
 			this.transaction = new Transaction();
 		});
 		this.buildForm();
-		this.getWallet();
-		this.transactionService.onTransactionsEdit().subscribe((transaction: Transaction) => {
-			this.transaction = transaction;
-			this.showForm();
-		})
+		this.transactionService.onTransactionsEdit().subscribe((transactionEdited: Transaction) => {
+			this.updateAmountValidators();
+		});
+		this.transactionService.onTransactionsUpdated().subscribe((transactionUpdated: Transaction) => {
+			this.updateAmountValidators();
+		});
 	}
 
 	ngOnDestroy() {
 		this._subCurrentTeam.unsubscribe();
 	}
 
-	async getWallet(team: Team = this.teamService.getCurrentTeam()) {
-		this.wallet = await this.transactionService.getWallet(this.userService.getStoredUser(), team);
-		this.updateAmountValidators([Validators.required, CustomValidators.max(this.wallet.funds), CustomValidators.gt(0)]);
-	}
-
-	updateAmountValidators(validators: ValidatorFn[]) {
-		this.donateForm.controls['amount'].setValidators(validators);
+	async updateAmountValidators(team: Team = this.teamService.getCurrentTeam()) {
+		if (this.isDonating) {
+			this.wallet = await this.transactionService.getWallet(this.userService.getStoredUser(), team);
+			this.donateForm.controls['amount'].setValidators([Validators.required, CustomValidators.max(this.wallet.funds), CustomValidators.gt(0)]);
+	} else {
+			this.donateForm.controls['amount'].setValidators([Validators.required, CustomValidators.max(1000), CustomValidators.gt(0)]);
+		}
 		this.donateForm.controls['amount'].updateValueAndValidity();
 	}
 
@@ -144,6 +146,7 @@ export class DonateComponent implements OnInit, OnDestroy {
 
 		this.donateForm.valueChanges.subscribe(data => this.onValueChanged(data));
 		this.onValueChanged(); // (re)set validation messages now
+		this.updateAmountValidators();
 	}
 
 	getControlClass(control: string): string {
@@ -176,19 +179,16 @@ export class DonateComponent implements OnInit, OnDestroy {
 
 	showForm(isDonating: boolean = true) {
 		this.isDonating = isDonating;
-		if (!isDonating) {
-			this.updateAmountValidators([Validators.required, CustomValidators.gt(0)]);
-		} else {
-			this.updateAmountValidators([Validators.required, CustomValidators.max(this.wallet.funds), CustomValidators.gt(0)]);
-		}
+		this.updateAmountValidators();
 		this.buttonsState = 'left';
 		this.formState = 'center';
 	}
 
 	showButtons() {
-		this.donateForm.reset();
+		this.buildForm();
 		this.buttonsState = 'center';
 		this.formState = 'right';
+		$('#donateBtn').button('reset');
 	}
 
 	loadUsers(team: Team) {
@@ -227,7 +227,7 @@ export class DonateComponent implements OnInit, OnDestroy {
 			transaction => {
 				this.transaction = new Transaction();
 				this.showButtons();
-				this.getWallet();
+				this.updateAmountValidators();
 				$('#donateBtn').button('reset');
 			},
 			error => {
