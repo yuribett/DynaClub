@@ -74,7 +74,7 @@ export class AppComponent implements OnInit {
 		this.notificationService.notify({
 			body: body,
 			title: title,
-			icon: `./assets/images/icon-dollar-150x150.png`,
+			icon: `./assets/images/icon-dollar-square-150x150.png`,
 			wrapBody: true,
 			onclick: () => {
 				try {
