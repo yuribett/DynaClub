@@ -16,7 +16,7 @@ import { UserService } from '../../shared/services/user.service';
 import { Globals } from '../../app.globals';
 import { User } from '../../shared/models/user';
 import { slide } from '../../animations';
-import { OnDestroy, Input, Component, OnInit } from '@angular/core';
+import { OnDestroy, Input, Component, OnInit, ViewChild } from '@angular/core';
 import { TransactionErrors } from '../../shared/errors/transaction.errors';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs';
@@ -52,6 +52,7 @@ export class DonateComponent implements OnInit, OnDestroy {
 		animate: 'fromLeft',
 		position: ['right', 'top']
 	};
+	@ViewChild("donateBtn") donateBtn;
 	formErrors = {
 		'amount': '',
 		'user': '',
@@ -130,7 +131,7 @@ export class DonateComponent implements OnInit, OnDestroy {
 		if (this.isDonating) {
 			this.wallet = await this.transactionService.getWallet(this.userService.getStoredUser(), team);
 			this.donateForm.controls['amount'].setValidators([Validators.required, CustomValidators.max(this.wallet.funds), CustomValidators.gt(0)]);
-	} else {
+		} else {
 			this.donateForm.controls['amount'].setValidators([Validators.required, CustomValidators.max(1000), CustomValidators.gt(0)]);
 		}
 		this.donateForm.controls['amount'].updateValueAndValidity();
@@ -182,13 +183,14 @@ export class DonateComponent implements OnInit, OnDestroy {
 		this.updateAmountValidators();
 		this.buttonsState = 'left';
 		this.formState = 'center';
+		$('option:disabled').prop('selected', true);
 	}
 
 	showButtons() {
 		this.buildForm();
 		this.buttonsState = 'center';
 		this.formState = 'right';
-		$('#donateBtn').button('reset');
+		this.unlockButton();
 	}
 
 	loadUsers(team: Team) {
@@ -204,8 +206,17 @@ export class DonateComponent implements OnInit, OnDestroy {
 		this.showButtons();
 	}
 
+	lockButton() {
+		this.donateBtn.nativeElement.disabled = true;
+		this.donateBtn.nativeElement.innerText = 'Loading...';
+	}
+	unlockButton() {
+		this.donateBtn.nativeElement.disabled = false;
+		this.donateBtn.nativeElement.innerText = 'Enviar';
+	}
+
 	submit() {
-		$('#donateBtn').button('loading');
+		this.lockButton();
 		this.toastService.remove();
 		this.transaction.requester = this.userService.getStoredUser();
 		this.transaction.team = this.teamService.getCurrentTeam();
@@ -228,7 +239,7 @@ export class DonateComponent implements OnInit, OnDestroy {
 				this.transaction = new Transaction();
 				this.showButtons();
 				this.updateAmountValidators();
-				$('#donateBtn').button('reset');
+				this.unlockButton();
 			},
 			error => {
 				TransactionErrors.parseServerErrors(error).subscribe(
@@ -237,7 +248,7 @@ export class DonateComponent implements OnInit, OnDestroy {
 					},
 					error => console.log(error)
 				);
-				$('#donateBtn').button('reset');
+				this.unlockButton();
 			}
 		);
 	}
