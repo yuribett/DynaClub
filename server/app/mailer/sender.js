@@ -1,44 +1,35 @@
 'use strict';
 
-function sendEmail() {
-    console.log('... mailer')
+module.exports = (to, from, templ) => {
+    let transporter = require('../../config/mailer')();
 
-    //let cron = require('node-cron');
-
-    //var task = cron.schedule('* * * * *', function () {
-        let transporter = require('../../../config/mailer')();
-
-        let ejs = require('ejs')
+    let ejs = require('ejs')
         , fs = require('fs')
-        , str = fs.readFileSync('./templates/shame-one-week.ejs', 'utf8'); 
+        , str = fs.readFileSync('app/mailer/templates/got-a-donnation.ejs', 'utf8');
 
-        let template = ejs.render(str, {});
+    let template = ejs.render(str, { value : 1000, from : from.name });
 
-        // setup email data with unicode symbols
-        let mailOptions = {
-            from: '"Fred Foo 👻" <foo@teste.com>', // sender address
-            to: 'yuri@dynamix.com.br', // list of receivers
-            subject: 'Hello ✔', // Subject line
-            text: 'What a shame', // plain text body
-            html: template // html body
-        };
+    console.log(template);
 
-        // send mail with defined transport object
-        if(false){ // dev mode
-            transporter.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                    return console.log(error);
-                }
-                console.log('Message %s sent: %s', info.messageId, info.response);
-            });
-        } else {
-            console.log("ficticius sent: ", template)
-        }
-        
-        
-    //}, false);
+    // setup email data with unicode symbols
+    let mailOptions = {
+        from: '"Fred Foo 👻" <foo@teste.com>', // sender address
+        to: 'yuri@dynamix.com.br', // list of receivers
+        subject: 'Hello ✔', // Subject line
+        text: 'What a shame', // plain text body
+        html: template // html body
+    };
 
-    //task.start();
+    // send mail with defined transport object
+    if (true) { // dev mode
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                return console.log(error);
+            }
+            console.log('Message %s sent: %s', info.messageId, info.response);
+        });
+    } else {
+        console.log("ficticius sent: ", template)
+    }
+
 }
-
-module.exports = () => sendEmail;
