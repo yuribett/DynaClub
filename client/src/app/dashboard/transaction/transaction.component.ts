@@ -1,3 +1,4 @@
+import { AppService } from '../../app.service';
 import { TeamService } from '../../shared/services/team.service';
 import { TransactionService } from './transaction.service';
 import { TransactionStatus } from '../../shared/enums/transactionStatus';
@@ -36,12 +37,12 @@ export class TransactionComponent implements OnInit {
 		position: ['right', 'top']
 	};
 
-	constructor(_userService: UserService, private _transactionService: TransactionService, private _teamService: TeamService, private _toastService: NotificationsService) {
+	constructor(private _appService: AppService, private _userService: UserService, private _transactionService: TransactionService, private _teamService: TeamService, private _toastService: NotificationsService) {
 		this.loggedUser = _userService.getStoredUser();
 	}
 
 	ngOnInit() {
-		const _today: Date = new Date();
+		const _today: Date = this._appService.getServerTime();
 		const _transactionDate: Date = new Date(this.transaction.date);
 		const _timeDiff: number = _today.getTime() - _transactionDate.getTime();
 		const _dateStart: Date = new Date(this.transaction.sprint.dateStart);
