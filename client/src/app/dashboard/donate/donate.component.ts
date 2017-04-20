@@ -135,6 +135,7 @@ export class DonateComponent implements OnInit, OnDestroy {
 			this.donateForm.controls['amount'].setValidators([Validators.required, CustomValidators.max(1000), CustomValidators.gt(0)]);
 		}
 		this.donateForm.controls['amount'].updateValueAndValidity();
+		this.donateBtn.nativeElement.disabled = this.donateForm.invalid;
 	}
 
 	buildForm() {
@@ -210,6 +211,7 @@ export class DonateComponent implements OnInit, OnDestroy {
 		this.donateBtn.nativeElement.disabled = true;
 		this.donateBtn.nativeElement.innerText = 'Loading...';
 	}
+
 	unlockButton() {
 		this.donateBtn.nativeElement.disabled = false;
 		this.donateBtn.nativeElement.innerText = 'Enviar';

@@ -4,17 +4,51 @@ import { Observable } from 'rxjs/Observable';
 import { User } from './shared/models/user';
 import { Team } from './shared/models/team';
 import { Globals } from './app.globals';
+import { Response, Http, Headers } from '@angular/http';
 import * as io from 'socket.io-client';
 
 @Injectable()
 export class AppService {
 
 	private user: User;
+	private serverTime: Date;
+	private needToSyncServerTime: boolean = true;
+	private headers: Headers;
 	private subjectUser: Subject<User> = new Subject<User>();
 	private currentTeam: Team;
 	private subjectCurrentTeam: Subject<Team> = new Subject<Team>();
 	private socket;
- 
+
+	constructor(private http: Http) {
+		this.headers = new Headers();
+		this.headers.append('Content-Type', 'application/json');
+		this.syncServerTime();
+	}
+
+
+	private loadServerTime(): Promise<Date> {
+		return this.http
+			.get(`${Globals.API_URL}/timesync/`)
+			.map(res => new Date(res.json().date))
+			.toPromise()
+			.catch(error => Promise.reject(error._body));
+	}
+	
+	private async syncServerTime() {
+		this.serverTime = await this.loadServerTime();
+		this.needToSyncServerTime = false;
+		setTimeout(() => {
+			this.needToSyncServerTime = true;
+		}, 30000);
+	}
+
+	getServerTime(): Date {
+		if (this.needToSyncServerTime) {
+			this.syncServerTime();
+		}
+		return this.serverTime;
+	}
+
 	getSocket() {
 		if (!this.socket) {
 			let user = JSON.parse(this.getStorage().getItem(Globals.LOCAL_USER));
@@ -28,10 +62,6 @@ export class AppService {
 			}
 		}
 		return this.socket;
-	}
-
-	ngOnInit() {
-
 	}
 
 	//USER SERVICES
