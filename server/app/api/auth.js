@@ -1,7 +1,6 @@
 let mongoose = require('mongoose');
 let jwt = require('jsonwebtoken');
 let logger = require('../services/logger.js');
-let mailer = require('../mailer/sender');
 
 module.exports = app => {
 
@@ -27,8 +26,6 @@ module.exports = app => {
 					});
 					delete auth.password;
 
-					mailer();
-					
 					res.set('x-access-token', token);
 					res.json(auth);
 					res.end();

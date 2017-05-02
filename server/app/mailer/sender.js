@@ -1,35 +1,34 @@
-'use strict';
+const ejs = require('ejs');
+const fs = require('fs');
+const transporter = require('../../config/mailer')();
 
-module.exports = (to, from, templ) => {
-    let transporter = require('../../config/mailer')();
+const sender = {
 
-    let ejs = require('ejs')
-        , fs = require('fs')
-        , str = fs.readFileSync('app/mailer/templates/got-a-donnation.ejs', 'utf8');
+    donationSent(transaction) {
+        
+        const str = fs.readFileSync('app/mailer/templates/got-a-donnation.ejs', 'utf8');
 
-    let template = ejs.render(str, { value : 1000, from : from.name });
+        let template = ejs.render(str, { value : transaction.amount, from : transaction.from.name });
 
-    console.log(template);
+        console.log(template);
 
-    // setup email data with unicode symbols
-    let mailOptions = {
-        from: '"Fred Foo 👻" <foo@teste.com>', // sender address
-        to: 'yuri@dynamix.com.br', // list of receivers
-        subject: 'Hello ✔', // Subject line
-        text: 'What a shame', // plain text body
-        html: template // html body
-    };
+        // setup email data with unicode symbols
+        let mailOptions = {
+            from: `"${transaction.from.name}" <${transaction.from.email}>`, // sender address
+            to: `${transaction.to.email}`, // list of receivers
+            subject: `Voc� acaba de receber Dynas de ${transaction.from.name}`, // Subject line
+            //text: '', // plain text body
+            html: template // html body
+        };
 
-    // send mail with defined transport object
-    if (true) { // dev mode
+        // send mail with defined transport object
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 return console.log(error);
             }
-            console.log('Message %s sent: %s', info.messageId, info.response);
         });
-    } else {
-        console.log("ficticius sent: ", template)
-    }
 
+    }
 }
+
+module.exports = sender;

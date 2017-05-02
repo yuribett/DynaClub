@@ -1,5 +1,6 @@
 let mongoose = require('mongoose');
 let logger = require('../services/logger.js');
+let mailer = require('../mailer/sender');
 
 module.exports = app => {
 
@@ -84,6 +85,9 @@ module.exports = app => {
                     app.get('redis').get("user:" + destinyID, (err, socketId) => {
                         emitTransaction(err, socketId, transaction);
                     });
+
+                    mailer.donationSent(transaction);
+
                     res.json(transaction);
                 }, error => {
                     throw error;
