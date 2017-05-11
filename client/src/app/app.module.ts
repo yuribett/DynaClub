@@ -39,42 +39,42 @@ import { LoggedInGuard } from './auth/logged.in.guard';
 import { HttpService } from './auth/http.service';
 
 @NgModule({
-	declarations: [
-		AppComponent,
-		LoginComponent,
-		AdminComponent,
-		ProfileComponent,
-		MenuComponent,
-		ConfigsComponent,
-		AboutComponent,
-		TransactionTypesComponent,
-		UsersComponent
-	],
-	imports: [
-		BrowserModule,
-		FormsModule,
-		ReactiveFormsModule,
-		HttpModule,
-		routing,
-		ModalModule.forRoot(),
-		BootstrapModalModule,
-		DashboardModule,
-		RankingModule,
-		TeamModule,
-		SprintModule,
-		DynaCommonModule,
-		BrowserAnimationsModule
-	],
-	providers: [
-		{ provide: Http, useClass: HttpService },
-		LoggedInGuard,
-		AuthService,
-		UserService,
-		AppService,
-		SprintService,
-		NotificationService,
-		MenuComponent // TODO wtf? Really... W.T.F!
-	],
-	bootstrap: [AppComponent]
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    AdminComponent,
+    ProfileComponent,
+    MenuComponent,
+    ConfigsComponent,
+    AboutComponent,
+    TransactionTypesComponent,
+    UsersComponent
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpModule,
+    routing,
+    ModalModule.forRoot(),
+    BootstrapModalModule,
+    DashboardModule,
+    RankingModule,
+    TeamModule,
+    SprintModule,
+    DynaCommonModule,
+    BrowserAnimationsModule
+  ],
+  providers: [
+    { provide: Http, useClass: HttpService },
+    LoggedInGuard,
+    AuthService,
+    UserService,
+    AppService,
+    SprintService,
+    NotificationService,
+    MenuComponent // TODO wtf? Really... W.T.F!
+  ],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }
