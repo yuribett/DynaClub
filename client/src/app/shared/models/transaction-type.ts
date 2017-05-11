@@ -1,6 +1,6 @@
 export class TransactionType {
 
-    _id: string;
-    description: String;
+  _id: string;
+  description: String;
 
 }
