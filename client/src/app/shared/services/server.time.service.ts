@@ -7,7 +7,6 @@ import { Observable } from 'rxjs';
 export class ServerTimeService {
 
     private headers: Headers;
-    private serverTime: Date;
     private serverClientDiffInMillis: number;
 
     constructor(private http: Http) {
@@ -19,15 +18,14 @@ export class ServerTimeService {
             .get(`${Globals.API_URL}/timesync/`)
             .toPromise()
             .then(res => {
-                this.serverTime = new Date(res.json().date);
-                const clientTime = new Date();
-                this.serverClientDiffInMillis = this.serverTime.getTime() - clientTime.getTime();
-                console.log(this.serverClientDiffInMillis);
+                const _serverTime = new Date(res.json().date);
+                const _clientTime = new Date();
+                this.serverClientDiffInMillis = _serverTime.getTime() - _clientTime.getTime();
             }).catch(err => console.log(err));
     }
 
     public getServerTime(): Date {
-        return new Date(new Date().getTime() - this.serverClientDiffInMillis);
+        return new Date(new Date().getTime() + this.serverClientDiffInMillis);
     }
 
 }
