@@ -44,6 +44,7 @@ export class TransactionComponent implements OnInit {
 
 	ngOnInit() {
 		const _today: Date = this._serverTimeService.getServerTime();
+		console.log('server Date: ', _today, 'client Date: ', new Date());
 		const _transactionDate: Date = new Date(this.transaction.date);
 		const _timeDiff: number = _today.getTime() - _transactionDate.getTime();
 		const _dateStart: Date = new Date(this.transaction.sprint.dateStart);
