@@ -40,7 +40,7 @@ import 'rxjs/add/operator/map';
 import { LoggedInGuard } from './auth/logged.in.guard';
 import { HttpService } from './auth/http.service';
 
-const loadContext = (context: ServerTimeService) => () => context.load();
+export const loadContext = (context: ServerTimeService) => () => context.load();
 
 @NgModule({
   declarations: [

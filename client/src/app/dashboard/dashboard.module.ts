@@ -11,6 +11,7 @@ import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { TransactionTypeService } from '../shared/services/transaction-type.service';
 import { TransactionTypeComponent } from './transaction/transaction-type/transaction-type.component';
 import { SimpleNotificationsModule } from 'angular2-notifications';
+import { Numeric } from '../shared/directives/numeric.directive';
 
 @NgModule({
     imports: [
@@ -29,7 +30,8 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
         TransactionComponent,
         WalletComponent,
         DonateComponent,
-        TransactionTypeComponent
+        TransactionTypeComponent,
+        Numeric
     ],
     providers: [
         TransactionService,
