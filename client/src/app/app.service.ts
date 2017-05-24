@@ -22,31 +22,6 @@ export class AppService {
 	constructor(private http: Http) {
 		this.headers = new Headers();
 		this.headers.append('Content-Type', 'application/json');
-		this.syncServerTime();
-	}
-
-
-	private loadServerTime(): Promise<Date> {
-		return this.http
-			.get(`${Globals.API_URL}/timesync/`)
-			.map(res => new Date(res.json().date))
-			.toPromise()
-			.catch(error => Promise.reject(error._body));
-	}
-	
-	private async syncServerTime() {
-		this.serverTime = await this.loadServerTime();
-		this.needToSyncServerTime = false;
-		setTimeout(() => {
-			this.needToSyncServerTime = true;
-		}, 30000);
-	}
-
-	getServerTime(): Date {
-		if (this.needToSyncServerTime) {
-			this.syncServerTime();
-		}
-		return this.serverTime;
 	}
 
 	getSocket() {

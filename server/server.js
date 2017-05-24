@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== 'production') {
+    require('@glimpse/glimpse').init();
+}
+
 var http = require('http');
 var app = require('./config/express');
 var server = http.createServer(app);
