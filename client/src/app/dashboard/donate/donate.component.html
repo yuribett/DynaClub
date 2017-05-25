@@ -13,7 +13,8 @@
             <div class="form-group">
                 <div class="input-group {{getControlClass('amount')}}">
                     <span class="input-group-addon" id="basic-addon1"><i class="fa fa-usd" aria-hidden="true"></i></span>
-                    <input [(ngModel)]="transaction.amount" formControlName="amount" type="number" name="inputAmount" class="form-control" placeholder="Quanto?">
+                    <input [(ngModel)]="transaction.amount" formControlName="amount" type="number" dir="rigth" numeric='true' name="inputAmount"
+                        class="form-control" placeholder="Quanto?">
                 </div>
                 <p [ngClass]="{'visible': formErrors.amount}" class="text-danger">
                     {{ formErrors.amount }}
