@@ -40,7 +40,9 @@ import 'rxjs/add/operator/map';
 import { LoggedInGuard } from './auth/logged.in.guard';
 import { HttpService } from './auth/http.service';
 
-export const loadContext = (context: ServerTimeService) => () => context.load();
+export function loadServerTime(serverTime: ServerTimeService) {
+  return () => serverTime.load();
+}
 
 @NgModule({
   declarations: [
@@ -73,7 +75,7 @@ export const loadContext = (context: ServerTimeService) => () => context.load();
     { provide: Http, useClass: HttpService },
     {
       provide: APP_INITIALIZER,
-      useFactory: loadContext,
+      useFactory: loadServerTime,
       deps: [ServerTimeService],
       multi: true
     },

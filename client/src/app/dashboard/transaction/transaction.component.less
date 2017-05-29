@@ -33,17 +33,17 @@
     }
     
     &.debit {
-        .credit-debit(@btn-danger-bg);
+        .credit-debit(lighten(@btn-primary-bg, 10%));
     }
 
     &.credit {
-        .credit-debit(lighten(@btn-primary-bg, 10%));    
+        .credit-debit(darken(@btn-success-bg, 10%));
     }
     &.canceled {
         .credit-debit(lighten(@gray, 10%));    
     }
     &.pending {
-        .credit-debit(darken(@btn-success-bg, 10%));    
+        .credit-debit(#996d47);    
     }
 
     .messageContainer {
