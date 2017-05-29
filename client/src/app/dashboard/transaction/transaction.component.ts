@@ -99,7 +99,7 @@ export class TransactionComponent implements OnInit {
 	}
 	getDisplayName(): string {
 		if (this.transaction.status == TransactionStatus.PENDING) {
-			return this.isCredit() ? `(Pedido a)${this.transaction.from.name}` : `(Pedido por)${this.transaction.to.name}`;
+			return this.isCredit() ? `(Pedido a) ${this.transaction.from.name}` : `(Pedido por) ${this.transaction.to.name}`;
 		} else {
 			return this.isCredit() ? this.transaction.from.name : this.transaction.to.name;
 		}
@@ -109,7 +109,7 @@ export class TransactionComponent implements OnInit {
 		if (status == TransactionStatus.ACCEPTED) {
 			let wallet = await this._transactionService.getWallet(this.loggedUser, this._teamService.getCurrentTeam());
 			if (wallet.funds < this.transaction.amount) {
-				this._toastService.error('Error', 'Saldo insuficiente!');
+				this._toastService.error('Erro', 'Saldo insuficiente!');
 				return;
 			}
 		}
