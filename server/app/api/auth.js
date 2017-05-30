@@ -1,21 +1,14 @@
-let mongoose = require('mongoose');
 let jwt = require('jsonwebtoken');
 let logger = require('../services/logger.js');
 
 module.exports = app => {
 
 	let api = {};
-	let model = mongoose.model('User');
+	let dao = app.dao.user;
 
 	api.authUser = (req, res) => {
-
-		model.findOne({
-			user: req.body.user,
-			password: req.body.password
-		})
-			.lean()
-			.populate('teams')
-			.then((auth) => {
+		dao.findByPassword(req.body.user, req.body.password).then(
+			auth => {
 				if (!auth) {
 					logger.error('Login or password incorrect: ' + req.body.user);
 					res.sendStatus(401);
@@ -30,7 +23,9 @@ module.exports = app => {
 					res.json(auth);
 					res.end();
 				}
-			});
+			},
+			error => res.sendStatus(500)
+		);
 	};
 
 	api.verifyToken = (req, res, next) => {
@@ -43,11 +38,10 @@ module.exports = app => {
 					logger.error('Token rejected');
 					return res.sendStatus(401);
 				} else {
-					model.findOne({ _id: decoded.auth })
-						 .then(user => {
-							 req.user = user;
-							 next();
-						 });
+					dao.findById(decoded.auth).then(user => {
+						req.user = user;
+						next();
+					});
 				}
 			});
 		} else {
@@ -60,15 +54,15 @@ module.exports = app => {
 	 * If request from admin user, triggers callback function, 
 	 * otherwise returns response with http error 403.
 	 */
-    api.guardAdmin = (callback) => {
-        return (req, res) => {
-            if (!req.user.admin){
-                res.status(403).send('Operation not allowed for current user (user not admin).');
-                return;
-            }
-            callback(req, res);
-        }
-    }
+	api.guardAdmin = (callback) => {
+		return (req, res) => {
+			if (!req.user.admin) {
+				res.status(403).send('Operation not allowed for current user (user not admin).');
+				return;
+			}
+			callback(req, res);
+		}
+	}
 
 	/**
 	 * If user id param (urlUserId) from URL is equal logged in user, triggers callback function, 
@@ -78,18 +72,18 @@ module.exports = app => {
 	 * 
 	 * @param {string} urlUserId - owner of the object requested
 	 */
-    api.guardOwner = (callback, urlUserId = null) => {
-        return (req, res) => {
-			let objectOwner = urlUserId == null ? 
-							req.params.user : req.params[urlUserId]; 
+	api.guardOwner = (callback, urlUserId = null) => {
+		return (req, res) => {
+			let objectOwner = urlUserId == null ?
+				req.params.user : req.params[urlUserId];
 			let sessionUser = req.user._id;
-            if (objectOwner != sessionUser){
-                res.status(403).send('Operation not allowed for current user (user not author).');
-                return;
-            }
-            callback(req, res);
-        }
-    }
+			if (objectOwner != sessionUser) {
+				res.status(403).send('Operation not allowed for current user (user not author).');
+				return;
+			}
+			callback(req, res);
+		}
+	}
 
 	return api;
 };
