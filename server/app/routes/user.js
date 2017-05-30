@@ -3,9 +3,12 @@ module.exports = app => {
 	let api = app.api.user;
 	let auth = app.api.auth;
 
-	app.route('/api/user')
-		.get(api.list)
-		.post(api.insert);
+	/**
+	 * TODO user admin
+	 */
+	//app.route('/api/user')
+	//	.get(api.list)
+	//	.post(api.insert);
 
 	app.route('/api/user/:id')
 		.get(api.findById)

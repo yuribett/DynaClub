@@ -3,13 +3,18 @@
 		<app-wallet></app-wallet>
 		<app-donate></app-donate>
 	</div>
-	<div class="col-md-8">
+	<div class="col-md-8 transactionContainer">
+
 		<div *ngIf="transactions == null" class="iconContainer">
 			<i class="fa fa-spinner fa-pulse fa-3x fa-fw margin-bottom"></i>
 		</div>
-		<div class="jumbotron" *ngIf="transactions != null && transactions.length == 0">
+		
+		<div class="jumbotron" *ngIf="!hasTransactions()">
 			<span>Voc&ecirc; n&atilde;o recebeu nem doou Dynas ainda!</span>
 		</div>
+
+		<div *ngIf="hasPendingTransactions()" class="mid"></div>
+
 		<app-transaction [transaction]="transaction" *ngFor="let transaction of transactions"></app-transaction>
 	</div>
 </div>

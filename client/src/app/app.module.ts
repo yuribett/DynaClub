@@ -1,10 +1,12 @@
-//Angular
-import { BrowserModule } from '@angular/platform-browser';
+// Angular
+import { BrowserModule, } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule, Http } from '@angular/http';
+import { APP_INITIALIZER } from '@angular/core';
 
-//Modules
+// Modules
 import { DashboardModule } from './dashboard/dashboard.module';
 import { RankingModule } from './ranking/ranking.module';
 import { TeamModule } from './admin/teams/team.module';
@@ -13,7 +15,7 @@ import { DynaCommonModule } from './shared/dyna-common.module';
 import { ModalModule } from 'angular2-modal';
 import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
 
-//Components
+// Components
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { AdminComponent } from './admin/admin.component';
@@ -24,55 +26,68 @@ import { AboutComponent } from './settings/about/about.component';
 import { TransactionTypesComponent } from './admin/transaction-types/transaction-types.component';
 import { UsersComponent } from './admin/users/users.component';
 
-//Services
+// Services
 import { AuthService } from './auth/auth.service';
 import { UserService } from './shared/services/user.service';
 import { AppService } from './app.service';
 import { SprintService } from './shared/services/sprint.service';
+import { ServerTimeService } from './shared/services/server.time.service';
 import { NotificationService } from './notification.service';
 
-//Others
+// Others
 import { routing } from './app.routes';
 import 'rxjs/add/operator/map';
 import { LoggedInGuard } from './auth/logged.in.guard';
 import { HttpService } from './auth/http.service';
 
+export function loadServerTime(serverTime: ServerTimeService) {
+  return () => serverTime.load();
+}
+
 @NgModule({
-	declarations: [
-		AppComponent,
-		LoginComponent,
-		AdminComponent,
-		ProfileComponent,
-		MenuComponent,
-		ConfigsComponent,
-		AboutComponent,
-		TransactionTypesComponent,
-		UsersComponent
-	],
-	imports: [
-		BrowserModule,
-		FormsModule,
-		ReactiveFormsModule,
-		HttpModule,
-		routing,
-		ModalModule.forRoot(),
-		BootstrapModalModule,
-		DashboardModule,
-		RankingModule,
-		TeamModule,
-		SprintModule,
-		DynaCommonModule
-	],
-	providers: [
-		{ provide: Http, useClass: HttpService },
-		LoggedInGuard,
-		AuthService,
-		UserService,
-		AppService,
-		SprintService,
-		NotificationService,
-		MenuComponent // TODO wtf? Really... W.T.F!
-	],
-	bootstrap: [AppComponent]
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    AdminComponent,
+    ProfileComponent,
+    MenuComponent,
+    ConfigsComponent,
+    AboutComponent,
+    TransactionTypesComponent,
+    UsersComponent
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpModule,
+    routing,
+    ModalModule.forRoot(),
+    BootstrapModalModule,
+    DashboardModule,
+    RankingModule,
+    TeamModule,
+    SprintModule,
+    DynaCommonModule,
+    BrowserAnimationsModule
+  ],
+  providers: [
+    { provide: Http, useClass: HttpService },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: loadServerTime,
+      deps: [ServerTimeService],
+      multi: true
+    },
+    ServerTimeService,
+    LoggedInGuard,
+    AuthService,
+    UserService,
+    AppService,
+    SprintService,
+    NotificationService,
+    MenuComponent // TODO wtf? Really... W.T.F!
+  ],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

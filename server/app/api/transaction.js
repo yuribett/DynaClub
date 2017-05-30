@@ -20,23 +20,26 @@ module.exports = app => {
                         res.json(JSON.parse(transactions));
                     } else {
                         model.find({
-                                $or: [
-                                    { 'to': user },
-                                    { 'from': user }
-                                ],
-                                'team': team,
-                                'sprint': sprint._id
-                            })
+                            $or: [
+                                { 'to': user },
+                                { 'from': user }
+                            ],
+                            'team': team,
+                            'sprint': sprint._id
+                        })
                             .lean()
                             .sort({ date: -1 })
-                            .populate('to from sprint transactionType team')
+                            .populate('to from requester sprint transactionType team')
                             .then((transactions) => {
-                                
+
                                 transactions.forEach((transaction, key) => {
                                     delete transactions[key].to.password;
                                     delete transactions[key].from.password;
+                                    if (transactions[key].requester) {
+                                        delete transactions[key].requester.password;
+                                    }
                                 });
-                                
+
                                 app.get('redis').set(`${redisKeyListByUser}${user}:${team}:${sprint._id}`, JSON.stringify(transactions));
                                 logger.info(`Redis: SET ${redisKeyListByUser}${user}:${team}:${sprint._id}`);
                                 res.json(transactions);
@@ -62,28 +65,19 @@ module.exports = app => {
     };
 
     let insertTransaction = (req, res, wallet) => {
+        req.body.date = new Date();
         let errors = runExpressValidator(req, wallet.funds);
-
         if (errors) {
             res.status(400).send(errors);
             return;
         }
         model.create(req.body).then(transaction => {
-            //TODO make this look nicer
-            // TO
-            app.get('redis').delRedisKeys(`${redisKeyListByUser}${transaction.to}:${transaction.team}:${transaction.sprint}`);
-            app.get('redis').delRedisKeys(`${redisKeyGetWallet}${transaction.to}:${transaction.team}:${transaction.sprint}`);
-            // FROM
-            app.get('redis').delRedisKeys(`${redisKeyListByUser}${transaction.from}:${transaction.team}:${transaction.sprint}`);
-            app.get('redis').delRedisKeys(`${redisKeyGetWallet}${transaction.from}:${transaction.team}:${transaction.sprint}`);
-
-            model.findOne({ _id: transaction._id }) 
-                .populate('to from sprint transactionType team')
+            model.findOne({ _id: transaction._id })
+                .populate('to from requester sprint transactionType team')
                 .then(transaction => {
+                    clearRedisKeys(transaction);
                     // Sending transaction through socket.io
-                    app.get('redis').get("user:" + transaction.to._id, (err, socketId) => {
-                        emitTransaction(err, socketId, transaction);
-                    });
+                    emitTransaction(transaction);
                     res.json(transaction);
                 }, error => {
                     throw error;
@@ -95,17 +89,57 @@ module.exports = app => {
         });
     }
 
-    let emitTransaction = (error, socketId, transaction) => {
-        if (error) {
-            logger.error('Error in getting socketId from Redis');
-        } else {
-            let socket = app.get('io').sockets.connected[socketId];
-            if (typeof socket != "undefined") {
-                socket.emit('transaction', transaction);
-            }
-        }
-    }
+    const TransactionStatus = {
+        NORMAL: 0,
+        PENDING: 1,
+        DENIED: 2,
+        ACCEPTED: 3,
+        CANCELED: 4
+    };
 
+    let emitTransaction = (transaction) => {
+
+        let type;
+        let destinyID;
+        switch (transaction.status) {
+            case TransactionStatus.NORMAL:
+                type = "transaction.added";
+                destinyID = transaction.to._id
+                break;
+            case TransactionStatus.PENDING:
+                type = "transaction.requested";
+                destinyID = transaction.from._id
+                break;
+            case TransactionStatus.DENIED:
+                type = "transaction.denied";
+                destinyID = transaction.requester._id
+                break;
+            case TransactionStatus.ACCEPTED:
+                type = "transaction.accepted";
+                destinyID = transaction.requester._id
+                break;
+            case TransactionStatus.CANCELED:
+                if (JSON.stringify(transaction.requester._id) == JSON.stringify(transaction.from._id)) {
+                    type = "transaction.canceled";
+                    destinyID = transaction.to._id;
+                } else {
+                    type = "transaction.request.canceled";
+                    destinyID = transaction.from._id;
+                }
+                break;
+        }
+
+        app.get('redis').get("user:" + destinyID, (err, socketId) => {
+            if (err) {
+                logger.error('Error in getting socketId from Redis');
+            } else {
+                let socket = app.get('io').sockets.connected[socketId];
+                if (typeof socket != "undefined") {
+                    socket.emit(type, transaction);
+                }
+            }
+        });
+    }
 
     api.getWallet = (req, res) => {
         let userID = req.params.user;
@@ -123,46 +157,49 @@ module.exports = app => {
                     resolve(JSON.parse(wallet));
                 } else {
                     model.aggregate([{
-                            $match: {
-                                $or: [
-                                    { 'to': mongoose.Types.ObjectId(userID) },
-                                    { 'from': mongoose.Types.ObjectId(userID) }
-                                ],
-                                'team': mongoose.Types.ObjectId(teamID),
-                                'sprint': mongoose.Types.ObjectId(sprint._id)
-                            }
-                        },
-                        {
-                            $project: {
-                                amount: 1,
-                                received: {
-                                    $cond: {
-                                        if: { '$eq': ['$to', mongoose.Types.ObjectId(userID)] },
-                                        then: true,
-                                        else: false
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            $group: {
-                                _id: '$received',
-                                total: { $sum: "$amount" }
-                            }
-                        },
-                        {
-                            $project: {
-                                _id: 0,
-                                total: 1,
-                                received: {
-                                    $cond: {
-                                        if: { '$eq': ['$_id', true] },
-                                        then: true,
-                                        else: false
-                                    }
+                        $match: {
+                            $or: [
+                                { 'to': mongoose.Types.ObjectId(userID) },
+                                { 'from': mongoose.Types.ObjectId(userID) }
+                            ],
+                            'status': {
+                                $in: [null, 0, 3] //NORMAL OR ACCEPTED
+                            },
+                            'team': mongoose.Types.ObjectId(teamID),
+                            'sprint': mongoose.Types.ObjectId(sprint._id)
+                        }
+                    },
+                    {
+                        $project: {
+                            amount: 1,
+                            received: {
+                                $cond: {
+                                    if: { '$eq': ['$to', mongoose.Types.ObjectId(userID)] },
+                                    then: true,
+                                    else: false
                                 }
                             }
                         }
+                    },
+                    {
+                        $group: {
+                            _id: '$received',
+                            total: { $sum: "$amount" }
+                        }
+                    },
+                    {
+                        $project: {
+                            _id: 0,
+                            total: 1,
+                            received: {
+                                $cond: {
+                                    if: { '$eq': ['$_id', true] },
+                                    then: true,
+                                    else: false
+                                }
+                            }
+                        }
+                    }
                     ]).then(result => {
                         let wallet = {
                             totalReceived: 0,
@@ -190,16 +227,44 @@ module.exports = app => {
         });
     }
 
-    let clearRedisKeys = () => {
+    api.update = (req, res) => {
+        let errors = runExpressValidator(req);
+        if (errors) {
+            logger.error('Bad request of transaction.update');
+            res.status(400).send(errors);
+            return;
+        }
 
+        model.findByIdAndUpdate(req.body._id, req.body, { new: true })
+            .populate('to from requester sprint transactionType team')
+            .then(transaction => {
+                clearRedisKeys(transaction);
+                // Sending transaction through socket.io
+                emitTransaction(transaction);
+                res.json(transaction);
+            }, error => {
+                logger.error(error);
+                res.sendStatus(500);
+            })
+    };
+
+    let clearRedisKeys = (transaction) => {
+        // TO
+        app.get('redis').delRedisKeys(`${redisKeyListByUser}${transaction.to._id}:${transaction.team._id}:${transaction.sprint._id}`);
+        app.get('redis').delRedisKeys(`${redisKeyGetWallet}${transaction.to._id}:${transaction.team._id}:${transaction.sprint._id}`);
+
+        // FROM
+        app.get('redis').delRedisKeys(`${redisKeyListByUser}${transaction.from._id}:${transaction.team._id}:${transaction.sprint._id}`);
+        app.get('redis').delRedisKeys(`${redisKeyGetWallet}${transaction.from._id}:${transaction.team._id}:${transaction.sprint._id}`);
     }
 
     let runExpressValidator = (req, funds) => {
+        const status = req.body.status;
         req.assert("from", "transaction.from is required").notEmpty();
         req.assert("to", "transaction.to is required").notEmpty();
         req.assert("date", "transaction.date is required and must be a date").notEmpty().isDate();
         req.assert("amount", "transaction.amount is required and must be a number greater than zero").notEmpty().isNumeric().gte(1);
-        if (funds) {
+        if (funds && (status == 0 || status == 3)) {
             req.assert("amount", "insuficient funds").lte(funds);
         }
         req.assert("team", "transaction.team is required").notEmpty();

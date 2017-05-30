@@ -1,21 +1,26 @@
-<div class="row transaction {{getStyle()}}">
+<div class="row transaction {{getStyle()}}" title="{{getTitle()}}">
+
+    <simple-notifications [options]="toastOptions"></simple-notifications>
+
     <div class="col-md-3 col-sm-3 col-xs-6">
-        <span class="symbol">D$ </span>
-        <span class="amount">{{transaction.amount}}</span>
+        <div class="row">
+            <span class="symbol">D$ </span>
+            <span class="amount">{{transaction.amount}}</span>
+        </div>
+        <div class="row">
+            <span id="date">{{transaction.date | date: 'dd/MM/yyyy HH:mm'}}</span>
+        </div>
     </div>
 
-    <div class="col-md-1 col-sm-1 col-xs-6">
+    <div class="col-md-1 col-sm-1 col-xs-6 statusIcons">
         <span *ngIf="isCredit()" class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
         <span *ngIf="!isCredit()" class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
     </div>
 
-    <div class="col-md-8 col-sm-8 col-xs-12 messageContainer">
+    <div class="col-md-7 col-sm-7 col-xs-12 messageContainer">
         <div class="row">
-            <div *ngIf="isCredit()" class="row">
-                <h3 class="text-info user-name">{{transaction.from.name}}</h3>
-            </div>
-            <div *ngIf="!isCredit()" class="row">
-                <h3 class="text-danger user-name">{{transaction.to.name}}</h3>
+            <div class="row">
+                <h3 class="text-danger user-name">{{getDisplayName()}}</h3>
             </div>
             <div class="row">
                 <label class="title">Por qu&ecirc;? </label> {{transaction.transactionType.description}}
@@ -23,7 +28,28 @@
             <div class="row">
                 <label class="title">Mensagem: </label> {{transaction.message}}
                 <input type="hidden" name="id" value="{{transaction._id}}">
+                <input type="hidden" name="status" value="{{transaction.status}}">
             </div>
         </div>
+    </div>
+
+    <div class="col-md-1 col-sm-1 col-xs-6 actionIcons">
+
+        <a title="Editar" *ngIf="canEdit" (click)="edit()">
+            <span class="edit glyphicon glyphicon-pencil" aria-hidden="true"></span>
+        </a>
+
+        <a title="Aceitar" *ngIf="canAccept" (click)="accept()">
+            <span class="accept glyphicon glyphicon-ok" aria-hidden="true"></span>
+        </a>
+
+        <a title="Negar" *ngIf="canDeny" (click)="deny()">
+            <span class="cancel glyphicon glyphicon-remove" aria-hidden="true"></span>
+        </a>
+
+        <a title="Cancelar" *ngIf="canCancel" (click)="cancel()">
+            <span class="cancel glyphicon glyphicon-remove" aria-hidden="true"></span>
+        </a>
+
     </div>
 </div>

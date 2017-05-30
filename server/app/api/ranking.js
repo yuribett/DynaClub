@@ -15,7 +15,10 @@ module.exports = app => {
                 {
                     $match: {
                         'sprint': mongoose.Types.ObjectId(sprintID),
-                        'team': mongoose.Types.ObjectId(teamID)
+                        'team': mongoose.Types.ObjectId(teamID),
+                        'status': {
+                            $in: [null, 0, 3] //NORMAL OR ACCEPTED
+                        },
                     }
                 },
                 {
@@ -23,21 +26,21 @@ module.exports = app => {
                     {
                         _id: "$to",
                         totalAmount: { $sum: "$amount" },
-                        to: {$first: '$to'},
+                        to: { $first: '$to' },
                         count: { $sum: 1 }
                     }
                 }
-                
-                ,{
+
+                , {
                     $lookup:
-                        {
-                            from: "users",
-                            localField: "to",
-                            foreignField: "_id",
-                            as: "user"
-                        }
+                    {
+                        from: "users",
+                        localField: "to",
+                        foreignField: "_id",
+                        as: "user"
+                    }
                 }
-                
+
             ]
         )
             .sort({ totalAmount: -1 })
