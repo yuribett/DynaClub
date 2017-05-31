@@ -36,7 +36,7 @@ module.exports = app => {
     };
 
     api.findLast = (req, res) => {
-        var lastMonhDate = new Date();
+        const lastMonhDate = new Date();
         lastMonhDate.setMonth(lastMonhDate.getMonth() - 1);
         dao.findLast().then(
             sprint => res.json(sprint),

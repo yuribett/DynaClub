@@ -21,15 +21,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator({
     customValidators: {
-        isArray: function(value) {
-            return Array.isArray(value);
-        },
-        gte: function(param, num) {
-            return param >= num;
-        },
-        lte: function(param, num) {
-            return param <= num;
-        }
+        isArray: value => Array.isArray(value),
+        gte: (param, num) => param >= num,
+        lte: (param, num) => param <= num
     }
 }));
 
