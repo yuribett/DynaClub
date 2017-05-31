@@ -105,7 +105,7 @@ module.exports = app => {
     };
 
     api.findLast = (req, res) => {
-        var lastMonhDate = new Date();
+        const lastMonhDate = new Date();
         lastMonhDate.setMonth(lastMonhDate.getMonth() - 1);
         api.findSprintByDate(lastMonhDate).then(
             sprint => {
