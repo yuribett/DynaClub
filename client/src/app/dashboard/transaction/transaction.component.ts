@@ -1,10 +1,12 @@
+import { AppService } from '../../app.service';
 import { TeamService } from '../../shared/services/team.service';
 import { TransactionService } from './transaction.service';
 import { TransactionStatus } from '../../shared/enums/transactionStatus';
 import { UserService } from '../../shared/services/user.service';
 import { Transaction } from './transaction';
 import { User } from '../../shared/models/user';
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { ServerTimeService } from '../../shared/services/server.time.service';
+import { Component, OnInit, Input, Output, EventEmitter, HostBinding } from '@angular/core';
 import { NotificationsService } from 'angular2-notifications';
 
 @Component({
@@ -15,12 +17,12 @@ import { NotificationsService } from 'angular2-notifications';
 export class TransactionComponent implements OnInit {
 
 	@Input() transaction: Transaction;
-	@Output() private onChange = new EventEmitter<Transaction>();
-	@Output() private onEdit = new EventEmitter<Transaction>();
 	loggedUser: User;
 	canCancel: Boolean = false;
 	canEdit: Boolean = false;
 	canAccept: Boolean = false;
+	@HostBinding('class.top') _top: boolean = false;
+	@HostBinding('class.bottom') _bottom: boolean = false;
 	canDeny: Boolean = false;
 	toastOptions = {
 		timeOut: 8000,
@@ -36,30 +38,35 @@ export class TransactionComponent implements OnInit {
 		position: ['right', 'top']
 	};
 
-	constructor(_userService: UserService, private _transactionService: TransactionService, private _teamService: TeamService, private _toastService: NotificationsService) {
+	constructor(private _appService: AppService, private _userService: UserService, private _transactionService: TransactionService, private _teamService: TeamService, private _toastService: NotificationsService, private _serverTimeService: ServerTimeService) {
 		this.loggedUser = _userService.getStoredUser();
 	}
 
 	ngOnInit() {
-		const today: Date = new Date();
-		const transactionDate: Date = new Date(this.transaction.date);
-		const timeDiff: number = today.getTime() - transactionDate.getTime();
-		const dateStart: Date = new Date(this.transaction.sprint.dateStart);
-		const dateFinish: Date = new Date(this.transaction.sprint.dateFinish);
-		const fiveMinutes: number = 300000;
-		
-		if (this.transaction.status == 1 && dateStart <= today && dateFinish >= today) {
+		const _today: Date = this._serverTimeService.getServerTime();
+		const _transactionDate: Date = new Date(this.transaction.date);
+		const _timeDiff: number = _today.getTime() - _transactionDate.getTime();
+		const _dateStart: Date = new Date(this.transaction.sprint.dateStart);
+		const _dateFinish: Date = new Date(this.transaction.sprint.dateFinish);
+		const _fiveMinutes: number = 300000;
+		this.canAccept = false;
+		this.canDeny = false;
+		this.canCancel = false;
+
+		if (this.transaction.status == 1 && _dateStart <= _today && _dateFinish >= _today) {
 			const isRequester = this.transaction.requester != null && this.transaction.requester._id == this.loggedUser._id;
 			this.canAccept = !isRequester;
 			this.canDeny = !isRequester;
 			this.canCancel = isRequester;
-		} else if (this.transaction.status == 0 && !this.isCredit() && timeDiff < fiveMinutes) {
+		} else if (this.transaction.status == 0 && !this.isCredit() && _timeDiff < _fiveMinutes) {
 			this.canCancel = true;
 			setTimeout(() => {
 				this.canCancel = false;
-			}, (fiveMinutes - timeDiff));
+			}, (_fiveMinutes - _timeDiff));
 		}
 
+		this._top = this.transaction.status == TransactionStatus.PENDING;
+		this._bottom = !this._top;
 	}
 
 	isCredit(): boolean {
@@ -92,7 +99,7 @@ export class TransactionComponent implements OnInit {
 	}
 	getDisplayName(): string {
 		if (this.transaction.status == TransactionStatus.PENDING) {
-			return this.isCredit() ? `(Pedido a)${this.transaction.from.name}` : `(Pedido por)${this.transaction.to.name}`;
+			return this.isCredit() ? `(Pedido a) ${this.transaction.from.name}` : `(Pedido por) ${this.transaction.to.name}`;
 		} else {
 			return this.isCredit() ? this.transaction.from.name : this.transaction.to.name;
 		}
@@ -102,15 +109,18 @@ export class TransactionComponent implements OnInit {
 		if (status == TransactionStatus.ACCEPTED) {
 			let wallet = await this._transactionService.getWallet(this.loggedUser, this._teamService.getCurrentTeam());
 			if (wallet.funds < this.transaction.amount) {
-				this._toastService.error('Error', 'Saldo insuficiente!');
+				this._toastService.error('Erro', 'Saldo insuficiente!');
 				return;
 			}
 		}
 
 		this.transaction.status = status;
-		this.onChange.next(this.transaction);
+
 		this._transactionService.update(this.transaction).subscribe(
-			transaction => console.log(transaction),
+			transaction => {
+				this.transaction = transaction;
+				this.ngOnInit();
+			},
 			error => console.log(error)
 		);
 	}
@@ -126,7 +136,6 @@ export class TransactionComponent implements OnInit {
 		this.update(TransactionStatus.CANCELED);
 	}
 	edit() {
-		this._transactionService.edit(this.transaction);
 	}
 
 }

@@ -4,6 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule, Http } from '@angular/http';
+import { APP_INITIALIZER } from '@angular/core';
 
 // Modules
 import { DashboardModule } from './dashboard/dashboard.module';
@@ -30,6 +31,7 @@ import { AuthService } from './auth/auth.service';
 import { UserService } from './shared/services/user.service';
 import { AppService } from './app.service';
 import { SprintService } from './shared/services/sprint.service';
+import { ServerTimeService } from './shared/services/server.time.service';
 import { NotificationService } from './notification.service';
 
 // Others
@@ -37,6 +39,10 @@ import { routing } from './app.routes';
 import 'rxjs/add/operator/map';
 import { LoggedInGuard } from './auth/logged.in.guard';
 import { HttpService } from './auth/http.service';
+
+export function loadServerTime(serverTime: ServerTimeService) {
+  return () => serverTime.load();
+}
 
 @NgModule({
   declarations: [
@@ -67,6 +73,13 @@ import { HttpService } from './auth/http.service';
   ],
   providers: [
     { provide: Http, useClass: HttpService },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: loadServerTime,
+      deps: [ServerTimeService],
+      multi: true
+    },
+    ServerTimeService,
     LoggedInGuard,
     AuthService,
     UserService,

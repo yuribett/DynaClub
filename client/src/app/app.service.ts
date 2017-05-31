@@ -4,16 +4,25 @@ import { Observable } from 'rxjs/Observable';
 import { User } from './shared/models/user';
 import { Team } from './shared/models/team';
 import { Globals } from './app.globals';
+import { Response, Http, Headers } from '@angular/http';
 import * as io from 'socket.io-client';
 
 @Injectable()
 export class AppService {
 
 	private user: User;
+	private serverTime: Date;
+	private needToSyncServerTime: boolean = true;
+	private headers: Headers;
 	private subjectUser: Subject<User> = new Subject<User>();
 	private currentTeam: Team;
 	private subjectCurrentTeam: Subject<Team> = new Subject<Team>();
 	private socket;
+
+	constructor(private http: Http) {
+		this.headers = new Headers();
+		this.headers.append('Content-Type', 'application/json');
+	}
 
 	getSocket() {
 		if (!this.socket) {
@@ -28,10 +37,6 @@ export class AppService {
 			}
 		}
 		return this.socket;
-	}
-
-	ngOnInit() {
-
 	}
 
 	//USER SERVICES

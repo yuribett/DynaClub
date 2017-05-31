@@ -8,7 +8,7 @@
             <span class="amount">{{transaction.amount}}</span>
         </div>
         <div class="row">
-            <span id="date">{{transaction.date | date: 'dd/MM/yyyy'}}</span>
+            <span id="date">{{transaction.date | date: 'dd/MM/yyyy HH:mm'}}</span>
         </div>
     </div>
 
@@ -28,6 +28,7 @@
             <div class="row">
                 <label class="title">Mensagem: </label> {{transaction.message}}
                 <input type="hidden" name="id" value="{{transaction._id}}">
+                <input type="hidden" name="status" value="{{transaction.status}}">
             </div>
         </div>
     </div>

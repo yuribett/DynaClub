@@ -1,6 +1,6 @@
 {
   "name": "dynaclubserver",
-  "version": "0.4.1",
+  "version": "0.5.2",
   "description": "Servidor NodeJS para API do DynaClub",
   "main": "index.js",
   "scripts": {
@@ -25,5 +25,8 @@
     "redis": "^2.6.5",
     "socket.io": "^1.7.2",
     "winston": "^2.3.1"
+  },
+  "devDependencies": {
+    "@glimpse/glimpse": "^0.20.8"
   }
 }
