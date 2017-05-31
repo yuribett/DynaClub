@@ -25,7 +25,7 @@ module.exports = app => {
         req.body.sprint = sprint;
         req.body.date = new Date();
 
-        let errors = runExpressValidator(req);
+        let errors = runExpressValidator(req, wallet);
         if (errors) {
             res.status(400).send(errors);
             return;
