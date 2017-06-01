@@ -13,8 +13,9 @@ const sender = {
         send({
             from: `"${transaction.from.name}" <${transaction.from.email}>`,
             to: `${transaction.to.email}`,
-            subject: `DynaClub: Voc&ecirc; acaba de receber Dynas de ${transaction.from.name}`,
+            subject: `DynaClub: Dynas recebidos de ${transaction.from.name}`,
             html: template
+
         });
     },
 
@@ -26,7 +27,7 @@ const sender = {
         send({
             from: `"${transaction.to.name}" <${transaction.to.email}>`,
             to: `${transaction.from.email}`,
-            subject: `DynaClub: Voc&ecirc; acaba de receber um pedido de ${transaction.to.name}`,
+            subject: `DynaClub: Pedido de Dynas de ${transaction.to.name}`,
             html: template
         });
     },

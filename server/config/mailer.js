@@ -8,7 +8,7 @@ module.exports = () => {
     let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: 'dynaclub.mailer@gmail.com',
+            user: 'dynaclub.mailer',
             pass: ''
         }
     });
