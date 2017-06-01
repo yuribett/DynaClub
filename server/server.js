@@ -39,8 +39,25 @@ require('./config/database')(MONGO_URL);
 const redis = require('./config/redis')(REDIS_PORT, REDIS_SERVER);
 app.set('redis', redis);
 
+///////////////////////////////////////////////////////////////////////
+// socket.io configuration
+///////////////////////////////////////////////////////////////////////
 const io = require('./config/io')(server, app);
 app.set('io', io);
+
+///////////////////////////////////////////////////////////////////////
+// mailer configuration
+///////////////////////////////////////////////////////////////////////
+let MAILER_USER = 'dynaclub.mailer';
+let MAILER_PASSWORD   = '';
+if( process.env.MAILER_USER ) {
+   MAILER_USER = process.env.MAILER_USER;
+}
+if( process.env.MAILER_PASSWORD) {
+   MAILER_PASSWORD = process.env.MAILER_PASSWORD;
+}
+const mailer = require('./app/mailer/sender')(MAILER_USER, MAILER_PASSWORD);
+app.set('mailer', mailer);
 
 server.listen(NODE_PORT, () => {
 	console.log('Server started and listening on port ' + NODE_PORT);

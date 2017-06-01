@@ -1,5 +1,4 @@
 const logger = require('../services/logger.js');
-const mailer = require('../mailer/sender.js');
 
 module.exports = app => {
 
@@ -70,6 +69,7 @@ module.exports = app => {
 
         let type;
         let destinyID;
+        const mailer = app.get('mailer');
 
         switch (transaction.status) {
             case TransactionStatus.NORMAL:

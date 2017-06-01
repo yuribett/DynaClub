@@ -1,11 +1,13 @@
 const ejs = require('ejs');
 const fs = require('fs');
-const transporter = require('../../config/mailer')();
 const logger = require('../services/logger.js');
 
-const sender = {
+module.exports = (user, password) => {
 
-    donationSent(transaction) {
+    const transporter = require('../../config/mailer')(user, password);
+    const sender = {};
+
+    sender.donationSent = transaction => {
 
         const str = fs.readFileSync('app/mailer/templates/got-a-donnation.ejs', 'utf8');
         const template = ejs.render(str, { value: transaction.amount, from: transaction.from.name });
@@ -17,9 +19,9 @@ const sender = {
             html: template
 
         });
-    },
+    };
 
-    requestSent(transaction) {
+    sender.requestSent = transaction => {
 
         const str = fs.readFileSync('app/mailer/templates/got-a-request.ejs', 'utf8');
         const template = ejs.render(str, { value: transaction.amount, to: transaction.to.name });
@@ -30,9 +32,9 @@ const sender = {
             subject: `DynaClub: Pedido de Dynas de ${transaction.to.name}`,
             html: template
         });
-    },
+    };
 
-    requestAccepted(transaction) {
+    sender.requestAccepted = transaction => {
 
         const str = fs.readFileSync('app/mailer/templates/accepted-request.ejs', 'utf8');
         const template = ejs.render(str, { value: transaction.amount, from: transaction.from.name });
@@ -43,9 +45,9 @@ const sender = {
             subject: `DynaClub: ${transaction.from.name} aceitou seu pedido`,
             html: template
         });
-    },
+    };
 
-    requestDenied(transaction) {
+    sender.requestDenied = transaction => {
 
         const str = fs.readFileSync('app/mailer/templates/denied-request.ejs', 'utf8');
         const template = ejs.render(str, { value: transaction.amount, from: transaction.from.name });
@@ -57,16 +59,16 @@ const sender = {
             html: template
         });
     }
-}
 
-const send = options => {
-    transporter.sendMail(options, (error, info) => {
-        if (error) {
-            logger.error(error);
-            return;
-        }
-        logger.info(info);
-    });
-}
+    const send = options => {
+        transporter.sendMail(options, (error, info) => {
+            if (error) {
+                logger.error(error);
+                return;
+            }
+            logger.info(info);
+        });
+    }
 
-module.exports = sender;
+    return sender;
+}
