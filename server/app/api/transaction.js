@@ -20,7 +20,7 @@ module.exports = app => {
         );
     }
 
-    api.insert = async(req, res) => {
+    api.insert = async (req, res) => {
         const sprint = await app.dao.sprint.findCurrent();
         const wallet = await dao.findWallet(req.body.from._id, req.body.team._id, sprint);
         req.body.sprint = sprint;
@@ -42,8 +42,9 @@ module.exports = app => {
         );
     };
 
-    api.update = (req, res) => {
-        let errors = runExpressValidator(req);
+    api.update = async (req, res) => {
+        const wallet = await dao.findWallet(req.body.from._id, req.body.team._id);
+        let errors = runExpressValidator(req, wallet);
         if (errors) {
             res.status(400).send(errors);
             return;
@@ -58,18 +59,18 @@ module.exports = app => {
         );
     };
 
+    const TransactionStatus = {
+        NORMAL: 0,
+        PENDING: 1,
+        DENIED: 2,
+        ACCEPTED: 3,
+        CANCELED: 4
+    };
+
     let emitTransaction = (transaction) => {
 
         let type;
         let destinyID;
-
-        const TransactionStatus = {
-            NORMAL: 0,
-            PENDING: 1,
-            DENIED: 2,
-            ACCEPTED: 3,
-            CANCELED: 4
-        };
 
         switch (transaction.status) {
             case TransactionStatus.NORMAL:
@@ -111,14 +112,14 @@ module.exports = app => {
         });
     }
 
-    let runExpressValidator = (req, funds) => {
+    let runExpressValidator = (req, wallet) => {
         const status = req.body.status;
         req.assert("from", "transaction.from is required").notEmpty();
         req.assert("to", "transaction.to is required").notEmpty();
         req.assert("date", "transaction.date is required and must be a date").notEmpty().isDate();
         req.assert("amount", "transaction.amount is required and must be a number greater than zero").notEmpty().isNumeric().gte(1);
-        if (funds && (status == 0 || status == 3)) {
-            req.assert("amount", "insuficient funds").lte(funds);
+        if (wallet && (status == TransactionStatus.NORMAL || status == TransactionStatus.ACCEPTED)) {
+            req.assert("amount", "insuficient funds").lte(wallet.funds);
         }
         req.assert("team", "transaction.team is required").notEmpty();
         req.assert("transactionType", "transaction.transactionType is required").notEmpty();
