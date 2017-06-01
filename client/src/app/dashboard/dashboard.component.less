@@ -1,3 +1,6 @@
+@import "~bootstrap/less/variables.less";
+@import "~bootswatch/darkly/variables.less";
+
 .jumbotron {
     margin-top: 5px;
     border-radius: 0;
@@ -5,7 +8,7 @@
     text-align: center;
 }
 .iconContainer {
-    text-align: center;
+    text-align: center; 
 }
 
 .transactionContainer {
@@ -24,4 +27,36 @@
 
 .bottom { 
     order: 3; 
+}
+
+.row {
+    margin-left: 0px;
+    margin-right: 0px;
+    height: 30px;
+    margin-top: 5px;
+}
+
+.build-filter(@color) {
+    border-top: 2px solid @color;
+    background-color: @gray-dark;
+    font-size: 13px;
+    padding-top: 3px;
+    height: 100%;
+    border-right: 1px solid #222222;
+}
+
+.received {
+    .build-filter(darken(@btn-success-bg, 10%));
+}
+
+.sent {
+    .build-filter(lighten(@btn-primary-bg, 10%));
+}
+
+.pending {
+    .build-filter(#996d47);
+}
+
+.canceled {
+    .build-filter(lighten(@gray, 10%));
 }
