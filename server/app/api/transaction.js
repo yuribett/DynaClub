@@ -1,9 +1,10 @@
-let logger = require('../services/logger.js');
+const logger = require('../services/logger.js');
+const mailer = require('../mailer/sender.js');
 
 module.exports = app => {
 
     let api = {};
-    let dao = app.dao.transaction;
+    const dao = app.dao.transaction;
 
     api.listByUser = (req, res) => {
         dao.listByUser(req.params.user, req.params.team).then(
@@ -34,6 +35,7 @@ module.exports = app => {
         dao.insert(req.body).then(
             transaction => {
                 emitTransaction(transaction);
+                mailer.donationSent(transaction);
                 res.json(transaction)
             },
             error => res.sendStatus(500)

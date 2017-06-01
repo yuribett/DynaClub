@@ -1,6 +1,6 @@
-if (process.env.NODE_ENV !== 'production') {
-    require('@glimpse/glimpse').init();
-}
+//if (process.env.NODE_ENV !== 'production') {
+//    require('@glimpse/glimpse').init();
+//}
 
 const http = require('http');
 const app = require('./config/express');
