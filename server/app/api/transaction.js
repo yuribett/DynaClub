@@ -35,7 +35,6 @@ module.exports = app => {
         dao.insert(req.body).then(
             transaction => {
                 emitTransaction(transaction);
-                mailer.donationSent(transaction);
                 res.json(transaction)
             },
             error => res.sendStatus(500)
@@ -75,19 +74,23 @@ module.exports = app => {
         switch (transaction.status) {
             case TransactionStatus.NORMAL:
                 type = "transaction.added";
-                destinyID = transaction.to._id
+                destinyID = transaction.to._id;
+                mailer.donationSent(transaction);
                 break;
             case TransactionStatus.PENDING:
                 type = "transaction.requested";
-                destinyID = transaction.from._id
+                destinyID = transaction.from._id;
+                mailer.requestSent(transaction);
                 break;
             case TransactionStatus.DENIED:
                 type = "transaction.denied";
-                destinyID = transaction.requester._id
+                destinyID = transaction.requester._id;
+                mailer.requestDenied(transaction);
                 break;
             case TransactionStatus.ACCEPTED:
                 type = "transaction.accepted";
-                destinyID = transaction.requester._id
+                destinyID = transaction.requester._id;
+                mailer.requestAccepted(transaction);
                 break;
             case TransactionStatus.CANCELED:
                 if (JSON.stringify(transaction.requester._id) == JSON.stringify(transaction.from._id)) {
