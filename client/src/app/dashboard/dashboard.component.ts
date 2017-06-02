@@ -31,6 +31,10 @@ export class DashboardComponent implements OnInit {
 		this.userService = userService;
 		this.appService = appService;
 		this.loadTransactions();
+		this.receivedCheck = (localStorage.getItem('receivedCheck') || "1") === "1";
+		this.sentCheck = (localStorage.getItem('sentCheck') || "1") === "1";
+		this.pendingCheck = (localStorage.getItem('pendingCheck') || "1") === "1";
+		this.canceledCheck = (localStorage.getItem('canceledCheck') || "1") === "1";
 	}
 
 	ngOnInit() {
@@ -59,6 +63,14 @@ export class DashboardComponent implements OnInit {
 
 	hasPendingTransactions(): boolean {
 		return this.hasTransactions() && this.filteredTransactions.filter(transaction => transaction.status == TransactionStatus.PENDING).length > 0;
+	}
+
+	onFiltersChange() {
+		this.applyFilters();
+		localStorage.setItem('receivedCheck', this.receivedCheck ? "1" : "0");
+		localStorage.setItem('sentCheck', this.sentCheck ? "1" : "0");
+		localStorage.setItem('pendingCheck', this.pendingCheck ? "1" : "0");
+		localStorage.setItem('canceledCheck', this.canceledCheck ? "1" : "0");
 	}
 
 	applyFilters() {

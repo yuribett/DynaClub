@@ -1,23 +1,23 @@
 @import "~bootstrap/less/variables.less";
 @import "~bootswatch/darkly/variables.less";
-
 .jumbotron {
     margin-top: 5px;
     border-radius: 0;
     box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
     text-align: center;
 }
+
 .iconContainer {
-    text-align: center; 
+    text-align: center;
 }
 
 .transactionContainer {
-     display: flex;  
-     flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
-.top { 
-    order: 1; 
+.top {
+    order: 1;
 }
 
 .mid {
@@ -25,8 +25,8 @@
     margin-bottom: 25px;
 }
 
-.bottom { 
-    order: 3; 
+.bottom {
+    order: 3;
 }
 
 .row {
@@ -37,12 +37,55 @@
 }
 
 .build-filter(@color) {
-    border-top: 2px solid @color;
     background-color: @gray-dark;
     font-size: 13px;
     padding-top: 3px;
     height: 100%;
     border-right: 1px solid #222222;
+    input[type=checkbox] {
+        position: absolute; // take it out of document flow
+        opacity: 0; // hide it
+        &+label {
+            position: relative;
+            cursor: pointer;
+            padding: 0;
+            margin-top: 3px;
+        } // Box.
+        &+label:before {
+            content: '';
+            margin-right: 6px;
+            display: inline-block;
+            vertical-align: text-top;
+            width: 15px;
+            height: 15px;
+            background: @color;
+        } // Box hover
+        &:hover+label:before {
+            background: @color;
+        } // Box focus
+        &:checked+label:before {
+            background: @color;
+        } // Disabled state label.
+        &:disabled+label {
+            color: #b8b8b8;
+            cursor: auto;
+        } // Disabled box.
+        &:disabled+label:before {
+            box-shadow: none;
+            background: #ddd;
+        } // Checkmark. Could be replaced with an image
+        &:checked+label:after {
+            content: '';
+            position: absolute;
+            left: 3px;
+            top: 7px;
+            background: white;
+            width: 2px;
+            height: 2px;
+            box-shadow: 2px 0 0 white, 4px 0 0 white, 4px -2px 0 white, 4px -4px 0 white, 4px -6px 0 white, 4px -8px 0 white;
+            transform: rotate(45deg);
+        }
+    }
 }
 
 .received {

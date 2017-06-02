@@ -6,23 +6,27 @@
 	<div class="col-md-8 transactionContainer">
 		<div class="row">
 			<div class="col-md-3 received">
-				<input type="checkbox" [(ngModel)]="receivedCheck" (change)="applyFilters()"> Recebidas
+				<input type="checkbox" id="received" [(ngModel)]="receivedCheck" (change)="onFiltersChange()">
+				<label for="received"></label> Recebidas
 			</div>
 			<div class="col-md-3 sent">
-				<input type="checkbox" [(ngModel)]="sentCheck" (change)="applyFilters()"> Enviadas
+				<input type="checkbox" id="sent" [(ngModel)]="sentCheck" (change)="onFiltersChange()">
+				<label for="sent"></label> Enviadas
 			</div>
 			<div class="col-md-3 pending">
-				<input type="checkbox" [(ngModel)]="pendingCheck" (change)="applyFilters()"> Pendentes
+				<input type="checkbox" id="pending" [(ngModel)]="pendingCheck" (change)="onFiltersChange()">
+				<label for="pending"></label> Pendentes
 			</div>
 			<div class="col-md-3 canceled">
-				<input type="checkbox" [(ngModel)]="canceledCheck" (change)="applyFilters()"> Canceladas/Negadas
+				<input type="checkbox" id="canceled" [(ngModel)]="canceledCheck" (change)="onFiltersChange()">
+				<label for="canceled"></label> Canceladas/Negadas
 			</div>
 		</div>
-		
+
 		<div *ngIf="transactions == null" class="iconContainer">
 			<i class="fa fa-spinner fa-pulse fa-3x fa-fw margin-bottom"></i>
 		</div>
-		
+
 		<div class="jumbotron" *ngIf="!hasTransactions()">
 			<span>Voc&ecirc; n&atilde;o recebeu nem doou Dynas ainda!</span>
 		</div>
