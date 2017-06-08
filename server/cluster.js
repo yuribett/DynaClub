@@ -1,18 +1,17 @@
-var cluster = require('cluster');
-var os = require('os');
-
-var cpus = os.cpus();
+const cluster = require('cluster');
+const os = require('os');
+const cpus = os.cpus();
 
 console.log('running thread');
 
 if (cluster.isMaster) {
     console.log('thread master');
 
-    cpus.forEach(function () {
+    cpus.forEach(() => {
         cluster.fork();
     });
 
-    cluster.on('listening', function (worker) {
+    cluster.on('listening', worker => {
         console.log('cluster cennected ' + worker.process.pid);
     });
 
