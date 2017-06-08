@@ -8,7 +8,7 @@ import { UserService } from '../shared/services/user.service';
 import { TransactionService } from './transaction/transaction.service';
 import { Transaction } from './transaction/transaction';
 import { TransactionComponent } from './transaction/transaction.component';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 
 @Component({
@@ -18,14 +18,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DashboardComponent implements OnInit {
 
+	filteredTransactions: Array<Transaction>;
 	transactions: Array<Transaction>;
 	wallet: Wallet = new Wallet();
+	receivedCheck: boolean = true;
+	sentCheck: boolean = true;
+	pendingCheck: boolean = true;
+	canceledCheck: boolean = true;
 
 	constructor(private transactionService: TransactionService, private userService: UserService, private appService: AppService, private teamService: TeamService) {
 		this.transactionService = transactionService;
 		this.userService = userService;
 		this.appService = appService;
 		this.loadTransactions();
+		this.receivedCheck = (localStorage.getItem('receivedCheck') || "1") === "1";
+		this.sentCheck = (localStorage.getItem('sentCheck') || "1") === "1";
+		this.pendingCheck = (localStorage.getItem('pendingCheck') || "1") === "1";
+		this.canceledCheck = (localStorage.getItem('canceledCheck') || "1") === "1";
 	}
 
 	ngOnInit() {
@@ -35,6 +44,7 @@ export class DashboardComponent implements OnInit {
 
 		this.transactionService.onTransactionsAdded().subscribe((transactionAdded: Transaction) => {
 			this.transactions.unshift(transactionAdded);
+			this.applyFilters();
 		});
 
 		this.transactionService.onTransactionsUpdated().subscribe((transactionUpdated: Transaction) => {
@@ -43,6 +53,7 @@ export class DashboardComponent implements OnInit {
 					this.transactions[i] = transactionUpdated;
 				}
 			});
+			this.applyFilters();
 		});
 	}
 
@@ -51,13 +62,46 @@ export class DashboardComponent implements OnInit {
 	}
 
 	hasPendingTransactions(): boolean {
-		return this.hasTransactions() && this.transactions.filter(transaction => transaction.status == TransactionStatus.PENDING).length > 0;
+		return this.hasTransactions() && this.filteredTransactions.filter(transaction => transaction.status == TransactionStatus.PENDING).length > 0;
+	}
+
+	onFiltersChange() {
+		this.applyFilters();
+		localStorage.setItem('receivedCheck', this.receivedCheck ? "1" : "0");
+		localStorage.setItem('sentCheck', this.sentCheck ? "1" : "0");
+		localStorage.setItem('pendingCheck', this.pendingCheck ? "1" : "0");
+		localStorage.setItem('canceledCheck', this.canceledCheck ? "1" : "0");
+	}
+
+	applyFilters() {
+		this.filteredTransactions = this.transactions.filter(transaction => this.canShowTransaction(transaction));
+	}
+
+	canShowTransaction(transaction: Transaction): boolean {
+		switch (transaction.status) {
+			case TransactionStatus.PENDING:
+				return this.pendingCheck;
+			case TransactionStatus.DENIED:
+			case TransactionStatus.CANCELED:
+				return this.canceledCheck;
+			case TransactionStatus.NORMAL:
+				return this.isReceived(transaction) ? this.receivedCheck : this.sentCheck;
+			default:
+				return false;
+		}
+	}
+
+	isReceived(transaction): boolean {
+		return this.userService.getStoredUser()._id == transaction.to._id;
 	}
 
 	loadTransactions(team: Team = this.teamService.getCurrentTeam()) {
 		this.transactions = null;
 		this.transactionService.findByUser(this.userService.getStoredUser(), team).subscribe(
-			transactions => this.transactions = transactions,
+			transactions => {
+				this.transactions = transactions;
+				this.applyFilters();
+			},
 			err => console.log(err)
 		);
 	}

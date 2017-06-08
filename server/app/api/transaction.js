@@ -1,9 +1,9 @@
-let logger = require('../services/logger.js');
+const logger = require('../services/logger.js');
 
 module.exports = app => {
 
     let api = {};
-    let dao = app.dao.transaction;
+    const dao = app.dao.transaction;
 
     api.listByUser = (req, res) => {
         dao.listByUser(req.params.user, req.params.team).then(
@@ -69,23 +69,28 @@ module.exports = app => {
 
         let type;
         let destinyID;
+        const mailer = app.get('mailer');
 
         switch (transaction.status) {
             case TransactionStatus.NORMAL:
                 type = "transaction.added";
-                destinyID = transaction.to._id
+                destinyID = transaction.to._id;
+                mailer.donationSent(transaction);
                 break;
             case TransactionStatus.PENDING:
                 type = "transaction.requested";
-                destinyID = transaction.from._id
+                destinyID = transaction.from._id;
+                mailer.requestSent(transaction);
                 break;
             case TransactionStatus.DENIED:
                 type = "transaction.denied";
-                destinyID = transaction.requester._id
+                destinyID = transaction.requester._id;
+                mailer.requestDenied(transaction);
                 break;
             case TransactionStatus.ACCEPTED:
                 type = "transaction.accepted";
-                destinyID = transaction.requester._id
+                destinyID = transaction.requester._id;
+                mailer.requestAccepted(transaction);
                 break;
             case TransactionStatus.CANCELED:
                 if (JSON.stringify(transaction.requester._id) == JSON.stringify(transaction.from._id)) {
