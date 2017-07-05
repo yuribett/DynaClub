@@ -75,22 +75,22 @@ module.exports = app => {
             case TransactionStatus.NORMAL:
                 type = "transaction.added";
                 destinyID = transaction.to._id;
-                mailer.donationSent(transaction);
+                //mailer.donationSent(transaction);
                 break;
             case TransactionStatus.PENDING:
                 type = "transaction.requested";
                 destinyID = transaction.from._id;
-                mailer.requestSent(transaction);
+                //mailer.requestSent(transaction);
                 break;
             case TransactionStatus.DENIED:
                 type = "transaction.denied";
                 destinyID = transaction.requester._id;
-                mailer.requestDenied(transaction);
+                //mailer.requestDenied(transaction);
                 break;
             case TransactionStatus.ACCEPTED:
                 type = "transaction.accepted";
                 destinyID = transaction.requester._id;
-                mailer.requestAccepted(transaction);
+                //mailer.requestAccepted(transaction);
                 break;
             case TransactionStatus.CANCELED:
                 if (JSON.stringify(transaction.requester._id) == JSON.stringify(transaction.from._id)) {

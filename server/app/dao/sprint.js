@@ -8,6 +8,7 @@ module.exports = app => {
     const redisKeyList = 'sprint:list';
     const redisKeyFindById = 'sprint:findById:';
     const redisKeyFindCurrent = 'sprint:findCurrent';
+    const redisKeyFindLast = 'sprint:findLast';
 
     dao.list = () => {
         return new Promise((resolve, reject) => {
@@ -66,11 +67,11 @@ module.exports = app => {
         });
     };
 
-    dao.findSprintByDate = (currentDate) => {
+    dao.findSprintByDate = (currentDate, redisKey) => {
         return new Promise((resolve, reject) => {
-            app.get('redis').get(`${redisKeyFindCurrent}`, (err, doc) => {
+            app.get('redis').get(`${redisKey}`, (err, doc) => {
                 if (!err && doc != null) {
-                    logger.info(`Redis: GET ${redisKeyFindCurrent}`);
+                    logger.info(`Redis: GET ${redisKey}`);
                     resolve(JSON.parse(doc));
                 } else {
                     model.findOne({
@@ -79,9 +80,9 @@ module.exports = app => {
                             { 'dateFinish': { "$gte": currentDate } }
                         ]
                     }).then(sprint => {
-                        app.get('redis').set(`${redisKeyFindCurrent}`, JSON.stringify(sprint));
-                        app.get('redis').expire(`${redisKeyFindCurrent}`, 18000); //expires in 5 hours
-                        logger.info(`Redis: SET ${redisKeyFindCurrent}`);
+                        app.get('redis').set(`${redisKey}`, JSON.stringify(sprint));
+                        app.get('redis').expire(`${redisKey}`, 18000); //expires in 5 hours
+                        logger.info(`Redis: SET ${redisKey}`);
                         resolve(sprint);
                     }, error => {
                         logger.error(error);
@@ -94,13 +95,13 @@ module.exports = app => {
 
     dao.findCurrent = () => {
         let currentDate = new Date();
-        return dao.findSprintByDate(currentDate);
+        return dao.findSprintByDate(currentDate, redisKeyFindCurrent);
     };
 
     dao.findLast = () => {
         var lastMonhDate = new Date();
         lastMonhDate.setMonth(lastMonhDate.getMonth() - 1);
-        return dao.findSprintByDate(lastMonhDate);
+        return dao.findSprintByDate(lastMonhDate, redisKeyFindLast);
     }
 
     dao.insert = (sprint) => {
@@ -144,6 +145,7 @@ module.exports = app => {
         app.get('redis').delRedisKeys(`${redisKeyFindById}*`);
         app.get('redis').delRedisKeys(`${redisKeyList}`);
         app.get('redis').delRedisKeys(`${redisKeyFindCurrent}`);
+        app.get('redis').delRedisKeys(`${redisKeyFindLastt}`);
     }
 
     return dao;
