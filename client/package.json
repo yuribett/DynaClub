@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "version": "0.5.3",
+  "version": "0.5.5",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
