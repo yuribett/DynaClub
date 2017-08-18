@@ -85,6 +85,7 @@ export class DashboardComponent implements OnInit {
 			case TransactionStatus.CANCELED:
 				return this.canceledCheck;
 			case TransactionStatus.NORMAL:
+			case TransactionStatus.ACCEPTED:
 				return this.isReceived(transaction) ? this.receivedCheck : this.sentCheck;
 			default:
 				return false;
