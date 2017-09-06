@@ -6,10 +6,10 @@ The app is used at [Dynamix Software](http://www.dynamix.com.br)
 
 ## Prerequisites
 
-* NodeJS and NPM
-* Redis
-* MongoDB
-* Angular-CLI
+* [NodeJS](https://nodejs.org/en/download/) and [NPM](https://www.npmjs.com/package/download)
+* [Redis](https://redis.io/download/)
+* [MongoDB](https://www.mongodb.com/download-center)
+* [Angular-CLI](https://cli.angular.io/)
 
 ## Run Server
 
