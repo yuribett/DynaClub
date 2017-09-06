@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "version": "0.5.6",
+  "version": "0.5.7",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -28,7 +28,7 @@
     "core-js": "^2.4.1",
     "font-awesome": "^4.7.0",
     "jquery": "^3.1.1",
-    "ng2-validation": "^3.8.0",
+    "ng2-validation": "^4.2.0",
     "rxjs": "^5.1.0",
     "socket.io-client": "^1.7.2",
     "ts-helpers": "^1.1.1",
