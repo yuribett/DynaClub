@@ -64,7 +64,7 @@ export class DonateComponent implements OnInit, OnDestroy {
 			'required': 'Quanto voc&ecirc; quer doar?',
 			'max': 'Saldo insuficiente.',
 			'gt': 'Doe pelo menos uma Dyna.',
-			'lt': 'Valor limite para pedidos &eacute; D$1000.'
+			'lte': 'Valor limite para doa&ccedil;&otilde;es &eacute; D$100.'
 		},
 		'user': {
 			'required': 'Pra quem voc&ecedil; quer doar?.'
@@ -74,15 +74,16 @@ export class DonateComponent implements OnInit, OnDestroy {
 		},
 		'message': {
 			'required': 'Deixe uma mensagem para a pessoa.',
-			'minlength': 'A mensagem deve conter no m&iacute;nimo 3 caracteres.',
+			'minlength': 'A mensagem deve conter no m&iacute;nimo 10 caracteres.',
 			'maxlength': 'A mensagem deve conter no m&aacute;ximo 500 caracteres.',
 		}
 	};
 	requestMessages = {
 		'amount': {
 			'required': 'Quanto voc&ecirc; quer pedir?',
-			'max': 'No m&aacute;ximo D$1000.',
-			'gt': 'Pe&ccedil;a pelo menos uma Dyna.'
+			'max': 'No m&aacute;ximo D$100.',
+			'gt': 'Pe&ccedil;a pelo menos uma Dyna.',
+			'lte': 'Valor limite para pedidos &eacute; D$100.'
 		},
 		'user': {
 			'required': 'Pra quem voc&ecedil; quer pedir?.'
@@ -92,7 +93,7 @@ export class DonateComponent implements OnInit, OnDestroy {
 		},
 		'message': {
 			'required': 'Deixe uma mensagem para a pessoa.',
-			'minlength': 'A mensagem deve conter no m&iacute;nimo 3 caracteres.',
+			'minlength': 'A mensagem deve conter no m&iacute;nimo 10 caracteres.',
 			'maxlength': 'A mensagem deve conter no m&aacute;ximo 500 caracteres.',
 		}
 	};
@@ -130,9 +131,10 @@ export class DonateComponent implements OnInit, OnDestroy {
 	async updateAmountValidators(team: Team = this.teamService.getCurrentTeam()) {
 		if (this.isDonating) {
 			this.wallet = await this.transactionService.getWallet(this.userService.getStoredUser(), team);
-			this.donateForm.controls['amount'].setValidators([Validators.required, CustomValidators.max(this.wallet.funds), CustomValidators.gt(0)]);
+			console.log(CustomValidators);
+			this.donateForm.controls['amount'].setValidators([Validators.required, CustomValidators.max(this.wallet.funds), CustomValidators.gt(0), CustomValidators.lte(100)]);
 		} else {
-			this.donateForm.controls['amount'].setValidators([Validators.required, CustomValidators.max(1000), CustomValidators.gt(0)]);
+			this.donateForm.controls['amount'].setValidators([Validators.required, CustomValidators.max(100), CustomValidators.gt(0), CustomValidators.lte(100)]);
 		}
 		this.donateForm.controls['amount'].updateValueAndValidity();
 		this.donateBtn.nativeElement.disabled = this.donateForm.invalid;
@@ -143,7 +145,7 @@ export class DonateComponent implements OnInit, OnDestroy {
 			'amount': new FormControl('', [Validators.required, CustomValidators.lt(1), CustomValidators.gt(0)]),
 			'user': new FormControl('', Validators.required),
 			'type': new FormControl('', Validators.required),
-			'message': new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(500)])
+			'message': new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(500)])
 		});
 
 		this.donateForm.valueChanges.subscribe(data => this.onValueChanged(data));
@@ -173,7 +175,11 @@ export class DonateComponent implements OnInit, OnDestroy {
 			if (control && control.dirty && !control.valid) {
 				const messages = this.isDonating ? this.donateMessages[field] : this.requestMessages[field];
 				for (const key in control.errors) {
-					this.formErrors[field] += this.decodeMsg(messages[key]) + ' ';
+					const value = messages[key]
+					if (value) {
+						this.formErrors[field] += this.decodeMsg(value) + ' ';
+						break;
+					}
 				}
 			}
 		}
