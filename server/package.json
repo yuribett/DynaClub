@@ -1,6 +1,6 @@
 {
   "name": "dynaclubserver",
-  "version": "0.5.6",
+  "version": "0.5.7",
   "description": "Servidor NodeJS para API do DynaClub",
   "main": "index.js",
   "scripts": {
